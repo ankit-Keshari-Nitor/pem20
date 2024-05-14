@@ -1,3 +1,4 @@
-import WorkFlowDesigner from './components/workflow-designer/workflow-designer';
+import ActivityDashboard from './components/activity-dashboard';
 import './index.css';
-export default WorkFlowDesigner;
+
+export default ActivityDashboard;
