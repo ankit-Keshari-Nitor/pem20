@@ -17,11 +17,8 @@ import {
 } from '@carbon/react';
 import { CheckmarkFilled, NewTab, Add } from '@carbon/icons-react';
 import './activity-definition.scss';
-import { useNavigate } from 'react-router-dom';
 
 export default function ActivityDefinition() {
-  let navigate = useNavigate();
-
   const [searchQuery, setSearchQuery] = useState('');
   const [filterKey, setFilterKey] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -143,7 +140,7 @@ export default function ActivityDefinition() {
     <div className="activities-list-container">
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <ExpandableSearch labelText="Search" placeholder="Search by name" onChange={(event) => setSearchQuery(event.target.value)} value={searchQuery} />
-        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} onClick={() => navigate('new')}>
+        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab}>
           New
         </Button>
         <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>

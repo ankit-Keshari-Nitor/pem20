@@ -192,7 +192,7 @@ export default function WorkFlowDesigner() {
   return (
     <>
       {isPageDesignerActive ? (
-        <DndProvider debugMode={true} backend={HTML5Backend}>
+        <DndProvider backend={HTML5Backend}>
           <Designer componentMapper={componentMapper} />
         </DndProvider>
       ) : (

@@ -290,8 +290,8 @@ export const COMPONENT_MAPPER = {
 };
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
-  const { handleSubmit, onReset, onCancel, getState } = useFormApi();
-  const { submitting, valid, pristine } = getState();
+  const { handleSubmit, onCancel, getState } = useFormApi();
+  const { submitting, valid, } = getState();
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField) => (
@@ -312,15 +312,6 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
                 </Button>
               </Column>
             </Grid>
-            {/* <Button disabled={submitting || !valid} style={{ marginRight: 8 }} type="submit" color="primary" variant="contained">
-              Submit
-            </Button>
-            <Button disabled={pristine} style={{ marginRight: 8 }} onClick={onReset} variant="contained">
-                  Reset
-                </Button>
-            <Button variant="contained" onClick={onCancel}>
-              Cancel
-            </Button> */}
           </div>
         )}
       </FormSpy>

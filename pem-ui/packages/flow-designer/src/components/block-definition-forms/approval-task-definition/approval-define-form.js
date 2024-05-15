@@ -36,7 +36,8 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED
+          type: validatorTypes.REQUIRED,
+          message: 'Description is required'
         },
         {
           type: validatorTypes.MAX_LENGTH,
@@ -52,7 +53,8 @@ export const SCHEMA = {
       isRequired: true,
       validate: [
         {
-          type: validatorTypes.REQUIRED
+          type: validatorTypes.REQUIRED,
+          message: 'Estimate is required'
         }
       ]
     },

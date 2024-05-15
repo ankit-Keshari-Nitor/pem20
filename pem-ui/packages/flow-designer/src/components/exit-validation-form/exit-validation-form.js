@@ -10,7 +10,7 @@ import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 export default function ExitValidationFrom() {
   const fields = [
     { name: 'firstName', label: 'DataType-1' },
-    { name: 'lastName', label: 'DataType-2', operators: defaultOperators.filter((op) => op.name === '=' || op.name === 'in') }
+    { name: 'lastName', label: 'DataType-2' }
   ];
   const initialQuery = {
     combinator: 'and',
@@ -28,16 +28,16 @@ export default function ExitValidationFrom() {
   return (
     <div className="query-builder">
       <CarbonWrapper>
-        {/* <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}> */}
-        <QueryBuilder
-          fields={fields}
-          query={query}
-          onQueryChange={setQuery}
-          combinators={combinator}
-          controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
-          // __RQB_PROPS__
-        />
-        {/* </QueryBuilderDnD> */}
+        <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
+          <QueryBuilder
+            fields={fields}
+            query={query}
+            onQueryChange={setQuery}
+            combinators={combinator}
+            controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
+            // __RQB_PROPS__
+          />
+        </QueryBuilderDnD>
       </CarbonWrapper>
       {/* <h4>Query</h4>
       <pre>
