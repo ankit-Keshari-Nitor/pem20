@@ -4,11 +4,11 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const Activity = {
-  Definition: React.lazy(() => import('./pages/definitions'))
+  Definition: React.lazy(() => import('./pages/activities/definitions'))
 };
 
 const Workflow = {
-  Designer: React.lazy(() => import('./pages/workflow'))
+  Designer: React.lazy(() => import('./pages/activities/workflow'))
 };
 
 const routes = [
