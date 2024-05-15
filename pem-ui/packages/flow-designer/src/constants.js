@@ -291,7 +291,7 @@ export const COMPONENT_MAPPER = {
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
   const { handleSubmit, onCancel, getState } = useFormApi();
-  const { submitting, valid, } = getState();
+  const { submitting, valid } = getState();
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField) => (
@@ -318,3 +318,26 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
     </form>
   );
 };
+
+// Query Builder Constants
+export const QUERY_FIELDS = [
+  { name: 'string', label: 'String' },
+  { name: 'numeric', label: 'Numeric' },
+  { name: 'boolean', label: 'Boolean' },
+  { name: 'date', label: 'Date' }
+];
+export const INITIAL_QUERY = {
+  combinator: 'and',
+  rules: [
+    { field: 'string', operator: ['', 'beginsWith'], value: '' },
+    { field: 'numeric', operator: ['', 'in'], value: '' }
+  ]
+};
+
+export const QUERY_COMBINATOR = [
+  { name: 'and', value: 'and', label: 'AND' },
+  { name: 'or', value: 'or', label: 'OR' }
+];
+
+
+export const NEW_ACTIVITY_URL = '#/activities/definitions/new';
