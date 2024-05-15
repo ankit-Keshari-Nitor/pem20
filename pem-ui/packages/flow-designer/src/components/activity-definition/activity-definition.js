@@ -140,7 +140,7 @@ export default function ActivityDefinition() {
     <div className="activities-list-container">
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <ExpandableSearch labelText="Search" placeholder="Search by name" onChange={(event) => setSearchQuery(event.target.value)} value={searchQuery} />
-        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab}>
+        <Button style={{ marginLeft: '8px' }} renderIcon={NewTab} href="#/activities/definitions/new">
           New
         </Button>
         <Button kind="tertiary" style={{ marginLeft: '8px' }} renderIcon={Add}>
