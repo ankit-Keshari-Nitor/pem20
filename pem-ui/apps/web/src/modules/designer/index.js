@@ -3,19 +3,35 @@ import Shell from '@b2bi/shell';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const WorkFlow = {
-  WorkFlow: React.lazy(() => import('./pages/workflow'))
+const Activity = {
+  Definition: React.lazy(() => import('./pages/definitions'))
+};
+
+const Workflow = {
+  Designer: React.lazy(() => import('./pages/workflow'))
 };
 
 const routes = [
   {
+    path: '/activities/definitions',
+    breadcrumb: 'mod-activity-designer:breadcrumb.definitions',
+    resourceKey: 'DEFINITIONS.VIEW',
+    element: (
+      <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
+        <DndProvider backend={HTML5Backend}>
+          <Activity.Definition />
+        </DndProvider>
+      </Shell.RoutePage>
+    )
+  },
+  {
     path: '/activities/workflow',
     breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
-    resourceKey: 'WORKFLOW.VIEW',
+    resourceKey: 'DESIGNER.VIEW',
     element: (
-      <Shell.RoutePage resourceKey="WORKFLOW.VIEW" dataLoaderConfig={{}}>
+      <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
         <DndProvider backend={HTML5Backend}>
-          <WorkFlow.WorkFlow />
+          <Workflow.Designer />
         </DndProvider>
       </Shell.RoutePage>
     )

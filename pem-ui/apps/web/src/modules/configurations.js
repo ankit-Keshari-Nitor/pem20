@@ -30,6 +30,12 @@ const sideNavConfig = [
     resourceKey: 'DIVISIONS.VIEW'
   },
   {
+    label: 'pem:sideNav.definitions',
+    to: '/activities/definitions',
+    title: 'pem:sideNav.definitions',
+    resourceKey: 'DEFINITIONS.VIEW'
+  },
+  {
     label: 'pem:sideNav.workflow',
     to: '/activities/workflow',
     title: 'pem:sideNav.workflow',
