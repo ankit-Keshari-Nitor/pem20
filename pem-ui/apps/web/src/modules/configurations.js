@@ -36,9 +36,9 @@ const sideNavConfig = [
     resourceKey: 'DEFINITIONS.VIEW'
   },
   {
-    label: 'pem:sideNav.definitionsSfg',
-    to: '/activities/definitionsSfg',
-    title: 'pem:sideNav.definitionsSfg',
+    label: 'pem:sideNav.definitionsApi',
+    to: '/activities/definitionsApi',
+    title: 'pem:sideNav.definitionsApi',
     resourceKey: 'DEFINITIONS.VIEW'
   }
 ];

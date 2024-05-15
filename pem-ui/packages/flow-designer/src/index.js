@@ -1,12 +1,12 @@
 import './index.css';
 import ActivityDefinition from './components/activity-definition';
 import WorkFlowDesigner from './components/workflow-designer';
-import ActivityDefinitionSFG from './components/actitivy-definition-sfg';
+import ActivityDefinitionAPI from './components/activity-definition-api';
 
 const Designer = {
   WorkFlowDesigner,
   ActivityDefinition,
-  ActivityDefinitionSFG
+  ActivityDefinitionAPI
 };
 
 export default Designer;

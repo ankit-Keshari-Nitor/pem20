@@ -16,10 +16,10 @@ import {
   OverflowMenuItem
 } from '@carbon/react';
 import { CheckmarkFilled, NewTab, Add } from '@carbon/icons-react';
-import './activity-definition-sfg.scss';
+import './activity-definition-api.scss';
 import { NEW_ACTIVITY_URL } from '../../constants';
 
-export default function ActivityDefinitionSFG() {
+export default function ActivityDefinitionAPI() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterKey, setFilterKey] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
