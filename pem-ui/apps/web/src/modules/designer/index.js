@@ -25,7 +25,7 @@ const routes = [
     )
   },
   {
-    path: '/activities/workflow',
+    path: '/activities/definitions/new',
     breadcrumb: 'mod-activity-designer:breadcrumb.workflow',
     resourceKey: 'DESIGNER.VIEW',
     element: (
