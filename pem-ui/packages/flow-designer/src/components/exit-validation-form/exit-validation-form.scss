@@ -1,16 +1,9 @@
-//Start-query-builder-css
-
-// #region Basic
 $rqb-spacing: 0.5rem !default;
 $rqb-border-width: 1px !default;
-// #endregion
 
-// #region Branches
 $rqb-branch-indent: $rqb-spacing !default;
 $rqb-branch-width: $rqb-border-width !default;
-// #endregion
 
-// Default styles
 .ruleGroup {
   display: flex;
   flex-direction: column;
@@ -51,18 +44,15 @@ $rqb-branch-width: $rqb-border-width !default;
     display: flex;
     flex-direction: column;
 
-    &>* {
+    & > * {
       padding: 0;
     }
   }
 }
 
-// #region Drag-and-drop
-
 // Hover styles
 [data-inlinecombinators='disabled'] {
   .dndOver {
-
     &.rule,
     &.ruleGroup-header {
       padding-bottom: $rqb-spacing;
@@ -72,10 +62,9 @@ $rqb-branch-width: $rqb-border-width !default;
 
 [data-inlinecombinators='enabled'] {
   .dndOver {
-
     &.rule:last-child,
     &.ruleGroup-header,
-    &.rule+.betweenRules,
+    &.rule + .betweenRules,
     &.betweenRules {
       padding-bottom: $rqb-spacing;
     }
@@ -94,8 +83,6 @@ $rqb-branch-width: $rqb-border-width !default;
   }
 }
 
-// #endregion
-
 // #region Branch styles
 .queryBuilder-branches {
   .ruleGroup-body {
@@ -106,7 +93,7 @@ $rqb-branch-width: $rqb-border-width !default;
   .ruleGroup .ruleGroup {
     position: relative;
     padding: 1rem;
-    background-color: #8D8D8D1F;
+    background-color: #8d8d8d1f;
     gap: 1rem;
 
     &::before,
@@ -136,7 +123,6 @@ $rqb-branch-width: $rqb-border-width !default;
   }
 
   .ruleGroup .ruleGroup {
-
     &::before,
     &::after {
       left: calc(calc(-#{$rqb-branch-indent} - #{$rqb-branch-width}) - #{$rqb-border-width});
@@ -195,10 +181,8 @@ $rqb-branch-style: $rqb-border-style !default;
   border-color: $rqb-border-color;
   border-style: $rqb-border-style;
   border-radius: $rqb-border-radius;
-  //background: $rqb-background-color;
-
   .shiftActions {
-    &>* {
+    & > * {
       background-color: transparent;
       border: none;
       cursor: pointer;
@@ -211,7 +195,6 @@ $rqb-branch-style: $rqb-border-style !default;
 // Hover styles
 [data-inlinecombinators='disabled'] {
   .dndOver {
-
     &.rule,
     &.ruleGroup-header {
       border-bottom-width: $rqb-dnd-hover-border-bottom-width;
@@ -227,10 +210,9 @@ $rqb-branch-style: $rqb-border-style !default;
 
 [data-inlinecombinators='enabled'] {
   .dndOver {
-
     &.rule:last-child,
     &.ruleGroup-header,
-    &.rule+.betweenRules,
+    &.rule + .betweenRules,
     &.betweenRules {
       border-bottom-width: $rqb-dnd-hover-border-bottom-width;
       border-bottom-style: $rqb-dnd-hover-border-bottom-style;
@@ -247,10 +229,8 @@ $rqb-branch-style: $rqb-border-style !default;
 
 // #region Branch styles
 .queryBuilder-branches {
-
   .rule,
   .ruleGroup .ruleGroup {
-
     &::before,
     &::after {
       border-color: $rqb-branch-color;
@@ -295,19 +275,18 @@ $rqb-branch-style: $rqb-border-style !default;
 .rule-remove:hover {
   background-color: unset;
   border: unset;
-  outline: none
+  outline: none;
 }
 
 .ruleGroup-remove:hover {
   background-color: unset;
   border: unset;
-  outline: none
+  outline: none;
 }
-
 
 .rule-remove,
 .ruleGroup-remove {
-  background: #8D8D8D1F;
+  background: #8d8d8d1f;
   padding-inline-end: 0.5rem;
   padding-inline-start: 0.5rem;
 }
@@ -380,7 +359,6 @@ $rqb-branch-style: $rqb-border-style !default;
   --cds-grid-gutter-start: none;
   padding-inline: unset;
   margin-top: 1rem;
-  // background-color: #eeeeee;
 }
 
 .col-margin {
@@ -412,7 +390,7 @@ $rqb-branch-style: $rqb-border-style !default;
   margin-top: 1rem;
 }
 
-.opt-btn>svg {
+.opt-btn > svg {
   margin-right: 1rem;
 }
 
@@ -420,7 +398,7 @@ $rqb-branch-style: $rqb-border-style !default;
   margin-right: 0.7rem;
 }
 
-.select-opt>.cds--select>label {
+.select-opt > .cds--select > label {
   display: none;
 }
 

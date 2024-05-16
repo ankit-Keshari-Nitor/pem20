@@ -1,5 +1,5 @@
-import { Button } from '@carbon/react';
 import * as React from 'react';
+import { Button } from '@carbon/react';
 
 const CarbonActionElement = ({
   className,
@@ -9,7 +9,6 @@ const CarbonActionElement = ({
   disabled,
   disabledTranslation,
   separator,
-  // Props that should not be in extraProps
   testID: _testID,
   rules: _rules,
   level: _level,

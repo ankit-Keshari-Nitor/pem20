@@ -64,6 +64,10 @@ export const SCHEMA = {
       labelText: 'Role',
       options: [
         {
+          label: 'Select Role',
+          value: ''
+        },
+        {
           label: 'AssignRole_Auto_Sponsor',
           value: 'AssignRole_Auto_Sponsor'
         },

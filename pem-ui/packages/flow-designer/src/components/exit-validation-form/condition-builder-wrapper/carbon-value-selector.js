@@ -9,7 +9,6 @@ const carbonValueSelector = ({
   value,
   title,
   disabled,
-  // Props that should not be in extraProps
   testID: _testID,
   rule: _rule,
   rules: _rules,
@@ -26,11 +25,9 @@ const carbonValueSelector = ({
   ...extraProps
 }) => {
   return (
-    <>
-      <Select id="selector-label" className={className} title={title} value={value} disabled={disabled} onChange={(e) => handleOnChange(e.target.value)} {...extraProps}>
-        {toOptions(options)}
-      </Select>
-    </>
+    <Select id="selector-label" className={className} title={title} value={value} disabled={disabled} onChange={(e) => handleOnChange(e.target.value)} {...extraProps}>
+      {toOptions(options)}
+    </Select>
   );
 };
 

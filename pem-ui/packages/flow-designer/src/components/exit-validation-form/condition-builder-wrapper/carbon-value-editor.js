@@ -1,12 +1,9 @@
-// import { Checkbox, Input, Radio, RadioGroup, Stack, Switch, Textarea } from '@chakra-ui/react';
 import { Checkbox, TextArea, TextInput, Toggle, Modal, TreeView, TreeNode, Button } from '@carbon/react';
 import * as React from 'react';
-// import { ValueEditorProps } from 'react-querybuilder';
 import { ValueSelector, getFirstOption, standardClassnames, useValueEditor } from 'react-querybuilder';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
-
-// type ChakraValueEditorProps = ValueEditorProps & { extraProps?: Record<string, any> };
+import WrapperModal from '../../helpers';
 
 const CarbonValueEditor = (allProps) => {
   const {
@@ -48,7 +45,6 @@ const CarbonValueEditor = (allProps) => {
   }
 
   const operandSelector = (selectedValue) => {
-    //operandOne('Disabled-2');
     handleOnChange(selectedValue);
     setOpenCancelDialog(false);
   };
@@ -75,7 +71,6 @@ const CarbonValueEditor = (allProps) => {
             key={key}
             type={inputTypeCoerced}
             value={valueAsArray[i] ?? ''}
-            //isDisabled={disabled}
             className={standardClassnames.valueListItem}
             placeholder={placeHolderText}
             onChange={(e) => multiValueHandler(e.target.value, i)}
@@ -104,8 +99,6 @@ const CarbonValueEditor = (allProps) => {
       </span>
     );
   }
-
-  // eslint-disable-next-line default-case
   switch (type) {
     case 'select':
       return <SelectorComponent {...props} className={className} title={title} value={value} disabled={disabled} handleOnChange={handleOnChange} options={values} />;
@@ -126,42 +119,13 @@ const CarbonValueEditor = (allProps) => {
       );
 
     case 'textarea':
-      return (
-        <TextArea
-          value={value}
-          title={title}
-          //isDisabled={disabled}
-          className={className}
-          placeholder={placeHolderText}
-          onChange={(e) => handleOnChange(e.target.value)}
-          {...extraProps}
-        />
-      );
+      return <TextArea value={value} title={title} className={className} placeholder={placeHolderText} onChange={(e) => handleOnChange(e.target.value)} {...extraProps} />;
 
     case 'switch':
       return <Toggle className={className} isChecked={!!value} title={title} onChange={(e) => handleOnChange(e.target.checked)} {...extraProps} />;
 
     case 'checkbox':
       return <Checkbox className={className} title={title} onChange={(e) => handleOnChange(e.target.checked)} isChecked={!!value} {...extraProps} />;
-
-    // case 'radio':
-    //   return (
-    //     <RadioGroup
-    //       className={className}
-    //       title={title}
-    //       value={value}
-    //       onChange={handleOnChange}
-    //       isDisabled={disabled}
-    //       {...extraProps}>
-    //       <Stack direction="row">
-    //         {values.map(v => (
-    //           <Radio key={v.name} value={v.name}>
-    //             {v.label}
-    //           </Radio>
-    //         ))}
-    //       </Stack>
-    //     </RadioGroup>
-    //   );
   }
 
   return (
@@ -170,16 +134,15 @@ const CarbonValueEditor = (allProps) => {
         type={inputTypeCoerced}
         value={value}
         title={title}
-        //isDisabled={disabled}
         className={className}
         placeholder={'Operand'}
         onChange={(e) => handleOnChange(e.target.value)}
         {...extraProps}
       />
       <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
-      <Modal open={openCancelDialog} onRequestClose={() => setOpenCancelDialog(false)} passiveModal>
+      <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
-      </Modal>
+      </WrapperModal>
     </>
   );
 };

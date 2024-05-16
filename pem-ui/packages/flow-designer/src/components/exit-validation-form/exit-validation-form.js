@@ -6,43 +6,23 @@ import QueryBuilder, { defaultOperators, formatQuery } from 'react-querybuilder'
 import { QueryBuilderDnD } from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
+import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
 
 export default function ExitValidationFrom() {
-  const fields = [
-    { name: 'firstName', label: 'DataType-1' },
-    { name: 'lastName', label: 'DataType-2' }
-  ];
-  const initialQuery = {
-    combinator: 'and',
-    rules: [
-      { field: 'firstName', operator: ['demo-1', 'beginsWith'], value: 'Stev' },
-      { field: 'lastName', operator: ['demo-2', 'in'], value: 'Vai,Vaughan' }
-    ]
-  };
-
-  const combinator = [
-    { name: 'and', value: 'and', label: 'AND' },
-    { name: 'or', value: 'or', label: 'OR' }
-  ];
-  const [query, setQuery] = useState(initialQuery);
+  const [query, setQuery] = useState(INITIAL_QUERY);
   return (
     <div className="query-builder">
       <CarbonWrapper>
         <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndHtml5Backend }}>
           <QueryBuilder
-            fields={fields}
+            fields={QUERY_FIELDS}
             query={query}
             onQueryChange={setQuery}
-            combinators={combinator}
+            combinators={QUERY_COMBINATOR}
             controlClassnames={{ queryBuilder: 'queryBuilder-branches', body: 'inline-indycomb-left' }}
-            // __RQB_PROPS__
           />
         </QueryBuilderDnD>
       </CarbonWrapper>
-      {/* <h4>Query</h4>
-      <pre>
-        <code>{formatQuery(query, 'json')}</code>
-      </pre> */}
       <Grid className="grid-margin grid-margin-top">
         <Column lg={16}>
           <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" />

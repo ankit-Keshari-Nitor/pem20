@@ -3,6 +3,7 @@ import { toOptions, useValueEditor } from 'react-querybuilder';
 import { Button, Modal, Select, TextInput, TreeView, TreeNode } from '@carbon/react';
 import { ElippsisIcon } from '../../../icons';
 import { useState } from 'react';
+import WrapperModal from '../../helpers';
 
 const CarbonOperatorSelector = ({
   className,
@@ -11,7 +12,6 @@ const CarbonOperatorSelector = ({
   value,
   title,
   disabled,
-  // Props that should not be in extraProps
   testID: _testID,
   rule: _rule,
   rules: _rules,
@@ -28,7 +28,6 @@ const CarbonOperatorSelector = ({
   ...extraProps
 }) => {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  //const [operandOne, setOperandOne] = useState('');
 
   const { valueAsArray, multiValueHandler } = useValueEditor({
     handleOnChange,
@@ -42,7 +41,6 @@ const CarbonOperatorSelector = ({
   });
 
   const operandSelector = (selectedValue) => {
-    //operandOne('Disabled-2');
     multiValueHandler(selectedValue, 0);
     setOpenCancelDialog(false);
   };
@@ -65,7 +63,6 @@ const CarbonOperatorSelector = ({
         type="text"
         value={valueAsArray.length > 1 ? valueAsArray[0] : ''}
         title={title}
-        //isDisabled={disabled}
         className={className}
         placeholder={'Operand'}
         labelText={''}
@@ -73,10 +70,9 @@ const CarbonOperatorSelector = ({
         {...extraProps}
       />
       <Button size="md" className="opt-btn" kind="secondary" renderIcon={ElippsisIcon} onClick={() => setOpenCancelDialog(true)}></Button>
-      <Modal open={openCancelDialog} onRequestClose={() => setOpenCancelDialog(false)} passiveModal>
+      <WrapperModal openCancelDialog={openCancelDialog} setOpenCancelDialog={setOpenCancelDialog}>
         {Temp}
-      </Modal>
-
+      </WrapperModal>
       <Select
         id="selector-label"
         className={className}

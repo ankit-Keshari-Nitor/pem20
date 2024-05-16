@@ -34,12 +34,6 @@ const sideNavConfig = [
     to: '/activities/definitions',
     title: 'pem:sideNav.definitions',
     resourceKey: 'DEFINITIONS.VIEW'
-  },
-  {
-    label: 'pem:sideNav.definitionsApi',
-    to: '/activities/definitionsApi',
-    title: 'pem:sideNav.definitionsApi',
-    resourceKey: 'DEFINITIONS.VIEW'
   }
 ];
 

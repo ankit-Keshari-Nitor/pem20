@@ -22,6 +22,8 @@ import {
   DIALOG_EDGE_TYPES,
   NODE_TYPE
 } from '../../constants';
+import useActivityStore from '../../store/useActivityStore';
+import { useEffect } from 'react';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -30,13 +32,18 @@ let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
 export default function WorkFlowDesigner() {
+  const storeData = useActivityStore((state) => state.activities);
+  const addTaskNode = useActivityStore((state) => state.addTaskNodes);
+  const editNodePros = useActivityStore((state) => state.editNodePros);
+  const addDilogNode = useActivityStore((state) => state.addDilogNodes);
+  const taskDilogNodes = useActivityStore((state) => state?.dialogNodes);
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
   // --------------------------------- Task Flow States -----------------------------------
   const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
   const taskFlowWrapper = useRef(null);
-  const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(TASK_INITIAL_NODES);
+  const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
   const [taskFlowInstance, setTaskFlowInstance] = useState(null);
   const [selectedTaskNode, setSelectedTaskNode] = useState(null);
@@ -44,7 +51,7 @@ export default function WorkFlowDesigner() {
   // --------------------------------- Dialog Flow States -----------------------------------
   const [openDialogPropertiesBlock, setOpenDialogPropertiesBlock] = useState(false);
   const dialogFlowWrapper = useRef(null);
-  const [dialogNodes, setDialogNodes, onDialogNodesChange] = useNodesState(DIALOG_INITIAL_NODES);
+  const [dialogNodes, setDialogNodes, onDialogNodesChange] = useNodesState(taskDilogNodes);
   const [dialogEdges, setDialogEdges, onDialogEdgesChange] = useEdgesState([]);
   const [dialogFlowInstance, setDialogFlowInstance] = useState(null);
   const [selectedDialogNode, setSelectedDialogNode] = useState(null);
@@ -71,6 +78,10 @@ export default function WorkFlowDesigner() {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  useEffect(() => {
+    setTaskNodes(storeData.taskNodes);
+  }, [storeData]);
+
   const onDialogNodeDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -95,7 +106,8 @@ export default function WorkFlowDesigner() {
         data: { ...nodeData, onDoubleClick: onDialogNodeDoubleClick }
       };
 
-      setDialogNodes((nds) => nds.concat(newDialog));
+      //setDialogNodes((nds) => nds.concat(newDialog));
+      addDilogNode(selectedTaskNode, newDialog);
     },
     [dialogFlowInstance]
   );
@@ -157,10 +169,12 @@ export default function WorkFlowDesigner() {
         id: getNewTaskId(),
         position,
         type: nodeData.type,
-        data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick }
+        data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick, dialogNodes: DIALOG_INITIAL_NODES }
       };
 
-      setTaskNodes((nds) => nds.concat(newTask));
+      //setTaskNodes((nds) => nds.concat(newTask));
+      //storeData.taskNodes = storeData.taskNodes.concat(newTask);
+      addTaskNode(newTask);
     },
     [taskFlowInstance]
   );
@@ -174,16 +188,17 @@ export default function WorkFlowDesigner() {
       node.type === NODE_TYPE.CUSTOM ||
       node.type === NODE_TYPE.SYSTEM
     ) {
-      let copyNodes = taskNodes;
-      copyNodes.map((copyNode) => {
-        if (node.id === copyNode.id) {
-          copyNode.data.borderColor = '#023FB2';
-        } else {
-          copyNode.data.borderColor = '#0585FC';
-        }
-        return copyNode;
-      });
-      setTaskNodes([...copyNodes]);
+      // let copyNodes = taskNodes;
+      // copyNodes.map((copyNode) => {
+      //   if (node.id === copyNode.id) {
+      //     copyNode.data.borderColor = '#023FB2';
+      //   } else {
+      //     copyNode.data.borderColor = '#0585FC';
+      //   }
+      //   return copyNode;
+      // });
+      //setTaskNodes([...copyNodes]);
+      editNodePros(node, 'borderColor', '023FB2');
       setSelectedTaskNode(node);
       setOpenTaskPropertiesBlock(true);
     }
@@ -192,7 +207,7 @@ export default function WorkFlowDesigner() {
   return (
     <>
       {isPageDesignerActive ? (
-        <DndProvider backend={HTML5Backend}>
+        <DndProvider debugMode={true} backend={HTML5Backend}>
           <Designer componentMapper={componentMapper} />
         </DndProvider>
       ) : (
@@ -217,6 +232,7 @@ export default function WorkFlowDesigner() {
                 DIALOG_NODE_TYPES={DIALOG_NODE_TYPES}
                 DIALOG_EDGE_TYPES={DIALOG_EDGE_TYPES}
                 selectedDialogNode={selectedDialogNode}
+                selectedTaskNode={selectedTaskNode}
                 openDialogPropertiesBlock={openDialogPropertiesBlock}
                 setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
               />

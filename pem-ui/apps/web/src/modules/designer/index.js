@@ -11,10 +11,6 @@ const Workflow = {
   Designer: React.lazy(() => import('./pages/activities/workflow'))
 };
 
-const ActivityAPI = {
-  Definition: React.lazy(() => import('./pages/activities/definitions-api'))
-};
-
 const routes = [
   {
     path: '/activities/definitions',
@@ -24,18 +20,6 @@ const routes = [
       <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
         <DndProvider backend={HTML5Backend}>
           <Activity.Definition />
-        </DndProvider>
-      </Shell.RoutePage>
-    )
-  },
-  {
-    path: '/activities/definitionsApi',
-    breadcrumb: 'mod-activity-designer:breadcrumb.definitions',
-    resourceKey: 'DEFINITIONS.VIEW',
-    element: (
-      <Shell.RoutePage resourceKey="DEFINITIONS.VIEW" dataLoaderConfig={{}}>
-        <DndProvider backend={HTML5Backend}>
-          <ActivityAPI.Definition />
         </DndProvider>
       </Shell.RoutePage>
     )

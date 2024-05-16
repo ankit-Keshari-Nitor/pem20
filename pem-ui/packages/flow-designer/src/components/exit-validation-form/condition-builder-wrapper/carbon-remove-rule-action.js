@@ -9,7 +9,6 @@ const CarbonRemoveRuleAction = ({
   title,
   disabled,
   disabledTranslation,
-  // Props that should not be in extraProps
   testID: _testID,
   rules: _rules,
   level: _level,
