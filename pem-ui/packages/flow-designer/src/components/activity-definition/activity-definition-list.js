@@ -114,6 +114,13 @@ export default function ActivityDefinition() {
     setSortConfig({ key, direction });
   };
 
+  // Function to handle dropdown change
+  const handleDropdownChange = (selectedItem, id) => {
+    const itemId = selectedItem ? selectedItem.key : '';
+    const newUrl = `/#/activities/definitions/${itemId}?id=${id}`;
+    console.log('URL - ', newUrl);
+  };
+
   return (
     <div className="activities-list-container">
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: '1rem' }}>
@@ -152,7 +159,7 @@ export default function ActivityDefinition() {
                   <TableHeader
                     {...getHeaderProps({
                       header,
-                      isSortable: header.key !== 'ellipsis'
+                      isSortable: header.key !== 'ellipsis' && header.key !== 'action' // Exclude sorting for 'ellipsis' and 'action' columns
                     })}
                     onClick={header.key !== 'ellipsis' ? () => handleSort(header.key) : undefined}
                   >
@@ -163,9 +170,27 @@ export default function ActivityDefinition() {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <TableRow {...getRowProps({ row })}>
+                <TableRow {...getRowProps({ row })} key={row.id}>
                   {row.cells.map((cell) => (
-                    <TableCell key={cell.id}>{cell.info.header === 'ellipsis' ? getEllipsis(cell.id) : cell.info.header === 'action' ? '' : cell.value}</TableCell>
+                    <TableCell key={cell.id}>
+                      {cell.info.header === 'ellipsis' ? (
+                        getEllipsis(row.id)
+                      ) : cell.info.header === 'action' ? (
+                        <Dropdown
+                          id={`action-dropdown-${cell.id}`}
+                          items={[
+                            { key: 'rollout', label: 'RollOut' },
+                            { key: 'final', label: 'Final' },
+                            { key: 'draft', label: 'Draft' }
+                          ]}
+                          label="Choose an action"
+                          itemToString={(item) => (item ? item.label : '')}
+                          onChange={({ selectedItem }) => handleDropdownChange(selectedItem, row.id)} // Call handleDropdownChange with selectedItem
+                        />
+                      ) : (
+                        cell.value
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}
