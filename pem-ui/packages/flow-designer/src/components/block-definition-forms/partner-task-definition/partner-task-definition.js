@@ -7,17 +7,11 @@ import PartnerDefineForm from './partner-define-form';
 import useActivityStore from '../../../store/useActivityStore';
 
 export default function PartnerTaskDefinitionForm({ selectedNode }) {
-  const [defineFormValue, setDefineFormValue] = useState(null);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const edit = useActivityStore((state) => state.editNodePros);
-
-  const onSubmitDefinitionForm = (values) =>
-    new Promise((resolve) =>
-      setTimeout(() => {
-        edit(selectedNode, 'editableProps', values);
-        resolve('Yay');
-      }, 100)
-    );
+  const edit = useActivityStore((state) => state.editTaskNodePros);
+  const onSubmitDefinitionForm = (values) => {
+    edit(selectedNode, 'editableProps', values);
+  };
 
   const onCancelDefinitionForm = () => {
     setOpenCancelDialog(true);

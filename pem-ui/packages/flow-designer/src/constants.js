@@ -13,13 +13,13 @@ import {
 } from './icons';
 import { MarkerType } from 'reactflow';
 import { StartNode, EndNode, GatewayNode, TaskNode } from './components/nodes';
-import { CrossEdge } from './components/edges';
 import { componentTypes, useFormApi, FormSpy } from '@data-driven-forms/react-form-renderer';
 import textField from '@data-driven-forms/carbon-component-mapper/text-field';
 import textarea from '@data-driven-forms/carbon-component-mapper/textarea';
 import select from '@data-driven-forms/carbon-component-mapper/select';
 import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
 import { Button, Column, Grid } from '@carbon/react';
+import CrossEdge from './components/edges/cross-edge';
 
 export const CATEGORY_TYPES = {
   TASK: 'task',
@@ -139,9 +139,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.DIALOG,
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
-    editableProps: {
-      name: 'Form'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -154,9 +152,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.API,
     borderColor: '#0585FC',
     taskName: 'API Task',
-    editableProps: {
-      name: 'API'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -169,9 +165,7 @@ export const NODE_TYPES = [
     type: NODE_TYPE.XSLT,
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
-    editableProps: {
-      name: 'XSLT'
-    },
+    editableProps: {},
     contextMenu: [
       { label: 'Delete', action: 'delete' },
       { label: 'Clone', action: 'clone' },
@@ -278,8 +272,7 @@ export const COMPONENT_MAPPER = {
 };
 
 export const FORM_TEMPLATE = ({ formFields, schema }) => {
-  const { handleSubmit, onCancel, getState } = useFormApi();
-  const { submitting, valid } = getState();
+  const { handleSubmit, onCancel } = useFormApi();
   return (
     <form onSubmit={handleSubmit}>
       {formFields.map((formField) => (
@@ -326,9 +319,3 @@ export const QUERY_COMBINATOR = [
   { name: 'and', value: 'and', label: 'AND' },
   { name: 'or', value: 'or', label: 'OR' }
 ];
-
-export const NEW_ACTIVITY_URL = '#/activities/definitions/new';
-
-export const API_URL = {
-	ACTIVITY_DEFINITION: "/sponsors/cashbank/v2/activityDefinitions"
-}

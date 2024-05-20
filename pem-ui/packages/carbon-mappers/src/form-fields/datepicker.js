@@ -12,7 +12,7 @@ const DatePicker = ({ field, id, currentPath, onChangeHandle, previewMode }) => 
     if (previewMode) {
       setFieldValue(value ? value : '');
     }
-  }, [field,previewMode, value]);
+  }, [field, previewMode, value]);
 
   return (
     <>
