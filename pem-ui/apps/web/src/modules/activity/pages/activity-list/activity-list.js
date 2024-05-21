@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './activity-list.scss';
-import * as ActivityService from '../activity-service';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS } from '../constants';
+import * as ActivityService from '../../activity-service'
+import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -19,6 +19,7 @@ import {
   Pagination
 } from '@carbon/react';
 import { NewTab, Add } from '@carbon/icons-react';
+import { ActivityDropdown } from '../../components';
 
 export default function ActivityList() {
   const [totalRows, setTotalRows] = useState(0);
@@ -28,9 +29,10 @@ export default function ActivityList() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [rows, setRows] = useState([]);
+  const [status, setStatus] = useState("DRAFT");
 
   const fetchAndSetData = () => {
-    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, filterKey, searchKey).then((data) => {
+    ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, filterKey, searchKey, status).then((data) => {
       setRows(data.content);
       setTotalRows(data.pageContent.totalElements);
     });
@@ -38,7 +40,7 @@ export default function ActivityList() {
 
   useEffect(() => {
     fetchAndSetData(); // Fetch data on component mount and when sortDir changes
-  }, [pageNo, pageSize, sortDir, filterKey, searchKey]);
+  }, [pageNo, pageSize, sortDir, filterKey, searchKey, status]);
 
   const handleHeaderClick = () => {
     setSortDir((prevSortDir) => (prevSortDir === 'ASC' ? 'DESC' : 'ASC'));
@@ -72,6 +74,18 @@ export default function ActivityList() {
         <OverflowMenuItem itemText="Delete" />
       </OverflowMenu>
     );
+  };
+
+  const getActionItem = (status, id) => {
+    if (status === "DRAFT") {
+      return (
+        <ActivityDropdown id={id} items={ACTION_COLUMN_DRAFT} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+      );
+    } else if (status === "FINAL") {
+      return (
+        <ActivityDropdown id={id} items={ACTION_COLUMN_FINAL} onChange={({ selectedItem }) => handleDropdownChange(selectedItem, id)} />
+      );
+    }
   };
 
   return (
@@ -117,23 +131,11 @@ export default function ActivityList() {
                   <TableRow {...getRowProps({ row })}>
                     {row.cells.map((cell, index) => (
                       <TableCell key={cell.id}>
-                        {cell.info.header === 'ellipsis' ? (
-                          getEllipsis(row.id)
-                        ) : cell.info.header === 'action' ? (
-                          <Dropdown
-                            id={`action-dropdown-${cell.id}`}
-                            items={[
-                              { key: 'rollout', label: 'RollOut' },
-                              { key: 'final', label: 'Final' },
-                              { key: 'draft', label: 'Draft' }
-                            ]}
-                            label="Choose an action"
-                            itemToString={(item) => (item ? item.label : '')}
-                            onChange={({ selectedItem }) => handleDropdownChange(selectedItem, row.id)}
-                          />
-                        ) : (
-                          cell.value
-                        )}
+                        {
+                          cell.info.header === 'action' ? getActionItem(status, row.id)
+                            : cell.info.header === 'ellipsis' ? getEllipsis()
+                              : cell.value
+                        }
                       </TableCell>
                     ))}
                   </TableRow>
