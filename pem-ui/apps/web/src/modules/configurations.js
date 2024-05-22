@@ -34,6 +34,12 @@ const sideNavConfig = [
     to: '/activities',
     title: 'pem:sideNav.definitions',
     resourceKey: 'DEFINITIONS.VIEW'
+  },
+  {
+    label: 'pem:sideNav.rollout',
+    to: '/activities/rollout',
+    title: 'pem:sideNav.rollout',
+    resourceKey: 'DEFINITIONS.VIEW'
   }
 ];
 

@@ -4,10 +4,10 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const ActivityDefinition = {
-
   List: React.lazy(() => import('./pages/activity-list')),
   New: React.lazy(() => import('./pages/activity-definition')),
-  Edit: React.lazy(() => import('./pages/activity-definition'))
+  Edit: React.lazy(() => import('./pages/activity-definition')),
+  Rollout: React.lazy(() => import('./components/activity-rollout'))
 };
 
 const routes = [
@@ -43,6 +43,18 @@ const routes = [
       <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
         <DndProvider backend={HTML5Backend}>
           <ActivityDefinition.Edit />
+        </DndProvider>
+      </Shell.RoutePage>
+    )
+  },
+  {
+    path: '/activities/rollout',
+    breadcrumb: 'mod-activity-designer:breadcrumb.rollout',
+    resourceKey: 'DESIGNER.VIEW',
+    element: (
+      <Shell.RoutePage resourceKey="DESIGNER.VIEW" dataLoaderConfig={{}}>
+        <DndProvider backend={HTML5Backend}>
+          <ActivityDefinition.Rollout />
         </DndProvider>
       </Shell.RoutePage>
     )

@@ -2,6 +2,7 @@
   "breadcrumb": {
     "definitions": "Definition",
     "designer": "Designer",
-    "workflow": "Workflow"
+    "workflow": "Workflow",
+    "rollout": "Rollout"
   }
 }
