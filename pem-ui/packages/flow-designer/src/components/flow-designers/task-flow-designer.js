@@ -28,7 +28,8 @@ const TaskFlowDesigner = ({
   TASK_EDGE_TYPES,
   openTaskPropertiesBlock,
   selectedTaskNode,
-  setOpenTaskPropertiesBlock
+  setOpenTaskPropertiesBlock,
+  showActivityDefineDrawer
 }) => {
   return (
     <div className="dnd-flow">
@@ -65,7 +66,7 @@ const TaskFlowDesigner = ({
             </ReactFlowProvider>
           </div>
         </Panel>
-        {openTaskPropertiesBlock && (
+        {(openTaskPropertiesBlock || showActivityDefineDrawer) && (
           <>
             <PanelResizeHandle />
             <Panel defaultSize={40} minSize={20} maxSize={70}>

@@ -14,6 +14,7 @@ import {
 } from '../block-definition-forms';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import { Modal } from '@carbon/react';
+import ActivityTaskDefinition from '../block-definition-forms/activity-task-definition';
 
 export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
@@ -37,11 +38,11 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.DIALOG:
         return <DialogTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       case NODE_TYPE.XSLT:
-        return <XsltTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode}/>;
+        return <XsltTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       case NODE_TYPE.API:
         return <ApiTaskDefinitionForm selectedNode={selectedNode} />;
       default:
-        return null;
+        return <ActivityTaskDefinition />;
     }
   };
 
@@ -50,7 +51,12 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       <div className="block-properties-container">
         <div className="title-bar">
           <span className="title">
-            {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+            {selectedNode && (
+              <span>
+                {' '}
+                {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName}){' '}
+              </span>
+            )}
           </span>
           <div className="icon">
             <span onClick={() => setOpenExpandMode(true)} className="icon">

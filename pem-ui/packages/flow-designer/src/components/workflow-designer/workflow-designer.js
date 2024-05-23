@@ -21,7 +21,7 @@ import {
   DIALOG_EDGE_TYPES,
   NODE_TYPE
 } from '../../constants';
-import useActivityStore from '../../store/useActivityStore';
+import useTaskStore from '../../store/useTaskStore';
 import { useEffect } from 'react';
 
 let dialogId = 0;
@@ -30,11 +30,11 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-export default function WorkFlowDesigner() {
+export default function WorkFlowDesigner({ showActivityDefineDrawer }) {
   //-------------------------------- State Management -------------------------------------
-  const storeData = useActivityStore((state) => state.activities);
-  const addTaskNode = useActivityStore((state) => state.addTaskNodes);
-  const addDialogNodes = useActivityStore((state) => state.addDialogNodes);
+  const storeData = useTaskStore((state) => state.tasks);
+  const addTaskNode = useTaskStore((state) => state.addTaskNodes);
+  const addDialogNodes = useTaskStore((state) => state.addDialogNodes);
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
@@ -258,6 +258,7 @@ export default function WorkFlowDesigner() {
                 selectedTaskNode={selectedTaskNode}
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
+                showActivityDefineDrawer={showActivityDefineDrawer}
               />
             )}
           </div>
