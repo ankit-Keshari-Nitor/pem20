@@ -30,7 +30,7 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-export default function WorkFlowDesigner({ showActivityDefineDrawer }) {
+export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinitionProp }) {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -263,6 +263,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer }) {
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
+                editDefinitionProp={editDefinitionProp}
               />
             )}
           </div>

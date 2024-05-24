@@ -7,6 +7,7 @@ import useActivitykStore from '../../store';
 
 export default function ActivityDefinition() {
   const activityStore = useActivitykStore((state) => state.activities);
+  const editDefinitionProp = useActivitykStore((state)=> state.editDefinitionProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
 
@@ -43,7 +44,7 @@ export default function ActivityDefinition() {
           <Button>Save Activity</Button>
         </Column>
       </Grid>
-      <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} />
+      <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} />
     </>
   );
 }
