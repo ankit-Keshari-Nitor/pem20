@@ -21,8 +21,8 @@ import {
   DIALOG_EDGE_TYPES,
   NODE_TYPE
 } from '../../constants';
-import useTaskStore from '../../store/useTaskStore';
 import { useEffect } from 'react';
+import useTaskStore from '../../store';
 
 let dialogId = 0;
 const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
@@ -39,7 +39,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer }) {
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
   // --------------------------------- Task Flow States -----------------------------------
-  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(false);
+  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(showActivityDefineDrawer);
   const taskFlowWrapper = useRef(null);
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
@@ -75,6 +75,10 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer }) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
   }, []);
+
+  useEffect(() => {
+    setOpenTaskPropertiesBlock(showActivityDefineDrawer);
+  }, [showActivityDefineDrawer]);
 
   useEffect(() => {
     setTaskNodes(storeData.taskNodes);

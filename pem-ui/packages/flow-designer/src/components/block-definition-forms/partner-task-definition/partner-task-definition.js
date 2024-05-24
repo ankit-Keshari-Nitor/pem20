@@ -4,7 +4,7 @@ import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 import '../style.scss';
 import ExitValidationFrom from '../../exit-validation-form/exit-validation-form';
 import PartnerDefineForm from './partner-define-form';
-import useTaskStore from '../../../store/useTaskStore';
+import useTaskStore from '../../../store';
 
 export default function PartnerTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);

@@ -13,7 +13,7 @@ import {
   XsltTaskDefinitionForm
 } from '../block-definition-forms';
 import { CrossIcon, ExpandIcon } from './../../icons';
-import { Modal } from '@carbon/react';
+import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
 import ActivityTaskDefinition from '../block-definition-forms/activity-task-definition';
 
 export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock }) {
@@ -40,9 +40,9 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.XSLT:
         return <XsltTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       case NODE_TYPE.API:
-        return <ApiTaskDefinitionForm selectedNode={selectedNode} />;
+        return <ApiTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       default:
-        return <ActivityTaskDefinition />;
+        return <ActivityTaskDefinition id={'activity-drawer'} />;
     }
   };
 
@@ -51,11 +51,26 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       <div className="block-properties-container">
         <div className="title-bar">
           <span className="title">
-            {selectedNode && (
+            {selectedNode ? (
               <span>
-                {' '}
-                {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName}){' '}
+                {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
               </span>
+            ) : (
+              <Grid>
+                <Column lg={4} md={3} sm={2}>
+                  <b>Define Activity</b>
+                </Column>
+                <Column lg={2} md={2} sm={1} className="activity-active">
+                  Active
+                </Column>
+                <Column lg={3} md={3} sm={2} id="versions">
+                  <Select id={'activity-version'}>
+                    <SelectItem value="ver.3.0" text="ver.3.0" />
+                    <SelectItem value="ver.2.0" text="ver.2.0" />
+                    <SelectItem value="ver.1.0" text="ver.1.0" />
+                  </Select>
+                </Column>
+              </Grid>
             )}
           </span>
           <div className="icon">

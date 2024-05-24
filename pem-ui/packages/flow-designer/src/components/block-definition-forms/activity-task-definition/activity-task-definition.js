@@ -3,6 +3,7 @@ import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
+import useActivitykStore from '../../../../../../apps/web/src/modules/activity/store';
 
 export const SCHEMA = {
   fields: [
@@ -47,15 +48,17 @@ export const SCHEMA = {
     },
     {
       component: componentTypes.CHECKBOX,
-      name: 'encrypt',
+      name: 'encrypted',
       labelText: 'Encrypt'
     }
   ]
 };
 
 const ActivityTaskDefinition = ({ id }) => {
+  const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+
   const onSubmitDefinitionForm = (values) => {
-    // edit(selectedNode, 'editableProps', values);
+    editDefinitionProp(values);
   };
 
   const onCancelDefinitionForm = () => {

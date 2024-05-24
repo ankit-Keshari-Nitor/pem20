@@ -3,7 +3,7 @@ import { TASK_INITIAL_NODES } from '../constants';
 
 const taskStore = (set, get) => ({
   tasks: {
-    taskNodes: TASK_INITIAL_NODES,
+    taskNodes: [],
     taskEdges: []
   },
   // Task Flow States
@@ -64,41 +64,9 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
     });
   },
-  issueActivity: (id) => {
-    const activities = get().activities;
-    const updatedActivities = activities?.map((activity) => {
-      if (activity.id === id) {
-        return {
-          ...activity,
-          status: 'issued'
-        };
-      } else {
-        return activity;
-      }
-    });
-    set((state) => ({
-      activities: updatedActivities
-    }));
-  },
-  returnActivity: (id) => {
-    const activities = get().activities;
-    const updatedActivities = activities?.map((activity) => {
-      if (activity.id === id) {
-        return {
-          ...activity,
-          status: 'available'
-        };
-      } else {
-        return activity;
-      }
-    });
-    set((state) => ({
-      activities: updatedActivities
-    }));
-  },
   reset: () => {
     set({
-      activities: {
+      tasks: {
         taskNodes: TASK_INITIAL_NODES,
         taskEdges: []
       }
