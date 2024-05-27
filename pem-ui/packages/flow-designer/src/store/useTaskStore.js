@@ -3,7 +3,7 @@ import { TASK_INITIAL_NODES } from '../constants';
 
 const taskStore = (set, get) => ({
   tasks: {
-    taskNodes: [],
+    taskNodes: TASK_INITIAL_NODES,
     taskEdges: []
   },
   // Task Flow States

@@ -19,7 +19,8 @@ import {
   DIALOG_INITIAL_NODES,
   DIALOG_NODE_TYPES,
   DIALOG_EDGE_TYPES,
-  NODE_TYPE
+  NODE_TYPE,
+  TASK_INITIAL_NODES
 } from '../../constants';
 import { useEffect } from 'react';
 import useTaskStore from '../../store';
@@ -30,7 +31,7 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinitionProp }) {
+export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp }) {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -86,6 +87,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
       const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
     }
+    editSchemaProp(storeData);
   }, [setTaskNodes, storeData]);
 
   const onDialogNodeDrop = useCallback(
