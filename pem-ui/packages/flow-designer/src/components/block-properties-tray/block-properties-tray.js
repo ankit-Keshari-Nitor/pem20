@@ -64,7 +64,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
                   Active
                 </Column>
                 <Column lg={3} md={3} sm={2} id="versions">
-                  <Select id={'activity-version'}>
+                  <Select id={'activity-version'} onChange={(e) => editDefinitionProp({ selectedVersion: e.target.value })}>
                     <SelectItem value="ver.3.0" text="ver.3.0" />
                     <SelectItem value="ver.2.0" text="ver.2.0" />
                     <SelectItem value="ver.1.0" text="ver.1.0" />

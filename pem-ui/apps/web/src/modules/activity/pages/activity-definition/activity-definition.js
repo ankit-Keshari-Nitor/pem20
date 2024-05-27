@@ -7,21 +7,21 @@ import useActivitykStore from '../../store';
 
 export default function ActivityDefinition() {
   const activityStore = useActivitykStore((state) => state.activities);
-  const editDefinitionProp = useActivitykStore((state)=> state.editDefinitionProps);
-  const editSchemaProp = useActivitykStore((state)=> state.editSchemaProps);
+  const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+  const editSchemaProp = useActivitykStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
-  const [activityDefinitionData, setActivityDefinitionData] = useState();
+  const [activityDefinitionName, setActivityDefinitionName] = useState();
 
   useEffect(() => {
-    if (activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
+    if (activityDefinitionName === '' || activityDefinitionName === null || activityDefinitionName === undefined) {
       setShowActivityDefineDrawer(true);
     } else {
       setShowActivityDefineDrawer(false);
     }
-  }, [activityDefinitionData]);
+  }, [activityDefinitionName]);
 
   useEffect(() => {
-    setActivityDefinitionData(activityStore.definition);
+    setActivityDefinitionName(activityStore.definition?.name);
   }, [activityStore]);
   return (
     <>
