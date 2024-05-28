@@ -31,3 +31,12 @@ export const ACTION_COLUMN_DRAFT = [
   { key: 'delete', label: 'Delete' },
   { key: 'export', label: 'Export' }
 ];
+
+export const ACTIVITY_DEFINITION_DATA = {
+  versions: [],
+  selectedVersion: '',
+  name: '',
+  description: '',
+  contextData: '',
+  encrypt: ''
+};

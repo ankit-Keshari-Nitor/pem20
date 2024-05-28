@@ -36,6 +36,8 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
   const addDialogNodes = useTaskStore((state) => state.addDialogNodes);
+  const addTaskEdge = useTaskStore((state) => state.addTaskEdges);
+  const addDialogEdge = useTaskStore((state) => state.addDialogEdges);
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
@@ -83,12 +85,14 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
 
   useEffect(() => {
     setTaskNodes(storeData.taskNodes);
+    setTaskEdges(storeData.taskEdges);
+    console.log('store>>>',storeData);
     if (selectedTaskNode) {
       const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
     }
     editSchemaProp(storeData);
-  }, [setTaskNodes, storeData]);
+  }, [setTaskNodes, setTaskEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
 
   const onDialogNodeDrop = useCallback(
     (event) => {
@@ -148,9 +152,9 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      setTaskEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
+      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges.slice(0, storeData.taskEdges.length - 1)));
     },
-    [setTaskEdges]
+    [addTaskEdge, storeData.taskEdges]
   );
 
   const onTaskNodeDragOver = useCallback((event) => {
