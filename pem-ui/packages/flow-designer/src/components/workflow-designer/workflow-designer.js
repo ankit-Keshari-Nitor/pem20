@@ -38,6 +38,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
   const addDialogNodes = useTaskStore((state) => state.addDialogNodes);
   const addTaskEdge = useTaskStore((state) => state.addTaskEdges);
   const addDialogEdge = useTaskStore((state) => state.addDialogEdges);
+  const restStore = useTaskStore((state) => state.reset);
   const [isDialogFlowActive, setIsDialogFlowActive] = useState(false);
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
@@ -69,9 +70,10 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      setDialogEdges((eds) => addEdge({ ...newParam, style: { stroke: '#000' } }, eds));
+      newParam.data = selectedTaskNode?.id;
+      addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges.slice(0, storeData.taskEdges.length - 1)));
     },
-    [setDialogEdges]
+    [addDialogEdge, dialogEdges, selectedTaskNode, storeData.taskEdges.length]
   );
 
   const onDialogNodeDragOver = useCallback((event) => {
@@ -84,15 +86,22 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
   }, [showActivityDefineDrawer]);
 
   useEffect(() => {
+    if (storeData.taskNodes.length === 0) {
+      restStore();
+    }
+  }, [restStore, storeData]);
+
+  useEffect(() => {
     setTaskNodes(storeData.taskNodes);
     setTaskEdges(storeData.taskEdges);
-    console.log('store>>>',storeData);
+    console.log('store>>>', storeData);
     if (selectedTaskNode) {
       const dialogNodeData = storeData.taskNodes.filter((node) => node.id === selectedTaskNode.id)[0];
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
+      setDialogEdges(dialogNodeData?.data?.dialogEdges);
     }
     editSchemaProp(storeData);
-  }, [setTaskNodes, setTaskEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
+  }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
 
   const onDialogNodeDrop = useCallback(
     (event) => {
@@ -183,7 +192,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
         id: getNewTaskId(),
         position,
         type: nodeData.type,
-        data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick, dialogNodes: DIALOG_INITIAL_NODES }
+        data: { ...nodeData, onDoubleClick: onTaskNodeDoubleClick, dialogNodes: DIALOG_INITIAL_NODES, dialogEdges: [] }
       };
       addTaskNode(newTask);
     },
