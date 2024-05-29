@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
-    "@b2bi/shell-bdd": "^1.0.0"
+    "@cucumber/cucumber": "^10.1.0",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.6"
   },
   "scripts": {
     "test": "cucumber-js test --tags \"(not (@Ignore or @ignore))\" ",
