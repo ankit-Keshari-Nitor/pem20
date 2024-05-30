@@ -1,4 +1,9 @@
-export const NEW_ACTIVITY_URL = '#/activities/new';
+// export const NEW_ACTIVITY_URL = '#/activities/new';
+
+export const ROUTES = {
+  NEW_ACTIVITY: '#/activities/new',
+  ACTIVITY_LIST: '#/activities'
+};
 
 export const API_URL = {
   ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions'
