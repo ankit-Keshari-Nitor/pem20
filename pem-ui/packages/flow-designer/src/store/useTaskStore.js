@@ -3,7 +3,7 @@ import { TASK_INITIAL_NODES } from '../constants';
 
 const taskStore = (set, get) => ({
   tasks: {
-    taskNodes: TASK_INITIAL_NODES,
+    taskNodes: [],
     taskEdges: []
   },
   // Task Flow States
@@ -85,7 +85,7 @@ const taskStore = (set, get) => ({
             data: { dialogEdges, ...restdata },
             ...rest
           } = node;
-          const newDilogEdge = [...dialogEdges, dialogEdge];
+          const newDilogEdge = [...dialogEdges, ...dialogEdge];
           return { ...rest, data: { ...restdata, dialogEdges: newDilogEdge } };
         } else {
           return node;
@@ -94,6 +94,25 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
     });
   },
+
+  deleteDialogEdge: (taskid, edgeid) => {
+    set((state) => {
+      const taskNodeData = state.tasks.taskNodes.map((node) => {
+        if (node.id === taskid) {
+          const {
+            data: { dialogEdges, ...restdata },
+            ...rest
+          } = node;
+          const newDilogEdge = dialogEdges.filter((edge) => edge.id !== edgeid);
+          return { ...rest, data: { ...restdata, dialogEdges: newDilogEdge } };
+        } else {
+          return node;
+        }
+      });
+      return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
+    });
+  },
+
   reset: () => {
     set({
       tasks: {

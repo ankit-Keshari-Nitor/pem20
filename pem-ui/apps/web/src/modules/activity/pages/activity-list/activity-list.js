@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './activity-list.scss';
 import * as ActivityService from '../../activity-service';
-import { NEW_ACTIVITY_URL, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../../constants';
+import { ROUTES, ACTIVITY_LIST_COLUMNS, ACTION_COLUMN_DRAFT, ACTION_COLUMN_FINAL } from '../../constants';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -225,7 +225,7 @@ export default function ActivityList() {
         <div className='header-buttons'>
           {/* Search, New, Import buttons */}
           <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
-          <Button className="new-button" renderIcon={NewTab} href={NEW_ACTIVITY_URL}>
+          <Button className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
             New
           </Button>
           <Button kind="tertiary" className="import-button" renderIcon={Add}>

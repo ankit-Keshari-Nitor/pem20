@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Designer from '@b2bi/flow-designer';
 import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
-import { CLoneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
+import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivitykStore from '../../store';
+import { ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
   const activityStore = useActivitykStore((state) => state.activities);
@@ -27,7 +28,7 @@ export default function ActivityDefinition() {
     <>
       <Grid className="activity-actions">
         <Column>
-          <CLoneIcon />
+          <CloneIcon />
         </Column>
         <Column>
           <PlayIcon />
@@ -41,8 +42,8 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column>
-          <Button>Save Activity</Button>
+        <Column className='activity-save'>
+          <Button className='activity' href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
         </Column>
       </Grid>
       <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />

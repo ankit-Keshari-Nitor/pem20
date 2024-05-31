@@ -70,17 +70,31 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
                     <SelectItem value="ver.1.0" text="ver.1.0" />
                   </Select>
                 </Column>
+                <Grid className="icon">
+                <Column>
+                <span onClick={() => setOpenExpandMode(true)} className="icon-test">
+                <ExpandIcon />
+              </span>
+                </Column>
+                <Column>
+                <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
+                <CrossIcon />
+              </span>
+                </Column>
+                </Grid>
               </Grid>
             )}
           </span>
-          <div className="icon">
-            <span onClick={() => setOpenExpandMode(true)} className="icon">
-              <ExpandIcon />
-            </span>
-            <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
-              <CrossIcon />
-            </span>
-          </div>
+          {selectedNode && (
+            <div className="icon">
+              <span onClick={() => setOpenExpandMode(true)} className="icon">
+                <ExpandIcon />
+              </span>
+              <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
+                <CrossIcon />
+              </span>
+            </div>
+          )}
         </div>
         {getForm(selectedNode)}
       </div>

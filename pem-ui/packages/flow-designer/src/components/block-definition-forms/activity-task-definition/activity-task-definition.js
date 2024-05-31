@@ -11,6 +11,7 @@ export const SCHEMA = {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
       labelText: 'Name*',
+      'data-testid': 'activity-name',
       isRequired: true,
       validate: [
         {
@@ -27,19 +28,7 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXTAREA,
       name: 'description',
-      labelText: 'Description*',
-      isRequired: true,
-      validate: [
-        {
-          type: validatorTypes.REQUIRED,
-          message: 'Description is required'
-        },
-        {
-          type: validatorTypes.MAX_LENGTH,
-          threshold: 100,
-          message: 'Name must be no longer then 100 characters'
-        }
-      ]
+      labelText: 'Description',
     },
     {
       component: componentTypes.TEXTAREA,
