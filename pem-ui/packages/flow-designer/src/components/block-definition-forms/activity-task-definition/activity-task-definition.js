@@ -11,6 +11,7 @@ export const SCHEMA = {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
       labelText: 'Name*',
+      'data-testid': 'activity-name',
       isRequired: true,
       validate: [
         {

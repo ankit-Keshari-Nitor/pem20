@@ -42,8 +42,8 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column>
-          <Button href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
+        <Column className='activity-save'>
+          <Button className='activity' href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
         </Column>
       </Grid>
       <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />
