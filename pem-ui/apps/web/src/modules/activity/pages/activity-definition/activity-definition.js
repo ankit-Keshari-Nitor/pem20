@@ -11,18 +11,18 @@ export default function ActivityDefinition() {
   const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
   const editSchemaProp = useActivitykStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
-  const [activityDefinitionName, setActivityDefinitionName] = useState();
+  const [activityDefinitionData, setActivityDefinitionData] = useState();
 
   useEffect(() => {
-    if (activityDefinitionName === '' || activityDefinitionName === null || activityDefinitionName === undefined) {
+    if (activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
     } else {
       setShowActivityDefineDrawer(false);
     }
-  }, [activityDefinitionName]);
+  }, [activityDefinitionData]);
 
   useEffect(() => {
-    setActivityDefinitionName(activityStore.definition?.name);
+    setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
   return (
     <>
@@ -42,8 +42,10 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column className='activity-save'>
-          <Button className='activity' href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
+        <Column className="activity-save">
+          <Button className="activity" href={ROUTES.ACTIVITY_LIST}>
+            Save Activity
+          </Button>
         </Column>
       </Grid>
       <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />

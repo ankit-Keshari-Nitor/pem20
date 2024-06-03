@@ -11,7 +11,6 @@ Given('User provides definition details to new activity', { timeout: 10 * 1000 }
 });
 
 Given('User adds {string} task to the new activities', { timeout: 10 * 1000 }, async function (activityName) {
-
   // ------------------------------------- Task Drag and Drop ----------------------------------------------------
   const dropTarget = this.page.locator('div.reactflow-wrapper');
   const dragap = this.page.locator(`div.block-tray .${activityName}`);
