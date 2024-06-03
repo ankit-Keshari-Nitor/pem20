@@ -22,9 +22,11 @@ import { NewTab, Add } from '@carbon/icons-react';
 import ActivityDropdown from '../../components/actions-dropdown';
 import WrapperModal from '../../components/helpers/wrapper-modal';
 import WrapperNotification from '../../components/helpers/wrapper-notification-toast';
+import useActivitykStore from '../../store';
 
 export default function ActivityList() {
   // State hooks for managing various states
+  const editDefinition = useActivitykStore((state)=> state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
@@ -158,6 +160,11 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
+  const handleEdit = (id) => {
+    const editRow = rows.filter((row) => row.id === id)[0];
+    editDefinition(editRow);
+  }
+
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     try {
@@ -198,7 +205,7 @@ export default function ActivityList() {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Edit" onClick={()=>handleEdit(id)} href={ROUTES.ACTIVITY_EDIT+id}/>
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />

@@ -2,7 +2,8 @@
 
 export const ROUTES = {
   NEW_ACTIVITY: '#/activities/new',
-  ACTIVITY_LIST: '#/activities'
+  ACTIVITY_LIST: '#/activities',
+  ACTIVITY_EDIT: '#/activities/',
 };
 
 export const API_URL = {
