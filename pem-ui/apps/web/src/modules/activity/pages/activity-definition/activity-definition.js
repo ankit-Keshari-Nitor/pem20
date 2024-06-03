@@ -4,25 +4,24 @@ import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivitykStore from '../../store';
-import { ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
   const activityStore = useActivitykStore((state) => state.activities);
-  const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
-  const editSchemaProp = useActivitykStore((state) => state.editSchemaProps);
+  const editDefinitionProp = useActivitykStore((state)=> state.editDefinitionProps);
+  const editSchemaProp = useActivitykStore((state)=> state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
-  const [activityDefinitionName, setActivityDefinitionName] = useState();
+  const [activityDefinitionData, setActivityDefinitionData] = useState();
 
   useEffect(() => {
-    if (activityDefinitionName === '' || activityDefinitionName === null || activityDefinitionName === undefined) {
+    if (activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
     } else {
       setShowActivityDefineDrawer(false);
     }
-  }, [activityDefinitionName]);
+  }, [activityDefinitionData]);
 
   useEffect(() => {
-    setActivityDefinitionName(activityStore.definition?.name);
+    setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
   return (
     <>
@@ -42,8 +41,8 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column className='activity-save'>
-          <Button className='activity' href={ROUTES.ACTIVITY_LIST}>Save Activity</Button>
+        <Column>
+          <Button>Save Activity</Button>
         </Column>
       </Grid>
       <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />
