@@ -58,7 +58,7 @@ export default function RolloutDetails({ id, onSubmit }) {
                 labelText={
                   <>
                     Due Date&nbsp;
-                    <Tooltip align="top" label="Due date cannot be earlier than today.">
+                    <Tooltip align="right" label="Due date cannot be earlier than today.">
                       <Information />
                     </Tooltip>
                   </>
@@ -98,7 +98,7 @@ export default function RolloutDetails({ id, onSubmit }) {
               labelText={
                 <>
                   Alert Interval&nbsp;
-                  <Tooltip align="top" label="Specify the alert email frequency in days. Enter the alert interval value in the range 1 - 99 days.">
+                  <Tooltip align="right" label="Specify the alert email frequency in days. Enter the alert interval value in the range 1 - 99 days.">
                     <Information />
                   </Tooltip>
                 </>

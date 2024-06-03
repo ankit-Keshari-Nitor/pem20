@@ -4,11 +4,12 @@ import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivitykStore from '../../store';
+import { ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
   const activityStore = useActivitykStore((state) => state.activities);
-  const editDefinitionProp = useActivitykStore((state)=> state.editDefinitionProps);
-  const editSchemaProp = useActivitykStore((state)=> state.editSchemaProps);
+  const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+  const editSchemaProp = useActivitykStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
 
@@ -41,8 +42,10 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column>
-          <Button>Save Activity</Button>
+        <Column className="activity-save">
+          <Button className="activity" href={ROUTES.ACTIVITY_LIST}>
+            Save Activity
+          </Button>
         </Column>
       </Grid>
       <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />
