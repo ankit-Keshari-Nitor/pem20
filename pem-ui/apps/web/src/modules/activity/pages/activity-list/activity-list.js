@@ -25,9 +25,11 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
+import useActivitykStore from '../../store';
 
 export default function ActivityList() {
   // State hooks for managing various states
+  const editDefinition = useActivitykStore((state)=> state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
@@ -179,6 +181,11 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
+  const handleEdit = (id) => {
+    const editRow = rows.filter((row) => row.id === id)[0];
+    editDefinition(editRow);
+  }
+
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     try {
@@ -219,7 +226,7 @@ export default function ActivityList() {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Edit" onClick={()=>handleEdit(id)} href={ROUTES.ACTIVITY_EDIT+id}/>
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
@@ -338,7 +345,7 @@ export default function ActivityList() {
           <Button className="new-button" renderIcon={NewTab} href={ROUTES.NEW_ACTIVITY}>
             New
           </Button>
-          <Button kind="tertiary" className="import-button" renderIcon={Add}></Button>
+          <Button kind="tertiary" className="import-button" renderIcon={Add}>Import</Button>
           {/* Filter dropdown */}
           <MultiSelect
             className="filter-dropdown"
