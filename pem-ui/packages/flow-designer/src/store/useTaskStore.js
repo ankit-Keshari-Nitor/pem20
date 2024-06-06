@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { TASK_INITIAL_NODES } from '../constants';
-
+ 
 const taskStore = (set, get) => ({
   tasks: {
     taskNodes: [],
@@ -24,19 +24,19 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
     });
   },
-
+ 
   addTaskEdges: (activity) => {
     set((state) => ({
       tasks: { taskNodes: state.tasks.taskNodes, taskEdges: state.tasks.taskEdges.concat(activity) }
     }));
   },
-
+ 
   deleteTaskEdge: (id) => {
     set((state) => ({
       tasks: { taskNodes: state.tasks.taskNodes, taskEdges: state.tasks.taskEdges.filter((edge) => edge.id !== id) }
     }));
   },
-
+ 
   // Dialog Flow States
   addDialogNodes: (taskNode, dialogNode) => {
     set((state) => {
@@ -76,7 +76,7 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: copyNodes, taskEdges: state.tasks.taskEdges } };
     });
   },
-
+ 
   addDialogEdges: (taskNode, dialogEdge) => {
     set((state) => {
       const taskNodeData = state.tasks.taskNodes.map((node) => {
@@ -94,7 +94,7 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
     });
   },
-
+ 
   deleteDialogEdge: (taskid, edgeid) => {
     set((state) => {
       const taskNodeData = state.tasks.taskNodes.map((node) => {
@@ -112,7 +112,7 @@ const taskStore = (set, get) => ({
       return { tasks: { taskNodes: taskNodeData, taskEdges: state.tasks.taskEdges } };
     });
   },
-
+ 
   reset: () => {
     set({
       tasks: {
@@ -122,7 +122,7 @@ const taskStore = (set, get) => ({
     });
   }
 });
-
+ 
 const useTaskStore = create(taskStore);
-
+ 
 export default useTaskStore;

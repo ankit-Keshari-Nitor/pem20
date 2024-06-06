@@ -1,8 +1,11 @@
+export const NEW_ACTIVITY_URL = '#/activities/new';
+
 export const ROUTES = {
   NEW_ACTIVITY: '#/activities/new',
   ACTIVITY_LIST: '#/activities',
   ACTIVITY_EDIT: '/activities/:id'
 };
+
 
 export const API_URL = {
   ACTIVITY_DEFINITION: '/sponsors/cashbank/v2/activityDefinitions'
@@ -37,21 +40,12 @@ export const ACTIVITY_LIST_COLUMNS = [
 
 export const ACTION_COLUMN_FINAL = [
   { key: ACTION_COLUMN_KEYS.ROLLOUT, label: 'Rollout' },
-  { key: ACTION_COLUMN_KEYS.SAVE_AS, label: 'Save As' },
-  { key: ACTION_COLUMN_KEYS.VIEW, label: 'View' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' },
-  { key: ACTION_COLUMN_KEYS.DELETE, label: 'Delete' },
-  { key: ACTION_COLUMN_KEYS.SHARE_UNSHARE, label: 'Share/Unshare' },
-  { key: ACTION_COLUMN_KEYS.EXPORT, label: 'Export' }
+  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
 ];
 
 export const ACTION_COLUMN_DRAFT = [
   { key: ACTION_COLUMN_KEYS.MARK_AS_FINAL, label: 'Mark as final' },
-  { key: ACTION_COLUMN_KEYS.SAVE_AS, label: 'Save As' },
-  { key: ACTION_COLUMN_KEYS.EDIT, label: 'Edit' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' },
-  { key: ACTION_COLUMN_KEYS.DELETE, label: 'Delete' },
-  { key: ACTION_COLUMN_KEYS.EXPORT, label: 'Export' }
+  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
 ];
 
 export const ROLLOUT_STEPS = [

@@ -10,8 +10,8 @@ export const SCHEMA = {
     {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
-      labelText: 'Name*',
       'data-testid': 'activity-name',
+      labelText: 'Name (required)',  
       isRequired: true,
       validate: [
         {
@@ -29,6 +29,16 @@ export const SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description',
+      enableCounter: true,
+      isRequired: true,
+      maxCount: 100,
+      validate: [
+        {
+          type: validatorTypes.MAX_LENGTH,
+          threshold: 100,
+          message: 'Description must be no longer then 100 characters'
+        }
+      ]
     },
     {
       component: componentTypes.TEXTAREA,
@@ -44,7 +54,7 @@ export const SCHEMA = {
 };
 
 const ActivityTaskDefinition = ({ id, editDefinitionProp }) => {
-//   const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+  //   const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
 
   const onSubmitDefinitionForm = (values) => {
     editDefinitionProp(values);

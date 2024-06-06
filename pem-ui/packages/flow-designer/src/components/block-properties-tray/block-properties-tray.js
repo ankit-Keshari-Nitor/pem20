@@ -53,7 +53,11 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
           <span className="title">
             {selectedNode ? (
               <span>
-                {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+                {selectedNode?.data?.editableProps.name ? (
+                  <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
+                ) : (
+                  <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
+                )}
               </span>
             ) : (
               <Grid>
@@ -64,37 +68,23 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
                   Active
                 </Column>
                 <Column lg={3} md={3} sm={2} id="versions">
-                  <Select id={'activity-version'} onChange={(e) => editDefinitionProp({ selectedVersion: e.target.value })}>
+                  <Select id={'activity-version'}>
                     <SelectItem value="ver.3.0" text="ver.3.0" />
                     <SelectItem value="ver.2.0" text="ver.2.0" />
                     <SelectItem value="ver.1.0" text="ver.1.0" />
                   </Select>
                 </Column>
-                <Grid className="icon">
-                <Column>
-                <span onClick={() => setOpenExpandMode(true)} className="icon-test">
-                <ExpandIcon />
-              </span>
-                </Column>
-                <Column>
-                <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
-                <CrossIcon />
-              </span>
-                </Column>
-                </Grid>
               </Grid>
             )}
           </span>
-          {selectedNode && (
-            <div className="icon">
-              <span onClick={() => setOpenExpandMode(true)} className="icon">
-                <ExpandIcon />
-              </span>
-              <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
-                <CrossIcon />
-              </span>
-            </div>
-          )}
+          <div className="icon">
+            <span onClick={() => setOpenExpandMode(true)} className="icon">
+              <ExpandIcon />
+            </span>
+            <span onClick={() => setOpenPropertiesBlock(false)} className="icon" style={{ marginLeft: '1rem' }}>
+              <CrossIcon />
+            </span>
+          </div>
         </div>
         {getForm(selectedNode)}
       </div>
@@ -102,7 +92,11 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
         open={openExpandMode}
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
-        modalHeading={selectedNode?.data?.editableProps.name}
+        modalHeading={selectedNode?.data?.editableProps.name ? (
+          <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
+        ) : (
+          <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
+        )}
         passiveModal
         primaryButtonText="Exit"
         secondaryButtonText="Cancel"

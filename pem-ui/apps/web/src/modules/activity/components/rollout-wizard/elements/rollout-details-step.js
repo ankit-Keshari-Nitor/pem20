@@ -78,7 +78,7 @@ export default function RolloutDetails({ id, onSubmit }) {
                   <>
                     Alert Date&nbsp;
                     <Tooltip
-                      align="top"
+                      align="right"
                       label="Alert date cannot be today or earlier than today. Cannot be same or later than due date. Email alert notifications are sent to partners."
                     >
                       <Information />
