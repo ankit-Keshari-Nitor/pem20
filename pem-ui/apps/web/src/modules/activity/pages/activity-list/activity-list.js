@@ -28,10 +28,12 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
+import useActivitykStore from '../../store';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
+  const editDefinition = useActivitykStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
@@ -199,6 +201,11 @@ export default function ActivityList() {
     setIsModalOpen(true);
   };
 
+  const handleEdit = (id) => {
+    const editRow = rows.filter((row) => row.id === id)[0];
+    editDefinition(editRow);
+  };
+
   // Handler for actual delete API call
   const handleDeleteActivity = async (id) => {
     try {
@@ -245,7 +252,7 @@ export default function ActivityList() {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText="View" />
-        <OverflowMenuItem itemText="Edit" />
+        <OverflowMenuItem itemText="Edit" onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />
         <OverflowMenuItem itemText="Delete" onClick={() => handleDelete(id)} />
@@ -379,7 +386,7 @@ export default function ActivityList() {
           <Shell.NotificationMessage></Shell.NotificationMessage>
         </Section>
         <Section className="page-body">
-          <div className='headers'>
+          <div className="headers">
             <div className="header-buttons">
               {/* Search, New, Import buttons */}
               <ExpandableSearch labelText="Search" placeholder="Search By Activity Name" onChange={(event) => setSearchKey(event.target.value)} value={searchKey} />
