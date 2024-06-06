@@ -119,17 +119,33 @@ export const SCHEMA = {
   ]
 };
 
-const ApprovalDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => (
-  <FormRenderer
-    id={id}
-    initialValues={selectedNode?.data?.editableProps}
-    FormTemplate={FORM_TEMPLATE}
-    componentMapper={COMPONENT_MAPPER}
-    schema={SCHEMA}
-    onSubmit={onSubmitDefinitionForm}
-    onCancel={setOpenCancelDialog}
-    onReset={() => console.log('Resetting')}
-  />
-);
+const ApprovalDefineForm = ({ id, selectedNode, setOpenCancelDialog, onSubmitDefinitionForm }) => {
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
+
+  return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+    <FormRenderer
+      id={id}
+      initialValues={selectedNode?.data?.editableProps}
+      FormTemplate={FORM_TEMPLATE}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={setOpenCancelDialog}
+      onReset={() => console.log('Resetting')}
+    />
+  ) : (
+    <FormRenderer
+      id={id}
+      initialValues={initialValues}
+      FormTemplate={FORM_TEMPLATE}
+      componentMapper={COMPONENT_MAPPER}
+      schema={SCHEMA}
+      onSubmit={onSubmitDefinitionForm}
+      onCancel={setOpenCancelDialog}
+      onReset={() => console.log('Resetting')}
+    />
+  );
+};
 
 export default ApprovalDefineForm;
