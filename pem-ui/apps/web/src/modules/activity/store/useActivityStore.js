@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { ACTIVITY_DEFINITION_DATA } from '../constants';
 
 const activityStore = (set, get) => ({
   activities: {
@@ -6,9 +7,16 @@ const activityStore = (set, get) => ({
     schema: {}
   },
   // Activity Flow State
-  editDefinitionProps: (value) => {
+  editDefinitionProps: (activity) => {
     set((state) => {
-      return { activities: { definition: value, schema: state.activities.schema } };
+      const copyNodes = ACTIVITY_DEFINITION_DATA;
+      Object.keys(copyNodes).map((key) => {
+        if (activity[key]) {
+          copyNodes[key] = activity[key];
+        }
+        return copyNodes;
+      });
+       return { activities: { definition: copyNodes, schema: state.activities.schema } };
     });
   },
   editSchemaProps: (task) => {
@@ -27,6 +35,6 @@ const activityStore = (set, get) => ({
   }
 });
 
-const useActivitykStore = create(activityStore);
+const useActivityStore = create(activityStore);
 
-export default useActivitykStore;
+export default useActivityStore;

@@ -3,7 +3,7 @@ import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-// import useActivitykStore from '../../../../../../apps/web/src/modules/activity/store';
+// import useActivityStore from '../../../../../../apps/web/src/modules/activity/store';
 
 export const SCHEMA = {
   fields: [
@@ -53,8 +53,8 @@ export const SCHEMA = {
   ]
 };
 
-const ActivityTaskDefinition = ({ id, editDefinitionProp }) => {
-  //   const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
+const ActivityTaskDefinition = ({ id, editDefinitionProp, activityDefinitionData }) => {
+  //   const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
 
   const onSubmitDefinitionForm = (values) => {
     editDefinitionProp(values);
@@ -66,7 +66,7 @@ const ActivityTaskDefinition = ({ id, editDefinitionProp }) => {
   return (
     <FormRenderer
       id={id}
-      //   initialValues={selectedNode?.data?.editableProps}
+      initialValues={activityDefinitionData}
       FormTemplate={FORM_TEMPLATE}
       componentMapper={COMPONENT_MAPPER}
       schema={SCHEMA}

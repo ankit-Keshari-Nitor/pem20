@@ -230,6 +230,7 @@ export const TEST_DIALOG_DATA = [
 ];
 
 export const ACTIVITY_DEFINITION_DATA = {
+  id: '',
   versions: [],
   selectedVersion: '',
   name: '',

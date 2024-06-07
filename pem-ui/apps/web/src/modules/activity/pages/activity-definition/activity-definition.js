@@ -3,18 +3,18 @@ import Designer from '@b2bi/flow-designer';
 import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
-import useActivitykStore from '../../store';
+import useActivityStore from '../../store';
 import { ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
-  const activityStore = useActivitykStore((state) => state.activities);
-  const editDefinitionProp = useActivitykStore((state) => state.editDefinitionProps);
-  const editSchemaProp = useActivitykStore((state) => state.editSchemaProps);
+  const activityStore = useActivityStore((state) => state.activities);
+  const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
+  const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
 
   useEffect(() => {
-    if (activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
+    if ((activityDefinitionData?.id !== '' || activityDefinitionData?.name === '') || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
     } else {
       setShowActivityDefineDrawer(false);
@@ -48,7 +48,7 @@ export default function ActivityDefinition() {
           </Button>
         </Column>
       </Grid>
-      <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} />
+      <Designer.WorkFlowDesigner showActivityDefineDrawer={showActivityDefineDrawer} editDefinitionProp={editDefinitionProp} editSchemaProp={editSchemaProp} activityDefinitionData={activityDefinitionData} />
     </>
   );
 }
