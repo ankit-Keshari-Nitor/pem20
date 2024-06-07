@@ -3,7 +3,6 @@ import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import { FORM_TEMPLATE, COMPONENT_MAPPER } from '../../../constants';
 import { componentTypes, validatorTypes } from '@data-driven-forms/react-form-renderer';
-// import useActivityStore from '../../../../../../apps/web/src/modules/activity/store';
 
 export const SCHEMA = {
   fields: [
@@ -54,7 +53,6 @@ export const SCHEMA = {
 };
 
 const ActivityTaskDefinition = ({ id, editDefinitionProp, activityDefinitionData }) => {
-  //   const editDefinitionProp = useActivityStore((state) => state.editDefinitionProps);
 
   const onSubmitDefinitionForm = (values) => {
     editDefinitionProp(values);
