@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { addEdge, useNodesState, useEdgesState } from 'reactflow';
@@ -31,7 +31,7 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp }) {
+const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp, activityDefinitionData }, ref) => {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -64,6 +64,16 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
       setIsPageDesignerActive(true);
     }
   };
+
+  const handleRest = () => {
+    restStore();
+  };
+
+  useImperativeHandle(ref, () => {
+    return {
+      handleRest
+    };
+  });
 
   const onDialogNodeConnect = useCallback(
     (params) => {
@@ -279,6 +289,7 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
                 editDefinitionProp={editDefinitionProp}
+                activityDefinitionData={activityDefinitionData}
               />
             )}
           </div>
@@ -286,4 +297,6 @@ export default function WorkFlowDesigner({ showActivityDefineDrawer, editDefinit
       )}
     </>
   );
-}
+});
+
+export default WorkFlowDesigner;

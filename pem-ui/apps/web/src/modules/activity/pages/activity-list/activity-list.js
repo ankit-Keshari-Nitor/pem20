@@ -28,13 +28,13 @@ import WrapperModal from '../../helpers/wrapper-modal';
 import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
-import useActivitykStore from '../../store';
+import useActivityStore from '../../store';
 import { formValidation } from '../../../../../../../packages/page-designer/src/utils/helpers.js';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
   // State hooks for managing various states
-  const editDefinition = useActivitykStore((state) => state.editDefinitionProps);
+  const editDefinition = useActivityStore((state) => state.editDefinitionProps);
   const [totalRows, setTotalRows] = useState(0);
   const [searchKey, setSearchKey] = useState('');
   const [sortDir, setSortDir] = useState('ASC'); // Sorting direction state
