@@ -489,6 +489,7 @@ export default function ActivityList() {
           primaryButtonText={actionText}
           onPrimaryButtonClick={onPrimaryButtonClick}
           onSecondaryButtonClick={handleModalClose}
+          onRequestClose={() => setIsModalOpen(false)}
         >
           {message}
         </WrapperModal>

@@ -238,7 +238,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
     <>
       {isPageDesignerActive ? (
         <DndProvider debugMode={true} backend={HTML5Backend}>
-          <Designer componentMapper={componentMapper} />
+          <PageDesigner.Designer componentMapper={componentMapper} />
         </DndProvider>
       ) : (
         <>

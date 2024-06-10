@@ -51,7 +51,7 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST}>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => handleActivityReset()}>
             Save Activity
           </Button>
         </Column>
