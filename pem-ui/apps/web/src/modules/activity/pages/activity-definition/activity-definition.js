@@ -31,6 +31,7 @@ export default function ActivityDefinition() {
     ref.current?.handleRest();
     activityReset();
   };
+
   return (
     <>
       <Grid className="activity-actions">
@@ -49,8 +50,8 @@ export default function ActivityDefinition() {
         <Column>
           <HistoryIcon />
         </Column>
-        <Column className="activity-save">
-          <Button className="activity" href={ROUTES.ACTIVITY_LIST} onClick={() => handleActivityReset()}>
+        <Column>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST}>
             Save Activity
           </Button>
         </Column>

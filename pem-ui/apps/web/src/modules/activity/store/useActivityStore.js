@@ -16,12 +16,12 @@ const activityStore = (set, get) => ({
         }
         return copyNodes;
       });
-       return { activities: { definition: copyNodes, schema: state.activities.schema } };
+      return { activities: { definition: copyNodes, schema: state.activities.schema } };
     });
   },
   editSchemaProps: (task) => {
     set((state) => {
-        console.log('updating>>>',{ activities: { definition: state.activities.definition, schema: { task } } });
+      console.log('updating>>>', { activities: { definition: state.activities.definition, schema: { task } } });
       return { activities: { definition: state.activities.definition, schema: { ...task } } };
     });
   },

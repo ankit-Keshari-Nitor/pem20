@@ -29,7 +29,7 @@ import WrapperNotification from '../../helpers/wrapper-notification-toast';
 import RolloutWizard from '../../components/rollout-wizard';
 import TestWizard from '../../components/test-wizard/test-wizard.js';
 import useActivityStore from '../../store';
-import { formValidation } from '../../../../../../../packages/page-designer/src/utils/helpers.js';
+import PageDesigner from '@b2bi/page-designer';
 
 export default function ActivityList() {
   const pageUtil = Shell.PageUtil();
@@ -368,7 +368,7 @@ export default function ActivityList() {
   // Function to handle the Next/rollout Button Click
   const handelTestFinishClick = () => {
     let schema = JSON.parse(JSON.stringify(formRenderSchema));
-    schema = formValidation(schema);
+    schema = PageDesigner.formValidation(schema);
     setFormRenderSchema(schema);
 
     if (currentTestStep < testDialogData.length - 1) {
@@ -390,8 +390,7 @@ export default function ActivityList() {
     }
   };
 
-  // --------------------------------------Test operation End-------------------------------------------------
-
+  // -------------------------------------Test operation End-------------------------------------------------
   return (
     <>
       <Shell.Page type="LIST" className="sfg--page--partner-list">
@@ -503,6 +502,7 @@ export default function ActivityList() {
             primaryButtonText={currentStep === 0 ? 'Next' : 'Rollout'}
             onPrimaryButtonClick={handelSubmitClick}
             onSecondaryButtonClick={handelCloseClick}
+            onRequestClose={() => setOpenRolloutModal(false)}
           >
             <RolloutWizard currentStep={currentStep} handelStepChange={handelStepChange} />
           </WrapperModal>
@@ -517,6 +517,7 @@ export default function ActivityList() {
             primaryButtonText={currentTestStep < testDialogData.length - 1 ? 'Next' : 'Finish'}
             onPrimaryButtonClick={handelTestFinishClick}
             onSecondaryButtonClick={handelTestCloseClick}
+            onRequestClose={() => setOpenTestModal(false)}
           >
             <TestWizard currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
           </WrapperModal>
