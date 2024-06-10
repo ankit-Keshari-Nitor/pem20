@@ -10,7 +10,7 @@ export const SCHEMA = {
       component: componentTypes.TEXT_FIELD,
       name: 'name',
       'data-testid': 'activity-name',
-      labelText: 'Name (required)',  
+      labelText: 'Name (required)',
       isRequired: true,
       validate: [
         {

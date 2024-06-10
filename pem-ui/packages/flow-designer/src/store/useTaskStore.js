@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { TASK_INITIAL_NODES } from '../constants';
- 
+
 const taskStore = (set, get) => ({
   tasks: {
     taskNodes: [],
@@ -36,7 +36,7 @@ const taskStore = (set, get) => ({
       tasks: { taskNodes: state.tasks.taskNodes, taskEdges: state.tasks.taskEdges.filter((edge) => edge.id !== id) }
     }));
   },
- 
+
   // Dialog Flow States
   addDialogNodes: (taskNode, dialogNode) => {
     set((state) => {
@@ -122,7 +122,7 @@ const taskStore = (set, get) => ({
     });
   }
 });
- 
+
 const useTaskStore = create(taskStore);
- 
+
 export default useTaskStore;
