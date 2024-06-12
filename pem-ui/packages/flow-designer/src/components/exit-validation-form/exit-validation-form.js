@@ -7,6 +7,7 @@ import { QueryBuilderDnD } from '@react-querybuilder/dnd';
 import * as ReactDnD from 'react-dnd';
 import * as ReactDndHtml5Backend from 'react-dnd-html5-backend';
 import { INITIAL_QUERY, QUERY_COMBINATOR, QUERY_FIELDS } from '../../constants';
+import { validationQuery } from '../helpers/exit-validation-form';
 
 export default function ExitValidationFrom() {
   const [query, setQuery] = useState(INITIAL_QUERY);
@@ -27,6 +28,11 @@ export default function ExitValidationFrom() {
         <Column lg={16}>
           <TextArea placeholder="Enter Text" labelText="Error Message" rows={4} id="text-area-1" />
         </Column>
+        <h4>Query</h4>
+      <pre>
+        <code>{formatQuery(query, 'json')}</code>
+        {console.log('final data--->',validationQuery(query))}
+      </pre>
       </Grid>
     </div>
   );

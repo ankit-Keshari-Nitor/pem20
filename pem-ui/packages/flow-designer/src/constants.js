@@ -303,17 +303,99 @@ export const FORM_TEMPLATE = ({ formFields, schema }) => {
 };
 
 // Query Builder Constants
+export const DEFAULT_OPERATORS = [
+  { name: '=', label: 'Equals (=)' },
+  { name: '!=', label: 'Not Equals (!=)' },
+  { name: '>', label: 'Greater than (>)' },
+  { name: '>=', label: 'Greater than or equal (>=)' },
+  { name: '<', label: 'Less than (<)' },
+  { name: '<=', label: 'Less than or equal (<=)' },
+  { name: 'contains', label: '[EAP?] contains' },
+  { name: 'beginsWith', label: '[EAP?] begins with' },
+  { name: 'endsWith', label: '[EAP?] ends with' },
+  { name: 'doesNotContain', label: '[EAP?] does not contain' },
+  { name: 'doesNotBeginWith', label: '[EAP?] does not begin with' },
+  { name: 'doesNotEndWith', label: '[EAP?] does not end with' },
+  { name: 'null', label: '[EAP?] is null' },
+  { name: 'notNull', label: '[EAP?] is not null' },
+  { name: 'in', label: '[EAP?] in' },
+  { name: 'notIn', label: '[EAP?] not in' },
+  { name: 'between', label: '[EAP?] between' },
+  { name: 'notBetween', label: '[EAP?] not between' }
+];
+
 export const QUERY_FIELDS = [
-  { name: 'string', label: 'String' },
-  { name: 'numeric', label: 'Numeric' },
-  { name: 'boolean', label: 'Boolean' },
-  { name: 'date', label: 'Date' }
+  {
+    name: 'string',
+    label: 'String',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] contains',
+        '[EAP?] begins with',
+        '[EAP?] ends with',
+        '[EAP?] does not contain',
+        '[EAP?] does not begin with',
+        '[EAP?] does not end with',
+        '[EAP?] is null',
+        '[EAP?] is not null',
+        '[EAP?] in',
+        '[EAP?] not in'
+      ].includes(op.label)
+    )
+  },
+  {
+    name: 'numeric',
+    label: 'Numeric',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] in',
+        '[EAP?] not in',
+        '[EAP?] between',
+        '[EAP?] not between'
+      ].includes(op.label)
+    )
+  },
+  {
+    name: 'boolean',
+    label: 'Boolean',
+    operators: DEFAULT_OPERATORS.filter((op) => ['Equals (=)', 'Not Equals (!=)'].includes(op.label))
+  },
+  {
+    name: 'date',
+    label: 'Date',
+    operators: DEFAULT_OPERATORS.filter((op) =>
+      [
+        'Equals (=)',
+        'Not Equals (!=)',
+        'Greater than (>)',
+        'Greater than or equal (>=)',
+        'Less than (<)',
+        'Less than or equal (<=)',
+        '[EAP?] is null',
+        '[EAP?] is not null',
+        '[EAP?] between',
+        '[EAP?] not between'
+      ].includes(op.label)
+    )
+  }
 ];
 export const INITIAL_QUERY = {
   combinator: 'and',
   rules: [
-    { field: 'string', operator: ['', 'beginsWith'], value: '' },
-    { field: 'numeric', operator: ['', 'in'], value: '' }
+    //{ field: 'string', operator: ['', 'beginsWith'], value: '' },
+    // { field: 'numeric', operator: ['', 'in'], value: '' }
   ]
 };
 
