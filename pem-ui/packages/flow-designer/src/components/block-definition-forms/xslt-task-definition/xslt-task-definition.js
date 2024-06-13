@@ -22,7 +22,7 @@ export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode 
   };
 
   const onSubmitExitValidationForm = (query) => {
-    console.log('query', query);
+    edit(selectedNode, 'exitValidationData', query);
   };
 
   return (

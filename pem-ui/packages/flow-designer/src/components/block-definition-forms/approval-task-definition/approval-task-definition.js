@@ -18,7 +18,7 @@ export default function ApprovalTaskDefinitionForm({ selectedNode }) {
   };
 
   const onSubmitExitValidationForm = (query) => {
-    console.log('query', query);
+    edit(selectedNode, 'exitValidationData', query);
   };
 
   return (

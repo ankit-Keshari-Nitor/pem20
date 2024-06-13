@@ -18,7 +18,7 @@ export default function AttributeTaskDefinitionForm({ selectedNode }) {
   };
 
   const onSubmitExitValidationForm = (query) => {
-    console.log('query', query);
+    edit(selectedNode, 'exitValidationData', query);
   };
 
   return (
