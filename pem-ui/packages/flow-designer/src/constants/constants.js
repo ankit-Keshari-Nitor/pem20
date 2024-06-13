@@ -10,16 +10,16 @@ import {
   FormBlockIcon,
   ApiBlockIcon,
   XsltBlockIcon
-} from './icons';
+} from '../icons';
 import { MarkerType } from 'reactflow';
-import { StartNode, EndNode, GatewayNode, TaskNode } from './components/nodes';
+import { StartNode, EndNode, GatewayNode, TaskNode } from './../components/nodes';
 import { componentTypes, useFormApi, FormSpy } from '@data-driven-forms/react-form-renderer';
 import textField from '@data-driven-forms/carbon-component-mapper/text-field';
 import textarea from '@data-driven-forms/carbon-component-mapper/textarea';
 import select from '@data-driven-forms/carbon-component-mapper/select';
 import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
 import { Button, Column, Grid } from '@carbon/react';
-import CrossEdge from './components/edges/cross-edge';
+import CrossEdge from './../components/edges/cross-edge';
 
 export const CATEGORY_TYPES = {
   TASK: 'task',
@@ -402,6 +402,7 @@ export const QUERY_FIELDS = [
     )
   }
 ];
+
 export const INITIAL_QUERY = {
   combinator: 'and',
   rules: [

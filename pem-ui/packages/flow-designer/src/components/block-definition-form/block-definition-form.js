@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Modal, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 
-import '../style.scss';
-import ExitValidationFrom from '../../exit-validation-form';
-import CustomDefineForm from './custom-define-form';
-import useTaskStore from '../../../store';
+import './block-definition-form.scss';
+import useTaskStore from '../../store';
+import ExitValidationFrom from '../exit-validation-form';
+import { COMPONENT_MAPPER, FORM_TEMPLATE } from '../../constants';
 
-export default function CustomTaskDefinitionForm({ selectedNode }) {
+export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editTaskNodePros);
+  let initialValues = {};
+  initialValues.name = selectedNode.id;
 
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, 'editableProps', values);
@@ -32,16 +35,31 @@ export default function CustomTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <CustomDefineForm
-              id={'custom-define-Form'}
-              selectedNode={selectedNode}
-              onCancelDefinitionForm={onCancelDefinitionForm}
-              onSubmitDefinitionForm={onSubmitDefinitionForm}
-            />
+            {Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
+              <FormRenderer
+                id={id}
+                initialValues={selectedNode?.data?.editableProps}
+                FormTemplate={FORM_TEMPLATE}
+                componentMapper={COMPONENT_MAPPER}
+                schema={schema}
+                onSubmit={onSubmitDefinitionForm}
+                onCancel={setOpenCancelDialog}
+              />
+            ) : (
+              <FormRenderer
+                id={id}
+                initialValues={initialValues}
+                FormTemplate={FORM_TEMPLATE}
+                componentMapper={COMPONENT_MAPPER}
+                schema={schema}
+                onSubmit={onSubmitDefinitionForm}
+                onCancel={setOpenCancelDialog}
+              />
+            )}
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom onSubmitExitValidationForm={onSubmitExitValidationForm} />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>
