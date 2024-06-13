@@ -5,7 +5,7 @@ import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import './block-definition-form.scss';
 import useTaskStore from '../../store';
 import ExitValidationFrom from '../exit-validation-form';
-import { COMPONENT_MAPPER, FORM_TEMPLATE } from '../../constants';
+import { COMPONENT_MAPPER, FORM_TEMPLATE, NODE_TYPE } from '../../constants';
 
 export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
@@ -14,7 +14,11 @@ export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode
   initialValues.name = selectedNode.id;
 
   const onSubmitDefinitionForm = (values) => {
-    edit(selectedNode, 'editableProps', values);
+    if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
+      edit(selectedNode, selectedTaskNode, 'editableProps', values);
+    } else {
+      edit(selectedNode, 'editableProps', values);
+    }
   };
 
   const onCancelDefinitionForm = () => {
