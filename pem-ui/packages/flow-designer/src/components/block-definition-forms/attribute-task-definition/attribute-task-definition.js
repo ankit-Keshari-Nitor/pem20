@@ -13,6 +13,14 @@ export default function AttributeTaskDefinitionForm({ selectedNode }) {
     edit(selectedNode, 'editableProps', values);
   };
 
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
+  };
+
   return (
     <div className="activity-form">
       <Tabs>
@@ -26,13 +34,13 @@ export default function AttributeTaskDefinitionForm({ selectedNode }) {
             <AttributeDefineForm
               id={'attribute-define-form'}
               selectedNode={selectedNode}
-              setOpenCancelDialog={setOpenCancelDialog}
+              setOpenCancelDialog={onCancelDefinitionForm}
               onSubmitDefinitionForm={onSubmitDefinitionForm}
             />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>

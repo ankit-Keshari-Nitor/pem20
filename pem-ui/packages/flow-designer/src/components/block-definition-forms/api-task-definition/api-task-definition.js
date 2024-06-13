@@ -9,8 +9,17 @@ import useTaskStore from '../../../store';
 export default function ApiTaskDefinitionForm({ selectedNode, selectedTaskNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editDialogNodePros);
+
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, selectedTaskNode, 'editableProps', values);
+  };
+
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
   };
 
   return (
@@ -24,7 +33,7 @@ export default function ApiTaskDefinitionForm({ selectedNode, selectedTaskNode }
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <ApiDefineForm id={'api-define-from'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <ApiDefineForm id={'api-define-from'} selectedNode={selectedNode} onCancelDefinitionForm={onCancelDefinitionForm} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>
@@ -112,7 +121,7 @@ export default function ApiTaskDefinitionForm({ selectedNode, selectedTaskNode }
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>

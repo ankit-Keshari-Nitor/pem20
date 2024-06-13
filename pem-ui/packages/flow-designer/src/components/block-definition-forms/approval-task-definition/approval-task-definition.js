@@ -8,8 +8,17 @@ import useTaskStore from '../../../store';
 export default function ApprovalTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editTaskNodePros);
+
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, 'editableProps', values);
+  };
+
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
   };
 
   return (
@@ -22,11 +31,16 @@ export default function ApprovalTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <ApprovalDefineForm id={'approval-define-form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <ApprovalDefineForm
+              id={'approval-define-form'}
+              selectedNode={selectedNode}
+              setOpenCancelDialog={onCancelDefinitionForm}
+              onSubmitDefinitionForm={onSubmitDefinitionForm}
+            />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom  setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>

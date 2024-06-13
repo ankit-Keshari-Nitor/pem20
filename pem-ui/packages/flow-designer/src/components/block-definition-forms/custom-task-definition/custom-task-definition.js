@@ -9,8 +9,17 @@ import useTaskStore from '../../../store';
 export default function CustomTaskDefinitionForm({ selectedNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editTaskNodePros);
+
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, 'editableProps', values);
+  };
+
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
   };
 
   return (
@@ -23,11 +32,16 @@ export default function CustomTaskDefinitionForm({ selectedNode }) {
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <CustomDefineForm id={'custom-define-Form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <CustomDefineForm
+              id={'custom-define-Form'}
+              selectedNode={selectedNode}
+              onCancelDefinitionForm={onCancelDefinitionForm}
+              onSubmitDefinitionForm={onSubmitDefinitionForm}
+            />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>

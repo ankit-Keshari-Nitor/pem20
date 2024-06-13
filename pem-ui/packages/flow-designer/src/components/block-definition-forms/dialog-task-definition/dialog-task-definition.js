@@ -8,9 +8,19 @@ import useTaskStore from '../../../store';
 export default function DialogTaskDefinitionForm({ selectedNode, selectedTaskNode }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editDialogNodePros);
+  
   const onSubmitDefinitionForm = (values) => {
     edit(selectedNode, selectedTaskNode, 'editableProps', values);
   };
+
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
+  };
+
   return (
     <div className="activity-form">
       <Tabs>
@@ -21,11 +31,11 @@ export default function DialogTaskDefinitionForm({ selectedNode, selectedTaskNod
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <DialogDefineForm id={'dialog-define-form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <DialogDefineForm id={'dialog-define-form'} selectedNode={selectedNode} setOpenCancelDialog={onCancelDefinitionForm} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm}/>
           </TabPanel>
         </TabPanels>
       </Tabs>

@@ -17,6 +17,14 @@ export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode 
     console.log('onSubmitPropertyForm', data);
   };
 
+  const onCancelDefinitionForm = () => {
+    setOpenCancelDialog(true);
+  };
+
+  const onSubmitExitValidationForm = (query) => {
+    console.log('query', query);
+  };
+
   return (
     <div className="activity-form">
       <Tabs>
@@ -28,7 +36,7 @@ export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode 
         <TabPanels>
           {/* Define Form */}
           <TabPanel>
-            <XsltDefineForm id={'xslt-define-Form'} selectedNode={selectedNode} setOpenCancelDialog={setOpenCancelDialog} onSubmitDefinitionForm={onSubmitDefinitionForm} />
+            <XsltDefineForm id={'xslt-define-Form'} selectedNode={selectedNode} setOpenCancelDialog={onCancelDefinitionForm} onSubmitDefinitionForm={onSubmitDefinitionForm} />
           </TabPanel>
           {/* Properties Form */}
           <TabPanel>
@@ -36,7 +44,7 @@ export default function XsltTaskDefinitionForm({ selectedNode, selectedTaskNode 
           </TabPanel>
           {/* Exit Validation Form */}
           <TabPanel>
-            <ExitValidationFrom />
+            <ExitValidationFrom setOpenCancelDialog={onCancelDefinitionForm} onSubmitExitValidationForm={onSubmitExitValidationForm} />
           </TabPanel>
         </TabPanels>
       </Tabs>
