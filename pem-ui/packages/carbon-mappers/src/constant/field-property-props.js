@@ -62,3 +62,15 @@ export const maxProps = {
   },
   type: 'TextInput'
 };
+
+// New constant for Options type
+export const options = {
+  propsName: 'options',
+  label: 'Options',
+  value: [{
+    label: '',
+    id: '',
+    value: ''
+  }],
+  type: 'Options'
+};
