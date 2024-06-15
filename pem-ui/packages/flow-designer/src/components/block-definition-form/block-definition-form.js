@@ -9,15 +9,16 @@ import { COMPONENT_MAPPER, FORM_TEMPLATE, NODE_TYPE } from '../../constants';
 
 export default function BlockDefinitionForm({ id, selectedNode, selectedTaskNode = null, schema }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
-  const edit = useTaskStore((state) => state.editTaskNodePros);
+  const editTask = useTaskStore((state) => state.editTaskNodePros);
+  const editDialog = useTaskStore((state) => state.editDialogNodePros);
   let initialValues = {};
   initialValues.name = selectedNode.id;
 
   const onSubmitDefinitionForm = (values) => {
     if (selectedNode.type === NODE_TYPE.API || selectedNode.type === NODE_TYPE.DIALOG || selectedNode.type === NODE_TYPE.XSLT) {
-      edit(selectedNode, selectedTaskNode, 'editableProps', values);
+      editDialog(selectedNode, selectedTaskNode, 'editableProps', values);
     } else {
-      edit(selectedNode, 'editableProps', values);
+      editTask(selectedNode, 'editableProps', values);
     }
   };
 
