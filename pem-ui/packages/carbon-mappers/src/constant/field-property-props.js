@@ -62,7 +62,6 @@ export const maxProps = {
   },
   type: 'TextInput'
 };
-
 export const NameLabel = {
   propsName: 'name',
   label: 'Name',
@@ -83,5 +82,32 @@ export const valueLabel = {
   propsName: 'value',
   label: 'Value',
   value: '',
+  type: 'TextInput'
+}
+// New constant for Options type
+export const options = {
+  propsName: 'options',
+  label: 'Options',
+  value: [
+    {
+      label: '',
+      id: '',
+      value: ''
+    }
+  ],
+  type: 'Options'
+};
+
+export const labelA = {
+  propsName: 'labelA',
+  label: 'Label A',
+  value: 'Yes',
+  type: 'TextInput'
+};
+
+export const labelB = {
+  propsName: 'labelB',
+  label: 'Label B',
+  value: 'No',
   type: 'TextInput'
 };
