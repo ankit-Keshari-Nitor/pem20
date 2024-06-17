@@ -21,7 +21,7 @@ describe('Select Component', () => {
 
     expect(screen.getByLabelText('Test Label')).toBeInTheDocument();
 
-    mockField.options.forEach(option => {
+    mockField.options.forEach((option) => {
       expect(screen.getByText(option.label)).toBeInTheDocument();
     });
   });

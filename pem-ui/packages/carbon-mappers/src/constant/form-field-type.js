@@ -18,7 +18,7 @@ export const FORM_FIELD_TYPE = {
   CHECKBOX: 'checkbox',
   RADIO: 'radio',
   NUMBER: 'numberinput',
-  SWITCH: 'switch'
+  SWITCH: 'switch',
 };
 
 export const FORM_FIELD_LABEL = {
@@ -34,7 +34,7 @@ export const FORM_FIELD_LABEL = {
   TEXT: 'Label',
   FILE_UPLOADER: 'File Upload',
   DATEPICKER: 'Date Time',
-  INFO: 'Help Text icon ',
+  INFO: 'Help Text icon',
   GROUP: 'Group',
   TAB: 'Tab',
   ACCORDION: 'Accordion',

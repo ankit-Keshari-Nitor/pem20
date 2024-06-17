@@ -11,7 +11,9 @@ const Tooltip = ({ field, id }) => {
 
   return (
     <CarbonTooltip align="bottom" label={labelText}>
-      <Information />
+      <button className="sb-tooltip-trigger" type="button">
+        <Information />
+      </button>
     </CarbonTooltip>
   );
 };

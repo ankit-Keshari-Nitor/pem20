@@ -67,10 +67,26 @@ export const maxProps = {
 export const options = {
   propsName: 'options',
   label: 'Options',
-  value: [{
-    label: '',
-    id: '',
-    value: ''
-  }],
+  value: [
+    {
+      label: '',
+      id: '',
+      value: ''
+    }
+  ],
   type: 'Options'
+};
+
+export const labelA = {
+  propsName: 'labelA',
+  label: 'Label A',
+  value: 'Yes',
+  type: 'TextInput'
+};
+
+export const labelB = {
+  propsName: 'labelB',
+  label: 'Label B',
+  value: 'No',
+  type: 'TextInput'
 };

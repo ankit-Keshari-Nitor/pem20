@@ -11,13 +11,15 @@ jest.mock('@b2bi/page-designer', () => ({
 }));
 
 // Mock window.matchMedia
-global.matchMedia = global.matchMedia || function () {
-  return {
-    matches: false,
-    addListener: function () { },
-    removeListener: function () { }
+global.matchMedia =
+  global.matchMedia ||
+  function () {
+    return {
+      matches: false,
+      addListener: function () {},
+      removeListener: function () {}
+    };
   };
-};
 
 const mockProps = {
   renderRow: jest.fn(),
@@ -44,7 +46,7 @@ describe('CustomTab Component', () => {
     expect(screen.getByRole('tablist')).toBeInTheDocument();
 
     // Check if the tab titles are rendered
-    mockProps.row.children.forEach(tab => {
+    mockProps.row.children.forEach((tab) => {
       expect(screen.getByText(tab.tabTitle)).toBeInTheDocument();
     });
 
