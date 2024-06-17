@@ -127,6 +127,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     className="right-palette-form-item "
                                     labelText={item.label}
                                     value={item.value}
+                                    invalid={item.invalid ? item.invalid : false}
+                                    invalidText={item.invalidText ? item.invalidText : null}
                                     onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
                                   />
                                 ) : (

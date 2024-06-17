@@ -11,6 +11,7 @@ export const SUBTAB = 'subTab';
 export const CUSTOM_SIZE = 'customsize';
 export const CUSTOM_TITLE = 'customTitle';
 export const TEXT_INPUT = 'textinput';
+export const NAME = 'name';
 
 export const PALETTE_GROUPS = [
   {

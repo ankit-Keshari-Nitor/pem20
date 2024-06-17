@@ -62,3 +62,26 @@ export const maxProps = {
   },
   type: 'TextInput'
 };
+
+export const NameLabel = {
+  propsName: 'name',
+  label: 'Name',
+  value: '',
+  type: 'TextInput',
+  invalid: false,
+  invalidText: 'Name should be unique'
+};
+
+export const placeHolder = {
+  propsName: 'placeHolder',
+  label: 'Placeholder Text',
+  value: '',
+  type: 'TextInput'
+};
+
+export const valueLabel = {
+  propsName: 'value',
+  label: 'Value',
+  value: '',
+  type: 'TextInput'
+};
