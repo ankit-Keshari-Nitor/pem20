@@ -13,7 +13,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [componentTypes, setComponentTypes] = React.useState([]);
   const [tabSubTitle, setTabSubTitle] = React.useState();
   const [options, setOptions] = React.useState([]);
-  const [customRegexPattern, SetCustomRegexPattern] = React.useState(false);
+  const [customRegexPattern, setCustomRegexPattern] = React.useState(false);
   const items = [
     { text: '1' },
     { text: '2' },
@@ -40,7 +40,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
-  }, [selectedFiledProps, componentMapper]);
+  }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
@@ -83,14 +83,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const handleRegexOption = (e, items, message, id, propsName, path) => {
     const newRegex = items.filter((items) => items.value === e.target.value)[0];
-    const newValue = { pattern: newRegex.label, message: message };
-    if(e.target.value === CUSTOMREGEX){
-      SetCustomRegexPattern(true);
-      newValue.value = '';
-    }else{
-      newValue.value = newRegex.value;
+    const newValue = { pattern: newRegex.label, value: newRegex.value, message: message };
+    if (e.target.value === CUSTOMREGEX) {
+      newValue.customRegex = '';
+      setCustomRegexPattern(true);
     }
-    handleSchemaChanges(id, 'advance', propsName, newValue , path);
+    handleSchemaChanges(id, 'advance', propsName, newValue, path);
   };
 
   return (
@@ -311,6 +309,36 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               })}
                             </Select>
                           )}
+                          {console.log('advncProps?.value?.CUSTOMREGEX',advncProps?.value?.customRegex === '' ? 'yes': 'no')}
+                          {(advncProps?.value?.customRegex || advncProps?.value?.customRegex === '') && (
+                            <TextInput
+                              key={`customregex-${idx}`}
+                              id={`customregex-${String(idx)}`}
+                              className="right-palette-form-item"
+                              labelText={'Custom Regex'}
+                              value={advncProps.value.customRegex}
+                              onChange={(e) => {
+                                if (isNaN(e.target.value)) {
+                                  e.preventDefault();
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                } else {
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                }
+                              }}
+                            />
+                          )}
                           {advncProps.type === 'Toggle' && (
                             <Toggle
                               key={idx}
@@ -345,7 +373,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                       selectedFiledProps?.id,
                                       'advance',
                                       advncProps.propsName,
-                                      { pattern: advncProps.value.pattern, value: advncProps.value.value, message: e.target.value },
+                                      { ...advncProps.value, message: e.target.value },
                                       selectedFiledProps?.currentPathDetail
                                     )
                                   : handleSchemaChanges(
