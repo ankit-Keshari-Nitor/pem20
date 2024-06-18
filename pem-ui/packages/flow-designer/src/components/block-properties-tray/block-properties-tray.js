@@ -22,7 +22,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
       case NODE_TYPE.PARTNER:
-        return <PartnerTaskDefinitionForm selectedNode={selectedNode} readOnly={readOnly}/>;
+        return <PartnerTaskDefinitionForm selectedNode={selectedNode} readOnly={readOnly} />;
       case NODE_TYPE.APPROVAL:
         return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
       case NODE_TYPE.ATTRIBUTE:
@@ -42,7 +42,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.API:
         return <ApiTaskDefinitionForm selectedNode={selectedNode} selectedTaskNode={selectedTaskNode} />;
       default:
-        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityDefinitionData={activityDefinitionData} />;
+        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityDefinitionData={activityDefinitionData} readOnly={readOnly} />;
     }
   };
 
@@ -54,9 +54,13 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
             {selectedNode ? (
               <span>
                 {selectedNode?.data?.editableProps.name ? (
-                  <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
+                  <span>
+                    {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+                  </span>
                 ) : (
-                  <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
+                  <span>
+                    {selectedNode?.id} ({selectedNode?.data?.taskName})
+                  </span>
                 )}
               </span>
             ) : (
@@ -92,11 +96,17 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
         open={openExpandMode}
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
-        modalHeading={selectedNode?.data?.editableProps.name ? (
-          <span>{selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})</span>
-        ) : (
-          <span>{selectedNode?.id} ({selectedNode?.data?.taskName})</span>
-        )}
+        modalHeading={
+          selectedNode?.data?.editableProps.name ? (
+            <span>
+              {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+            </span>
+          ) : (
+            <span>
+              {selectedNode?.id} ({selectedNode?.data?.taskName})
+            </span>
+          )
+        }
         passiveModal
         primaryButtonText="Exit"
         secondaryButtonText="Cancel"

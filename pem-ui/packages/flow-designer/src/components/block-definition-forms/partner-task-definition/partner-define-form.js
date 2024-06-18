@@ -97,6 +97,7 @@ const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm,
 
   let initialValues = {};
   initialValues.name = selectedNode.id;
+  SCHEMA.fields = SCHEMA.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
 
   return Object.keys(selectedNode?.data?.editableProps).length > 0 ? (
     <FormRenderer
