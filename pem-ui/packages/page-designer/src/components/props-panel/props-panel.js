@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel } from '@carbon/react';
 
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 
 export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
@@ -13,6 +13,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [componentTypes, setComponentTypes] = React.useState([]);
   const [tabSubTitle, setTabSubTitle] = React.useState();
   const [options, setOptions] = React.useState([]);
+  const [customRegexPattern, setCustomRegexPattern] = React.useState(false);
   const items = [
     { text: '1' },
     { text: '2' },
@@ -38,8 +39,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTabSubTitle(selectedFiledProps?.component?.tabTitle);
     setComponentType(selectedFiledProps.component.type);
     setComponentTypes(collectPaletteEntries(componentMapper));
-    setOptions(selectedFiledProps?.component?.editableProps?.Basic.find(prop => prop.type === 'Options')?.value || []);
-  }, [selectedFiledProps, componentMapper]);
+    setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
+  }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
   const handleChange = (e) => {
     columnSizeCustomization(e.target.value, selectedFiledProps.currentPathDetail);
@@ -54,7 +55,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setOptions((prevOptions) => {
       const newOptions = [...prevOptions];
       newOptions[index].id = `${selectedFiledProps?.id}-${index}`;
-      key == 'label' ? newOptions[index].label = value : newOptions[index].value = value;
+      key == 'label' ? (newOptions[index].label = value) : (newOptions[index].value = value);
       handleSchemaChanges(selectedFiledProps?.id, 'Basic', 'options', newOptions, selectedFiledProps?.currentPathDetail);
       return newOptions;
     });
@@ -79,6 +80,17 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     replaceComponet(e, selectedFiledProps.currentPathDetail, newComponent);
     setComponentType(e.target.value);
   };
+
+  const handleRegexOption = (e, items, message, id, propsName, path) => {
+    const newRegex = items.filter((items) => items.value === e.target.value)[0];
+    const newValue = { pattern: newRegex.label, value: newRegex.value, message: message };
+    if (e.target.value === CUSTOMREGEX) {
+      newValue.customRegex = '';
+      setCustomRegexPattern(true);
+    }
+    handleSchemaChanges(id, 'advance', propsName, newValue, path);
+  };
+
   return (
     <div className="right-palette-container">
       {selectedFiledProps && (
@@ -91,7 +103,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
             </TabList>
             <TabPanels>
               <TabPanel className="tab-panel">
-
                 {/* Component Types Select */}
                 {componentStyle === undefined && tabSubTitle === undefined && (
                   <Select
@@ -144,6 +155,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     className="right-palette-form-item "
                                     labelText={item.label}
                                     value={item.value}
+                                    invalid={item.invalid ? item.invalid : false}
+                                    invalidText={item.invalidText ? item.invalidText : null}
                                     onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
                                   />
                                 ) : (
@@ -174,30 +187,24 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                 {/* Option Section */}
                 {options.length > 0 && (
                   <div className="options-section">
-                    <label className='cds--label'>Options</label>
+                    <label className="cds--label">Options</label>
                     {options.map((option, index) => {
                       return (
                         <>
                           <div key={index} className="option-input">
-                            <label className='cds--label'>Label {index}</label>
-                            <TextInput
-                              id={`option-${index}`}
-                              value={option?.label}
-                              onChange={(e) => handleOptionChange(index, e.target.value, 'label')}
-                            />
+                            <label className="cds--label">Label {index}</label>
+                            <TextInput id={`option-${index}`} value={option?.label} onChange={(e) => handleOptionChange(index, e.target.value, 'label')} />
                           </div>
                           <div key={index} className="option-input">
-                            <label className='cds--label'>value {index}</label>
-                            <TextInput
-                              id={`option-${index}`}
-                              value={option?.value}
-                              onChange={(e) => handleOptionChange(index, e.target.value, 'value')}
-                            />
+                            <label className="cds--label">value {index}</label>
+                            <TextInput id={`option-${index}`} value={option?.value} onChange={(e) => handleOptionChange(index, e.target.value, 'value')} />
                           </div>
                         </>
-                      )
+                      );
                     })}
-                    <Button size='sm' onClick={handleAddOption}>Add Option</Button>
+                    <Button size="sm" onClick={handleAddOption}>
+                      Add Option
+                    </Button>
                   </div>
                 )}
                 {/* Column Size Style  */}
@@ -279,6 +286,59 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               }}
                             />
                           )}
+                          {advncProps.type === OPTIONS && (
+                            <Select
+                              className="regex-types"
+                              id={String(selectedFiledProps.id)}
+                              labelText={advncProps.label}
+                              onChange={(e) =>
+                                handleRegexOption(
+                                  e,
+                                  advncProps?.items,
+                                  advncProps.value.message,
+                                  selectedFiledProps?.id,
+                                  advncProps.propsName,
+                                  selectedFiledProps?.currentPathDetail
+                                )
+                              }
+                              defaultValue={advncProps.value.value}
+                              value={advncProps.value.value}
+                            >
+                              {advncProps?.items.map((item, index) => {
+                                return <SelectItem key={index} value={item.value} text={item.label} />;
+                              })}
+                            </Select>
+                          )}
+                          {console.log('advncProps?.value?.CUSTOMREGEX',advncProps?.value?.customRegex === '' ? 'yes': 'no')}
+                          {(advncProps?.value?.customRegex || advncProps?.value?.customRegex === '') && (
+                            <TextInput
+                              key={`customregex-${idx}`}
+                              id={`customregex-${String(idx)}`}
+                              className="right-palette-form-item"
+                              labelText={'Custom Regex'}
+                              value={advncProps.value.customRegex}
+                              onChange={(e) => {
+                                if (isNaN(e.target.value)) {
+                                  e.preventDefault();
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                } else {
+                                  handleSchemaChanges(
+                                    selectedFiledProps?.id,
+                                    'advance',
+                                    advncProps.propsName,
+                                    { pattern: advncProps.value.pattern, value: advncProps.value.value, customRegex: e.target.value, message: advncProps.value.message },
+                                    selectedFiledProps?.currentPathDetail
+                                  );
+                                }
+                              }}
+                            />
+                          )}
                           {advncProps.type === 'Toggle' && (
                             <Toggle
                               key={idx}
@@ -308,21 +368,37 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                             onChange={(e) => {
                               if (isNaN(e.target.value)) {
                                 e.preventDefault();
-                                handleSchemaChanges(
-                                  selectedFiledProps?.id,
-                                  'advance',
-                                  advncProps.propsName,
-                                  { value: advncProps.value.value, message: e.target.value },
-                                  selectedFiledProps?.currentPathDetail
-                                );
+                                advncProps.type === OPTIONS
+                                  ? handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { ...advncProps.value, message: e.target.value },
+                                      selectedFiledProps?.currentPathDetail
+                                    )
+                                  : handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: advncProps.value.value, message: e.target.value },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
                               } else {
-                                handleSchemaChanges(
-                                  selectedFiledProps?.id,
-                                  'advance',
-                                  advncProps.propsName,
-                                  { value: advncProps.value.value, messag: e.target.value },
-                                  selectedFiledProps?.currentPathDetail
-                                );
+                                advncProps.type === OPTIONS
+                                  ? handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { pattern: advncProps.value.pattern, value: advncProps.value.value, message: e.target.value },
+                                      selectedFiledProps?.currentPathDetail
+                                    )
+                                  : handleSchemaChanges(
+                                      selectedFiledProps?.id,
+                                      'advance',
+                                      advncProps.propsName,
+                                      { value: advncProps.value.value, messag: e.target.value },
+                                      selectedFiledProps?.currentPathDetail
+                                    );
                               }
                             }}
                           />

@@ -17,7 +17,7 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
@@ -31,6 +31,7 @@ export default function Designer({ componentMapper }) {
   const [open, setOpen] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [deletedFieldPath, setDeletedFieldPath] = useState();
+  const [componentsName, setComponentsName] = useState([]);
 
   const handleDrop = useCallback(
     (dropZone, item) => {
@@ -59,8 +60,9 @@ export default function Designer({ componentMapper }) {
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: item.component
+          component: { ...item.component, name: newComponent.id }
         };
+        setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
         return;
       }
@@ -89,6 +91,7 @@ export default function Designer({ componentMapper }) {
   );
 
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
+
     e.stopPropagation();
     let filedTypeConfig;
     if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
@@ -98,10 +101,9 @@ export default function Designer({ componentMapper }) {
         filedTypeConfig = componentMapper[componentDetail.component.type].config;
       }
       let fieldData = findChildComponentById(layout, componentDetail.id);
-
-
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
+          basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
@@ -127,7 +129,7 @@ export default function Designer({ componentMapper }) {
         if (fieldData?.component[advancePops?.propsName]) {
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return (advancePops.value = { value: '', message: '' });
+          return (advancePops?.propsName === REGEXVALIDATION ? advancePops.value = { pattern: 'None', value: '', message: '' } : advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -137,6 +139,7 @@ export default function Designer({ componentMapper }) {
       filedTypeConfig = { ...componentDetail };
     }
     setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
+    console.log('final select-->', { id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
   };
 
   const columnSizeCustomization = (colsize, path) => {
@@ -145,7 +148,9 @@ export default function Designer({ componentMapper }) {
   };
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
+
     const componentPosition = currentPathDetail.split('-');
+    let uniqueName = true;
     if (key === SUBTAB) {
       const position = indexForChild(layout, componentPosition, 0);
       componentPosition.push(position);
@@ -163,10 +168,34 @@ export default function Designer({ componentMapper }) {
       setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
     } else {
       let objCopy = selectedFiledProps;
+      if (propsName === NAME) {
+        componentsName.map((item, idx) => {
+          if (item.name !== newValue) {
+            if (item.id === selectedFiledProps.id) {
+              setComponentsName((stateItems) => [
+                ...stateItems.slice(0, idx),
+                {
+                  ...stateItems[idx],
+                  name: newValue
+                },
+                ...stateItems.slice(idx + 1)
+              ]);
+            }
+          } else {
+            if (item.id !== selectedFiledProps.id) {
+              uniqueName = false;
+            }
+          }
+        });
+      }
       if (key !== 'advance') {
         objCopy.component.editableProps[key].map((config) => {
           if (config.propsName === propsName) {
             config.value = newValue;
+            config.invalid = false;
+            if (!uniqueName) {
+              config.invalid = true;
+            }
           }
         });
       } else {
@@ -177,7 +206,9 @@ export default function Designer({ componentMapper }) {
         });
       }
       setSelectedFiledProps({ ...objCopy });
-      setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      if (uniqueName) {
+        setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      }
     }
   };
 
