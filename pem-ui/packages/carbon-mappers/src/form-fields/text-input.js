@@ -13,7 +13,8 @@ import {
   isDisabled,
   placeHolder,
   valueLabel,
-  NameLabel
+  NameLabel,
+  regexValidation
 } from '../constant';
 import { TextInputIcon } from './../icons';
 
@@ -62,5 +63,5 @@ TextInput.config = {
     Basic: [labelText, valueLabel, helperText, NameLabel, placeHolder, isDisabled, readOnly],
     Condition: []
   },
-  advanceProps: [minProps, maxProps, isRequired]
+  advanceProps: [minProps, maxProps, regexValidation, isRequired]
 };

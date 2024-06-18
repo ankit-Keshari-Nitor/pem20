@@ -17,7 +17,7 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
@@ -91,10 +91,7 @@ export default function Designer({ componentMapper }) {
   );
 
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
-    console.log('conponent layout', layout);
-    console.log('componentMapper', componentMapper);
-    console.log('componentsName >>', componentsName);
-    console.log('componentDetail >>', componentDetail);
+
     e.stopPropagation();
     let filedTypeConfig;
     if (componentDetail.type === COMPONENT || componentDetail.type === ACCORDION || componentDetail.type === TAB) {
@@ -104,9 +101,6 @@ export default function Designer({ componentMapper }) {
         filedTypeConfig = componentMapper[componentDetail.component.type].config;
       }
       let fieldData = findChildComponentById(layout, componentDetail.id);
-      console.log('fieldData', fieldData);
-
-
       filedTypeConfig?.editableProps?.Basic.map((basicEditPops) => {
         if (fieldData?.component[basicEditPops?.propsName]) {
           basicEditPops?.propsName === NAME && (basicEditPops.invalid = false);
@@ -135,7 +129,7 @@ export default function Designer({ componentMapper }) {
         if (fieldData?.component[advancePops?.propsName]) {
           return (advancePops.value = fieldData.component[advancePops?.propsName]);
         } else {
-          return (advancePops.value = { value: '', message: '' });
+          return (advancePops?.propsName === REGEXVALIDATION ? advancePops.value = { pattern: 'None', value: '', message: '' } : advancePops.value = { value: '', message: '' });
         }
       });
     } else if (componentDetail.type === COLUMN) {
@@ -154,11 +148,7 @@ export default function Designer({ componentMapper }) {
   };
 
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
-    console.log('layout', layout);
-    console.log('key', key);
-    console.log('propsName', propsName);
-    console.log('newValue', newValue);
-    console.log('componetsName>', componentsName);
+
     const componentPosition = currentPathDetail.split('-');
     let uniqueName = true;
     if (key === SUBTAB) {

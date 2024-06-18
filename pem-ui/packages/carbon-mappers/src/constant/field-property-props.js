@@ -83,7 +83,49 @@ export const valueLabel = {
   label: 'Value',
   value: '',
   type: 'TextInput'
-}
+};
+
+export const regexValidation = {
+  propsName: 'regexValidation',
+  lable: 'Regex Validation',
+  items: [
+    {
+      label: 'None',
+      value: ''
+    },
+    {
+      label: 'Lower- or Upper-case Alpha Numeric only',
+      value: '/^(?=.*?[a-zA-Z])[a-zA-Z0-9]+$'
+    },
+    {
+      label: 'Lower- or Upper-case Alpha Numeric and Numbers only',
+      value: '/^(?=.*?\d)[a-zA-Z0-9]+$'
+    },
+    {
+      label: 'Email Address',
+      value: '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+    },
+    {
+      label: 'Integer Number with min and max values',
+      value: '1'
+    },
+    {
+      label: 'URL',
+      value: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
+    },
+    {
+      label: 'Custom Regular Expression',
+      value: 'customRegex'
+    }
+  ],
+  value: {
+    pattern: '',
+    value: '',
+    message: ''
+  },
+  type: 'Options'
+};
+
 // New constant for Options type
 export const options = {
   propsName: 'options',
