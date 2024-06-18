@@ -31,6 +31,7 @@ const TaskFlowDesigner = ({
   setOpenTaskPropertiesBlock,
   editDefinitionProp,
   activityDefinitionData,
+  readOnly,
 }) => {
   return (
     <div className="dnd-flow">
@@ -39,7 +40,7 @@ const TaskFlowDesigner = ({
           <div className="dnd-flow">
             {/* Tasks Block */}
             <div className="task-tray-container">
-              <BlocksTray category={CATEGORY_TYPES.TASK} />
+              <BlocksTray category={CATEGORY_TYPES.TASK} readOnly={readOnly} />
             </div>
             {/* Flow Designer Block  */}
             <ReactFlowProvider>

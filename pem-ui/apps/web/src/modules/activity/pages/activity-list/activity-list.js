@@ -260,7 +260,7 @@ export default function ActivityList() {
   const getEllipsis = (id) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-        <OverflowMenuItem itemText="View" />
+        <OverflowMenuItem itemText="View" onClick={() => handleEdit(id)} href={`${ROUTES.ACTIVITY_EDIT + id}?readonly=true`}/>
         <OverflowMenuItem itemText="Edit" onClick={() => handleEdit(id)} href={ROUTES.ACTIVITY_EDIT + id} />
         <OverflowMenuItem itemText="Export" />
         <OverflowMenuItem itemText="Create Version" />

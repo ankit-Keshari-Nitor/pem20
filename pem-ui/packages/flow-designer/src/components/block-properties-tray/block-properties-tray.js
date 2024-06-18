@@ -16,13 +16,13 @@ import { CrossIcon, ExpandIcon } from './../../icons';
 import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
 import ActivityTaskDefinition from '../block-definition-forms/activity-task-definition';
 
-export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData }) {
+export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData, readOnly }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
   const getForm = (selectedNode) => {
     switch (selectedNode && selectedNode.type) {
       case NODE_TYPE.PARTNER:
-        return <PartnerTaskDefinitionForm selectedNode={selectedNode} />;
+        return <PartnerTaskDefinitionForm selectedNode={selectedNode} readOnly={readOnly}/>;
       case NODE_TYPE.APPROVAL:
         return <ApprovalTaskDefinitionForm selectedNode={selectedNode} />;
       case NODE_TYPE.ATTRIBUTE:

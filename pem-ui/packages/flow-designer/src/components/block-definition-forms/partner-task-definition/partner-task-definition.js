@@ -6,7 +6,7 @@ import ExitValidationFrom from '../../exit-validation-form/exit-validation-form'
 import PartnerDefineForm from './partner-define-form';
 import useTaskStore from '../../../store';
 
-export default function PartnerTaskDefinitionForm({ selectedNode }) {
+export default function PartnerTaskDefinitionForm({ selectedNode, readOnly }) {
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
   const edit = useTaskStore((state) => state.editTaskNodePros);
   const onSubmitDefinitionForm = (values) => {
@@ -32,6 +32,7 @@ export default function PartnerTaskDefinitionForm({ selectedNode }) {
               selectedNode={selectedNode}
               onCancelDefinitionForm={onCancelDefinitionForm}
               onSubmitDefinitionForm={onSubmitDefinitionForm}
+              readOnly={readOnly}
             />
           </TabPanel>
           {/* Exit Validation Form */}

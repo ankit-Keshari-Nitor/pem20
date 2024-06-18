@@ -93,7 +93,7 @@ export const SCHEMA = {
   ]
 };
 
-const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm, selectedNode }) => {
+const PartnerDefineForm = ({ id, onCancelDefinitionForm, onSubmitDefinitionForm, selectedNode, readOnly }) => {
 
   let initialValues = {};
   initialValues.name = selectedNode.id;

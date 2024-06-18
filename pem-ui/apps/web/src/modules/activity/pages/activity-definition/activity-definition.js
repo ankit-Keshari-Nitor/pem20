@@ -13,6 +13,7 @@ export default function ActivityDefinition() {
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
+  const readOnly = window.location.href.search('readonly') >= 0 ? true : false;
   const ref = useRef();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function ActivityDefinition() {
         editDefinitionProp={editDefinitionProp}
         editSchemaProp={editSchemaProp}
         activityDefinitionData={activityDefinitionData}
+        readOnly={readOnly}
       />
     </>
   );
