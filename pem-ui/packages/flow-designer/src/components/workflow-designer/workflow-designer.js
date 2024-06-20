@@ -31,7 +31,11 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp, activityDefinitionData, activityOperation, readOnly }, ref) => {
+const WorkFlowDesigner = forwardRef(({ 
+  showActivityDefineDrawer, editDefinitionProp, editSchemaProp, 
+  activityDefinitionData, activityOperation, readOnly,
+  onVersionSelection,versionData,selectedVersion
+}, ref) => {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -43,7 +47,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
   const [isPageDesignerActive, setIsPageDesignerActive] = useState(false);
 
   // --------------------------------- Task Flow States -----------------------------------
-  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState(showActivityDefineDrawer);
+  const [openTaskPropertiesBlock, setOpenTaskPropertiesBlock] = useState();
   const taskFlowWrapper = useRef(null);
   const [taskNodes, setTaskNodes, onTaskNodesChange] = useNodesState(storeData.taskNodes);
   const [taskEdges, setTaskEdges, onTaskEdgesChange] = useEdgesState([]);
@@ -91,9 +95,9 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  useEffect(() => {
+/*  useEffect(() => {
     setOpenTaskPropertiesBlock(showActivityDefineDrawer);
-  }, [showActivityDefineDrawer]);
+  }, [showActivityDefineDrawer]);*/
 
   useEffect(() => {
     if (storeData.taskNodes.length === 0) {
@@ -293,6 +297,9 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
                 activityDefinitionData={activityDefinitionData}
                 activityOperation={activityOperation}
                 readOnly={readOnly}
+                onVersionSelection={onVersionSelection}
+                versionData={versionData}
+                selectedVersion={selectedVersion}
               />
             )}
           </div>

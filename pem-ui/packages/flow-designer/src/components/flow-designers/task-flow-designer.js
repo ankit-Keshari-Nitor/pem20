@@ -9,6 +9,7 @@ import './style.scss';
 import BlocksTray from '../blocks-tray';
 import { CATEGORY_TYPES } from '../../constants';
 import BlockPropertiesTray from '../block-properties-tray';
+import ActivityDefinitionForm from '../activity-definition-form';
 
 const TaskFlowDesigner = ({
   connectionLineStyle,
@@ -32,7 +33,9 @@ const TaskFlowDesigner = ({
   editDefinitionProp,
   activityDefinitionData,
   activityOperation,
-  readOnly
+  readOnly,
+  showActivityDefineDrawer,
+  onVersionSelection
 }) => {
   return (
     <div className="dnd-flow">
@@ -88,6 +91,26 @@ const TaskFlowDesigner = ({
             </Panel>
           </>
         )}
+        {showActivityDefineDrawer && (
+          <>
+          <PanelResizeHandle />
+          <Panel defaultSize={40} minSize={20} maxSize={70}>
+            <div className="dnd-flow">
+              <div className="task-activity-container">
+                <ActivityDefinitionForm
+                  //selectedNode={selectedTaskNode}
+                  //setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
+                  onVersionSelection={onVersionSelection}
+                  editDefinitionProp={editDefinitionProp}
+                  activityOperation={activityOperation}
+                  activityDefinitionData={activityDefinitionData}
+                  readOnly={readOnly}
+                />
+              </div>
+            </div>
+          </Panel>
+        </>)
+        }
       </PanelGroup>
     </div>
   );

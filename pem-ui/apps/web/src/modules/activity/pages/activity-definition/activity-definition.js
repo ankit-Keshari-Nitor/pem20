@@ -65,6 +65,9 @@ export default function ActivityDefinition() {
         activityDefinitionData={activityDefinitionData}
         activityOperation={activityOperation}
         readOnly={readOnly}
+        onVersionSelection={(selectedVersion)=> console.log(selectedVersion)}
+        versionData={[]}//todo -- this data will be based on version api response 
+        selectedVersion={"1"}//todo - pass current version id being loaded
       />
     </>
   );
