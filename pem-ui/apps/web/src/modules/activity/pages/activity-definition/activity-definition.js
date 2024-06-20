@@ -4,7 +4,7 @@ import { Button, Column, Grid } from '@carbon/react';
 import './activity-definition.css';
 import { CloneIcon, CopyIcon, DeleteIcon, HistoryIcon, PlayIcon } from '../../icons';
 import useActivityStore from '../../store';
-import { ROUTES } from '../../constants';
+import { OPERATIONS, ROUTES } from '../../constants';
 
 export default function ActivityDefinition() {
   const activityStore = useActivityStore((state) => state.activities);
@@ -13,9 +13,9 @@ export default function ActivityDefinition() {
   const editSchemaProp = useActivityStore((state) => state.editSchemaProps);
   const [showActivityDefineDrawer, setShowActivityDefineDrawer] = useState();
   const [activityDefinitionData, setActivityDefinitionData] = useState();
-  const readOnly = window.location.href.search('readonly') >= 0 ? true : false;
+  const activityOperation = activityStore.operation;
+  const readOnly = activityStore.operation === OPERATIONS.VIEW ? true : false;
   const ref = useRef();
-
   useEffect(() => {
     if (activityDefinitionData?.id !== '' || activityDefinitionData?.name === '' || activityDefinitionData?.name === null || activityDefinitionData?.name === undefined) {
       setShowActivityDefineDrawer(true);
@@ -52,7 +52,7 @@ export default function ActivityDefinition() {
           <HistoryIcon />
         </Column>
         <Column>
-          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} onClick={() => handleActivityReset()}>
+          <Button id="saveactivity" href={ROUTES.ACTIVITY_LIST} disabled={readOnly} onClick={() => handleActivityReset()}>
             Save Activity
           </Button>
         </Column>
@@ -63,6 +63,7 @@ export default function ActivityDefinition() {
         editDefinitionProp={editDefinitionProp}
         editSchemaProp={editSchemaProp}
         activityDefinitionData={activityDefinitionData}
+        activityOperation={activityOperation}
         readOnly={readOnly}
       />
     </>

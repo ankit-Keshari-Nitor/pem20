@@ -31,7 +31,7 @@ const getNewDialogId = () => `Dialog_Name_${dialogId++}`;
 let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
-const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp, activityDefinitionData, readOnly }, ref) => {
+const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionProp, editSchemaProp, activityDefinitionData, activityOperation, readOnly }, ref) => {
   //-------------------------------- State Management -------------------------------------
   const storeData = useTaskStore((state) => state.tasks);
   const addTaskNode = useTaskStore((state) => state.addTaskNodes);
@@ -80,7 +80,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      newParam.data = selectedTaskNode?.id;
+      newParam.data = { id: selectedTaskNode?.id };
       addDialogEdge(selectedTaskNode, addEdge({ ...newParam, style: { stroke: '#000' } }, dialogEdges));
     },
     [addDialogEdge, dialogEdges, selectedTaskNode]
@@ -110,7 +110,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       setDialogNodes(dialogNodeData?.data?.dialogNodes);
       setDialogEdges(dialogNodeData?.data?.dialogEdges);
     }
-    editSchemaProp(storeData);
+    editSchemaProp(storeData, activityOperation);
   }, [setTaskNodes, setTaskEdges, setDialogEdges, storeData, selectedTaskNode, editSchemaProp, setDialogNodes]);
 
   const onDialogNodeDrop = useCallback(
@@ -171,7 +171,8 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
       let newParam = params;
       newParam.type = 'crossEdge';
       newParam.markerEnd = endMarks;
-      addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
+      newParam.data = { readOnly: readOnly };
+      !readOnly && addTaskEdge(addEdge({ ...newParam, style: { stroke: '#000' } }, storeData.taskEdges));
     },
     [addTaskEdge, storeData.taskEdges]
   );
@@ -290,6 +291,7 @@ const WorkFlowDesigner = forwardRef(({ showActivityDefineDrawer, editDefinitionP
                 showActivityDefineDrawer={showActivityDefineDrawer}
                 editDefinitionProp={editDefinitionProp}
                 activityDefinitionData={activityDefinitionData}
+                activityOperation={activityOperation}
                 readOnly={readOnly}
               />
             )}

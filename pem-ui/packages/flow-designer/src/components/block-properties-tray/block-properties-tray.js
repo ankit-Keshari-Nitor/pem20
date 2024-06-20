@@ -20,7 +20,7 @@ import {
 import './block-properties-tray.scss';
 
 
-export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData, readOnly }) {
+export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
   const getForm = (selectedNode) => {
@@ -46,7 +46,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.GATEWAY:
         return null;
       default:
-        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityDefinitionData={activityDefinitionData} readOnly={readOnly} />;
+        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityOperation={activityOperation} activityDefinitionData={activityDefinitionData} readOnly={readOnly} />;
     }
   };
 

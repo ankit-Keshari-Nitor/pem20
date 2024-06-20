@@ -31,6 +31,7 @@ const TaskFlowDesigner = ({
   setOpenTaskPropertiesBlock,
   editDefinitionProp,
   activityDefinitionData,
+  activityOperation,
   readOnly
 }) => {
   return (
@@ -78,6 +79,7 @@ const TaskFlowDesigner = ({
                     selectedNode={selectedTaskNode}
                     setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
                     editDefinitionProp={editDefinitionProp}
+                    activityOperation={activityOperation}
                     activityDefinitionData={activityDefinitionData}
                     readOnly={readOnly}
                   />

@@ -52,10 +52,10 @@ export const SCHEMA = {
   ]
 };
 
-const ActivityTaskDefinition = ({ id, editDefinitionProp, activityDefinitionData, readOnly }) => {
+const ActivityTaskDefinition = ({ id, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) => {
   SCHEMA.fields = SCHEMA.fields.map((item) => ({ ...item, isReadOnly: readOnly }));
   const onSubmitDefinitionForm = (values) => {
-    editDefinitionProp(values);
+    editDefinitionProp(values, activityOperation);
   };
 
   const onCancelDefinitionForm = () => {
