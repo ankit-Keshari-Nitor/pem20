@@ -28,6 +28,15 @@ export default function ActivityDefinition() {
     setActivityDefinitionData(activityStore.definition);
   }, [activityStore]);
 
+
+  useEffect(()=>{
+    return (()=>{
+      //clear the current activity from the store
+      console.log('clear the current activity from the store')
+    })
+ // TODO if we get activityDefinitionVersion Key and activityDefinition Key then make api call to load data
+  },[])
+
   const handleActivityReset = () => {
     ref.current?.handleRest();
     activityReset();
@@ -60,6 +69,7 @@ export default function ActivityDefinition() {
       <Designer.WorkFlowDesigner
         ref={ref}
         showActivityDefineDrawer={showActivityDefineDrawer}
+        setShowActivityDefineDrawer={setShowActivityDefineDrawer}
         editDefinitionProp={editDefinitionProp}
         editSchemaProp={editSchemaProp}
         activityDefinitionData={activityDefinitionData}

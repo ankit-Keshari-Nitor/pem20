@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Column, Grid, Modal, Select, SelectItem } from '@carbon/react';
+import { Modal, } from '@carbon/react';
 
 import { NODE_TYPE } from '../../constants';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import BlockDefinitionForm from '../block-definition-form';
-import ActivityTaskDefinition from '../activity-task-definition';
 import {
   PARTNER_FORM_SCHEMA,
   APPROVAL_FORM_SCHEMA,
@@ -46,7 +45,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       case NODE_TYPE.GATEWAY:
         return null;
       default:
-        return <ActivityTaskDefinition id={'activity-drawer'} editDefinitionProp={editDefinitionProp} activityOperation={activityOperation} activityDefinitionData={activityDefinitionData} readOnly={readOnly} />;
+        return null;
     }
   };
 
@@ -55,7 +54,6 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       <div className="block-properties-container">
         <div className="title-bar">
           <span className="title">
-            {selectedNode ? (
               <span>
                 {selectedNode?.data?.editableProps.name ? (
                   <span>
@@ -67,23 +65,6 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
                   </span>
                 )}
               </span>
-            ) : (
-              <Grid>
-                <Column lg={4} md={3} sm={2}>
-                  <b>Define Activity</b>
-                </Column>
-                <Column lg={2} md={2} sm={1} className="activity-active">
-                  Active
-                </Column>
-                <Column lg={3} md={3} sm={2} id="versions">
-                  <Select id={'activity-version'}>
-                    <SelectItem value="ver.3.0" text="ver.3.0" />
-                    <SelectItem value="ver.2.0" text="ver.2.0" />
-                    <SelectItem value="ver.1.0" text="ver.1.0" />
-                  </Select>
-                </Column>
-              </Grid>
-            )}
           </span>
           <div className="icon">
             <span onClick={() => setOpenExpandMode(true)} className="icon">

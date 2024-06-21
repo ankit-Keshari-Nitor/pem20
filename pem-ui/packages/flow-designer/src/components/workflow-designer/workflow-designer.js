@@ -32,7 +32,7 @@ let taskId = 0;
 const getNewTaskId = () => `Task_Name_${taskId++}`;
 
 const WorkFlowDesigner = forwardRef(({ 
-  showActivityDefineDrawer, editDefinitionProp, editSchemaProp, 
+  showActivityDefineDrawer, setShowActivityDefineDrawer, editDefinitionProp, editSchemaProp, 
   activityDefinitionData, activityOperation, readOnly,
   onVersionSelection,versionData,selectedVersion
 }, ref) => {
@@ -236,6 +236,7 @@ const WorkFlowDesigner = forwardRef(({
       setSelectedTaskNode(node);
       setDialogNodes(node.data.dialogNodes);
       setOpenTaskPropertiesBlock(true);
+      setShowActivityDefineDrawer(false)
     }
   };
 
@@ -270,6 +271,7 @@ const WorkFlowDesigner = forwardRef(({
                 selectedTaskNode={selectedTaskNode}
                 openDialogPropertiesBlock={openDialogPropertiesBlock}
                 setOpenDialogPropertiesBlock={setOpenDialogPropertiesBlock}
+                readOnly={readOnly}
               />
             ) : (
               <TaskFlowDesigner
@@ -293,6 +295,7 @@ const WorkFlowDesigner = forwardRef(({
                 openTaskPropertiesBlock={openTaskPropertiesBlock}
                 setOpenTaskPropertiesBlock={setOpenTaskPropertiesBlock}
                 showActivityDefineDrawer={showActivityDefineDrawer}
+                setShowActivityDefineDrawer={setShowActivityDefineDrawer}
                 editDefinitionProp={editDefinitionProp}
                 activityDefinitionData={activityDefinitionData}
                 activityOperation={activityOperation}

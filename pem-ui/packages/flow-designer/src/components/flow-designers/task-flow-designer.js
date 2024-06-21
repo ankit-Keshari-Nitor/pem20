@@ -35,7 +35,10 @@ const TaskFlowDesigner = ({
   activityOperation,
   readOnly,
   showActivityDefineDrawer,
-  onVersionSelection
+  setShowActivityDefineDrawer,
+  onVersionSelection,
+  versionData,
+  selectedVersion
 }) => {
   return (
     <div className="dnd-flow">
@@ -91,7 +94,7 @@ const TaskFlowDesigner = ({
             </Panel>
           </>
         )}
-        {showActivityDefineDrawer && (
+        {showActivityDefineDrawer  && (
           <>
           <PanelResizeHandle />
           <Panel defaultSize={40} minSize={20} maxSize={70}>
@@ -99,12 +102,14 @@ const TaskFlowDesigner = ({
               <div className="task-activity-container">
                 <ActivityDefinitionForm
                   //selectedNode={selectedTaskNode}
-                  //setOpenPropertiesBlock={setOpenTaskPropertiesBlock}
+                  setOpenPropertiesBlock={setShowActivityDefineDrawer}
                   onVersionSelection={onVersionSelection}
                   editDefinitionProp={editDefinitionProp}
                   activityOperation={activityOperation}
                   activityDefinitionData={activityDefinitionData}
                   readOnly={readOnly}
+                  versionData={versionData}
+                  selectedVersion={selectedVersion}
                 />
               </div>
             </div>
