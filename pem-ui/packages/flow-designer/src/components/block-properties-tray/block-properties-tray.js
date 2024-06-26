@@ -19,7 +19,6 @@ import {
 
 import './block-properties-tray.scss';
 
-
 export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityDefinitionData }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
@@ -94,7 +93,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
             </span>
           </div>
         </div>
-        {getForm(selectedNode)}
+        <div className="block-properties-form">{getForm(selectedNode)}</div>
       </div>
       <Modal
         open={openExpandMode}
