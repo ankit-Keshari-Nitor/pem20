@@ -15,6 +15,7 @@ export const NAME = 'name';
 export const REGEXVALIDATION = 'regexValidation';
 export const OPTIONS = 'Options';
 export const CUSTOMREGEX = 'customRegex';
+export const TABLECOLUMNS = 'tableColumns';
 
 export const PALETTE_GROUPS = [
   {
@@ -36,6 +37,33 @@ export const PALETTE_GROUPS = [
   {
     label: 'Action',
     id: 'action'
+  }
+];
+
+export const TABLE_HEADER = [
+  {
+    key: 'column0',
+    header: 'column0',
+    colSpan: '6',
+    searchable: false,
+    sortable: false,
+    required: false
+  },
+  {
+    key: 'column1',
+    header: 'column1',
+    colSpan: '6',
+    Searchable: false,
+    Sortable: false,
+    Required: false
+  }
+];
+
+export const OPTION = [
+  {
+    label: '',
+    id: '',
+    value: ''
   }
 ];
 

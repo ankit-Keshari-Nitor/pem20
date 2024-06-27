@@ -17,7 +17,7 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION, OPTIONS, TABLECOLUMNS, TABLE_HEADER, OPTION } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
@@ -60,7 +60,7 @@ export default function Designer({ componentMapper }) {
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, name: newComponent.id }
+          component: { ...item.component, name: newComponent.id, [TABLECOLUMNS]: TABLE_HEADER }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
@@ -107,11 +107,12 @@ export default function Designer({ componentMapper }) {
           return (basicEditPops.value = fieldData.component[basicEditPops?.propsName]);
         } else {
           // Initialize options for checkbox-group and radio-group
-          if (basicEditPops?.propsName === "options") {
-            return (basicEditPops.value = [{
-              label: '', id: '', value: ''
-            }]);
-          } else {
+          if (basicEditPops?.propsName === OPTIONS) {
+            return (basicEditPops.value = OPTION);
+          } if (basicEditPops?.propsName === TABLECOLUMNS) {
+            return (basicEditPops.value = TABLE_HEADER)
+          }
+           else {
             return (basicEditPops.value = '');
           }
         }
@@ -139,16 +140,13 @@ export default function Designer({ componentMapper }) {
       filedTypeConfig = { ...componentDetail };
     }
     setSelectedFiledProps({ id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
-    console.log('final select-->', { id: componentDetail.id, type: componentDetail.type, component: { ...filedTypeConfig }, currentPathDetail: currentPathDetail });
   };
 
   const columnSizeCustomization = (colsize, path) => {
     const newLayout = updateChildToChildren(layout, path.split('-'), CUSTOM_SIZE, colsize);
     setLayout([...newLayout]);
   };
-
   const handleSchemaChanges = (id, key, propsName, newValue, currentPathDetail) => {
-
     const componentPosition = currentPathDetail.split('-');
     let uniqueName = true;
     if (key === SUBTAB) {
