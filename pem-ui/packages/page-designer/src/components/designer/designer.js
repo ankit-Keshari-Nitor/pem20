@@ -17,7 +17,7 @@ import {
   findChildComponentById,
   indexForChild
 } from '../../utils/helpers';
-import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION, OPTIONS, TABLECOLUMNS, TABLE_HEADER, OPTION } from '../../constants/constants';
+import { SIDEBAR_ITEM, COMPONENT, COLUMN, INITIAL_DATA, ACCORDION, CUSTOM_COLUMN, CUSTOM_SIZE, SUBTAB, CUSTOM_TITLE, DEFAULTTITLE, TAB, NAME, REGEXVALIDATION, OPTIONS, TABLECOLUMNS, TABLE_HEADER, OPTION, DATATABLE, TABLEROWS } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
 import FormPreview from '../preview-mode';
@@ -46,6 +46,10 @@ export default function Designer({ componentMapper }) {
         newItem.children = item.children;
       }
 
+      if(item.component.type === DATATABLE){
+        item = { id: item.id, type : item.type, component: {...item.component, [TABLECOLUMNS]: TABLE_HEADER }}
+      }
+
       // sidebar into
       if (item.type === SIDEBAR_ITEM) {
         // 1. Move sidebar item into page
@@ -60,7 +64,7 @@ export default function Designer({ componentMapper }) {
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, name: newComponent.id, [TABLECOLUMNS]: TABLE_HEADER }
+          component: { ...item.component, name: newComponent.id }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
@@ -111,8 +115,9 @@ export default function Designer({ componentMapper }) {
             return (basicEditPops.value = OPTION);
           } if (basicEditPops?.propsName === TABLECOLUMNS) {
             return (basicEditPops.value = TABLE_HEADER)
-          }
-           else {
+          } if (basicEditPops?.propsName === TABLEROWS) {
+            return (basicEditPops.value = [])
+          } else {
             return (basicEditPops.value = '');
           }
         }

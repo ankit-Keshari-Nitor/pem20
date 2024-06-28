@@ -133,6 +133,13 @@ export const tableColumn = {
   type: 'TextInput'
 };
 
+export const tableRows = {
+  propsName: 'tableRows',
+  label: 'Table Rows',
+  value: [],
+  type: 'TextInput'
+};
+
 export const selectRow = {
   propsName: 'selectablerows',
   label: 'Selectable Rows',

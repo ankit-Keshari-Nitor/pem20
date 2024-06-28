@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel, Accordion, AccordionItem, Checkbox } from '@carbon/react';
 
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLECOLUMNS } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLECOLUMNS, TABLEROWS, TABLE_HEADER } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 
 export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
@@ -14,6 +14,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
   const [tabSubTitle, setTabSubTitle] = React.useState();
   const [options, setOptions] = React.useState([]);
   const [tableHeader, setTableHeader] = React.useState([]);
+  const [tableRows, setTableRows] = React.useState([]);
+  // const [tableRowColumnOpt, setTableRowColumnOpt] = React.useState([]);
   const [customRegexPattern, setCustomRegexPattern] = React.useState(false);
   const items = [
     { text: '1' },
@@ -42,6 +44,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setComponentTypes(collectPaletteEntries(componentMapper));
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
     setTableHeader(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLECOLUMNS)?.value || []);
+    setTableRows(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLEROWS)?.value || []);
   }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
   const handleChange = (e) => {
@@ -67,8 +70,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setTableHeader((preHeader) => [
       ...preHeader,
       {
-        key: 'column',
-        header: 'column',
+        key: '',
+        header: '',
         colSpan: '6',
         searchable: false,
         sortable: false,
@@ -76,6 +79,29 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
       }
     ]);
   };
+
+  const handleAddRow = (tableolumns) => {
+    const tableRow = {};
+    tableolumns.map((item)=>{
+      tableRow[item.key] = '';
+    })
+    setTableRows((preRows)=> [...preRows, {id:'a', ...tableRow}])
+  }
+
+  const handleRowOpt = (index, value, key) => {
+    setTableRows((prevRow)=>{
+      const rows = [...prevRow];
+      rows[index][key] = value;
+      handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLEROWS, rows, selectedFiledProps?.currentPathDetail);
+      return rows;
+    })
+  }
+
+  const handleTableColumn = (index) => {
+    const updatedHeader = tableHeader.splice(index, 1);
+    setTableHeader(updatedHeader);
+    handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLECOLUMNS, updatedHeader, selectedFiledProps?.currentPathDetail);
+  }
 
   const handleHeaderChange = (index, value, key = '') => {
     setTableHeader((prevOptions) => {
@@ -115,7 +141,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     }
     handleSchemaChanges(id, 'advance', propsName, newValue, path);
   };
-
   return (
     <div className="right-palette-container">
       {selectedFiledProps && (
@@ -178,7 +203,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                     <div className="table-header">
                                       <span>
                                         <label>Column Header</label>
-                                        <Button size="sm" onClick={handleAddHeader}>
+                                        <Button size="sm" className='add-header' onClick={handleAddHeader}>
                                           Add Header
                                         </Button>
                                       </span>
@@ -211,25 +236,28 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                             /> */}
                                             <Checkbox
                                               key={`searchable-${idx}-${index}`}
-                                              id="searchable"
+                                              id={`searchable-${idx}-${index}`}
                                               labelText="Searchable"
                                               checked={header.searchable}
                                               onChange={(e) => handleHeaderChange(index, !header?.searchable, 'searchable')}
                                             />
                                             <Checkbox
                                               key={`sortable-${idx}-${index}`}
-                                              id="sortable"
+                                              id={`sortable-${idx}-${index}`}
                                               labelText="Sortable"
                                               checked={header.sortable}
                                               onChange={(e) => handleHeaderChange(index, !header?.sortable, 'sortable')}
                                             />
                                             <Checkbox
                                               key={`required-${idx}-${index}`}
-                                              id="required"
+                                              id={`required-${idx}-${index}`}
                                               labelText="Required"
                                               checked={header.required}
                                               onChange={(e) => handleHeaderChange(index, !header?.required, 'required')}
                                             />
+                                            <Button size="sm" className= 'delete-table-column' onClick={()=>handleTableColumn(index)}>
+                                              Delete Column
+                                            </Button>
                                             {/* <Toggle 
                                                 key={`searchable-${idx}-${index}`}
                                                 id={String(`searchable-${idx}-${index}`)}
@@ -243,6 +271,41 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         ))}
                                       </Accordion>
                                     </div>
+                                  ) : item.propsName === TABLEROWS ? (
+                                    <div className="table-row">
+                                    <span>
+                                      <label>Table Row</label>
+                                      <Button size="sm" className='add-row' onClick={()=>handleAddRow(tableHeader)}>
+                                        Add Row
+                                      </Button>
+                                    </span>
+                                    {console.log('tableRow>>>',tableRows)}
+                                    <Accordion>
+                                      {tableRows.map((rowValue, index) => (
+                                        <AccordionItem title={`Row-${index}`}>
+                                          {/* <Select id={String(idx)} labelText="Column" onChange={(e)=>handleRowOpt(index,e.target.value)}>
+                                            {tableHeader.map((item, index) => {
+                                              return <SelectItem key={index} value={item.key} text={item.key} />;
+                                            })}
+                                          </Select> */}
+                                          {tableHeader.map((item, colidex) => {
+                                              return <TextInput
+                                              key={`${item.key}-${idx}-${colidex}`}
+                                              id={String(`${item.key}-${idx}`)}
+                                              className="right-palette-form-item "
+                                              labelText={item.key}
+                                              value={rowValue[item.key]}
+                                              onChange={(e) => handleRowOpt(index, e.target.value, item.key)}
+                                            />;
+                                            })}
+                                          
+                                          <Button size="sm" className= 'delete-table-column'>
+                                            Delete Row
+                                          </Button>
+                                        </AccordionItem>
+                                      ))}
+                                    </Accordion>
+                                  </div>
                                   ) : (
                                     <TextInput
                                       key={idx}
@@ -280,72 +343,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                       </>
                     );
                   })}
-
-                {/* Table Header */}
-                {/* {tableHeader.length > 0 && (
-                  <div className="options-section">
-                    <label className="cds--label">Column Headers</label>
-                    {tableHeader.map((header, index) => {
-                      return (
-                        <>
-                          <div key={`key-${index}`} className="option-input">
-                            <label className="cds--label">Key {index}</label>
-                            <TextInput id={`key-${index}`} value={header?.key} onChange={(e) => handleHeaderChange(index, e.target.value, 'key')} />
-                          </div>
-                          <div key={`value-${index}`} className="option-input">
-                            <label className="cds--label">value {index}</label>
-                            <TextInput id={`value-${index}`} value={header?.header} onChange={(e) => handleHeaderChange(index, e.target.value, 'header')} />
-                          </div>
-                          <div key={`column-width-${index}`} className="option-input">
-                            <label className="cds--label">Column Width {index}</label>
-                            <TextInput id={`column-width-${index}`} value={header?.colSpan} onChange={(e) => handleHeaderChange(index, e.target.value, 'colSpan')} />
-                          </div>
-                          <ul key={index}>
-                            <li>
-                              <Toggle
-                                key={`Searchable-${index}`}
-                                id={'toggle-Searchable-' + String(index) + '-' + selectedFiledProps?.id}
-                                className="right-palette-form-item"
-                                labelText={'Searchable'}
-                                defaultToggled={Boolean(header?.searchable)}
-                                toggled={Boolean(header?.searchable)}
-                                onClick={(e) =>  handleHeaderChange(index, !header?.searchable, 'searchable')}
-                                hideLabel
-                              />
-                            </li>
-                            <li>
-                              <Toggle
-                                key={`Sortable-${index}`}
-                                id={'toggle-Sortable-' + String(index) + '-' + selectedFiledProps?.id}
-                                className="right-palette-form-item"
-                                labelText={'Sortable'}
-                                defaultToggled={Boolean(header?.sortable)}
-                                toggled={Boolean(header?.sortable)}
-                                onClick={(e) => handleHeaderChange(index, !header?.sortable, 'sortable')}
-                                hideLabel
-                              />
-                            </li>
-                            <li>
-                              <Toggle
-                                key={`Required-${index}`}
-                                id={'toggle-Required-' + String(index) + '-' + selectedFiledProps?.id}
-                                className="right-palette-form-item"
-                                labelText={'Required'}
-                                defaultToggled={Boolean(header?.required)}
-                                toggled={Boolean(header?.required)}
-                                onClick={(e) => handleHeaderChange(index, !header?.required, 'required')}
-                                hideLabel
-                              />
-                            </li>
-                          </ul>
-                        </>
-                      );
-                    })}
-                    <Button size="sm" onClick={handleAddOption}>
-                      Add Header
-                    </Button>
-                  </div>
-                )} */}
                 {/* Option Section */}
                 {options.length > 0 && (
                   <div className="options-section">

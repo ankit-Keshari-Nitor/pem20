@@ -16,6 +16,8 @@ export const REGEXVALIDATION = 'regexValidation';
 export const OPTIONS = 'Options';
 export const CUSTOMREGEX = 'customRegex';
 export const TABLECOLUMNS = 'tableColumns';
+export const TABLEROWS = 'tableRows';
+export const DATATABLE = 'data-table';
 
 export const PALETTE_GROUPS = [
   {
