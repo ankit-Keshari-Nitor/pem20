@@ -129,7 +129,7 @@ DataTable.config = {
   group: FORM_FIELD_GROUPS.BASIC_INPUT,
   icon: <TextInputIcon />,
   editableProps: {
-    Basic: [NameLabel, labelText, helperText, placeHolder, readOnly, selectRow, pageSize, tableColumn, tableRowsData],
+    Basic: [NameLabel, labelText, helperText, placeHolder, readOnly, selectRow, pageSize, tableColumn],
     Condition: []
   },
   advanceProps: [isRequired]
