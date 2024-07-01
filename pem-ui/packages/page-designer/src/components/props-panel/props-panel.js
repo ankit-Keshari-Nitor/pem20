@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Toggle, TextInput, Button, Select, SelectItem, Tabs, TabList, Tab, TabPanels, TabPanel, Accordion, AccordionItem, Checkbox } from '@carbon/react';
-
+import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLECOLUMNS, TABLEROWS, TABLE_HEADER } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
@@ -85,12 +85,12 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     tableolumns.map((item)=>{
       tableRow[item.key] = '';
     })
-    setTableRows((preRows)=> [...preRows, {id:'a', ...tableRow}])
+    setTableRows((preRows)=> [...preRows, {id: uuid(), ...tableRow}])
   }
 
   const handleRowOpt = (index, value, key) => {
     setTableRows((prevRow)=>{
-      const rows = [...prevRow];
+      let rows = [...prevRow];
       rows[index][key] = value;
       handleSchemaChanges(selectedFiledProps?.id, 'Basic', TABLEROWS, rows, selectedFiledProps?.currentPathDetail);
       return rows;
@@ -226,14 +226,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               value={header?.header}
                                               onChange={(e) => handleHeaderChange(index, e.target.value, 'header')}
                                             />
-                                            {/* <TextInput
-                                              key={`colspan-${idx}-${index}`}
-                                              id={String(`colspan-${idx}`)}
-                                              className="right-palette-form-item "
-                                              labelText={'Column Width'}
-                                              value={header?.colSpan}
-                                              onChange={(e) => handleHeaderChange(index, e.target.value, 'colSpan')}
-                                            /> */}
                                             <Checkbox
                                               key={`searchable-${idx}-${index}`}
                                               id={`searchable-${idx}-${index}`}
@@ -279,7 +271,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         Add Row
                                       </Button>
                                     </span>
-                                    {console.log('tableRow>>>',tableRows)}
                                     <Accordion>
                                       {tableRows.map((rowValue, index) => (
                                         <AccordionItem title={`Row-${index}`}>
@@ -298,10 +289,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               onChange={(e) => handleRowOpt(index, e.target.value, item.key)}
                                             />;
                                             })}
-                                          
-                                          <Button size="sm" className= 'delete-table-column'>
-                                            Delete Row
-                                          </Button>
                                         </AccordionItem>
                                       ))}
                                     </Accordion>

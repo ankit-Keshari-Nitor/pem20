@@ -93,7 +93,6 @@ export default function Designer({ componentMapper }) {
     },
     [layout, components]
   );
-
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
 
     e.stopPropagation();
