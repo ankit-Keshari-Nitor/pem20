@@ -12,20 +12,27 @@ export const API_URL = {
 
 export const ACTION_COLUMN_KEYS = {
   NAME: 'name',
-  ENCRYPTED: 'encrypted',
+  ENCRYPTED: 'isEncrypted',
   STATUS: 'status',
   VERSION: 'version',
   ACTIONS: 'action',
   ELLIPSIS: 'ellipsis',
-  ROLLOUT: 'rollout',
-  SAVE_AS: 'saveas',
-  VIEW: 'view',
-  TEST: 'test',
-  DELETE: 'delete',
-  SHARE_UNSHARE: 'shareunshare',
-  EXPORT: 'export',
-  MARK_AS_FINAL: 'markasfinal',
-  EDIT: 'edit'
+  ROLLOUT: 'Rollout',
+  VIEW: 'View',
+  TEST_ACTIVITY: 'Test Activity',
+  TEST_VERSION: 'Test Version',
+  DELETE: 'Delete',
+  SHARE_UNSHARE: 'Share/Unshared',
+  EXPORT_ACTIVITY: 'Export Activity',
+  EXPORT_VERSION: 'Export Version',
+  MARK_AS_FINAL: 'Mark As Final',
+  EDIT: 'Edit',
+  CLONE_ACTIVITY: 'Clone Activity',
+  CLONE_VERSION: 'Clone Version',
+  MARK_AS_DEFAULT: 'Mark As Default',
+  ACTIVITYDEFVERSIONKEY: 'activityDefnVersionKey',
+  RESTORE: 'Restore',
+  DESCRCIPTION: 'description'
 };
 
 export const ACTIVITY_LIST_COLUMNS = [
@@ -34,17 +41,19 @@ export const ACTIVITY_LIST_COLUMNS = [
   { key: ACTION_COLUMN_KEYS.STATUS, header: 'Current Status' },
   { key: ACTION_COLUMN_KEYS.VERSION, header: 'Default Version' },
   { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
-  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' }
+  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' },
 ];
 
-export const ACTION_COLUMN_FINAL = [
-  { key: ACTION_COLUMN_KEYS.ROLLOUT, label: 'Rollout' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
-];
-
-export const ACTION_COLUMN_DRAFT = [
-  { key: ACTION_COLUMN_KEYS.MARK_AS_FINAL, label: 'Mark as final' },
-  { key: ACTION_COLUMN_KEYS.TEST, label: 'Test' }
+export const ACTIVITY_VERSION_COLUMNS = [
+  { key: ACTION_COLUMN_KEYS.VERSION, header: 'Version' },
+  { key: ACTION_COLUMN_KEYS.ENCRYPTED, header: 'Encrypted' },
+  { key: ACTION_COLUMN_KEYS.STATUS, header: 'Status' },
+  { key: ACTION_COLUMN_KEYS.ACTIONS, header: 'Actions' },
+  { key: ACTION_COLUMN_KEYS.ELLIPSIS, header: '' },
+  { key: ACTION_COLUMN_KEYS.ACTIVITYDEFVERSIONKEY, header: '' },
+  { key: ACTION_COLUMN_KEYS.DESCRCIPTION, header: '' }
 ];
 
 export const ROLLOUT_STEPS = [
@@ -229,9 +238,6 @@ export const TEST_DIALOG_DATA = [
 ];
 
 export const ACTIVITY_DEFINITION_DATA = {
-  id: '',
-  versions: [],
-  selectedVersion: '',
   name: '',
   description: '',
   contextData: '',
@@ -239,8 +245,10 @@ export const ACTIVITY_DEFINITION_DATA = {
 };
 
 export const OPERATIONS = {
-  VIEW: 'view',
+  VIEW: 'View',
   EDIT: 'edit',
   EXPORT: 'export',
-  DELETE: 'delete'
+  DELETE: 'delete',
+  CREATE_NEW_VERSION: 'create_new_version',
+  TEST: 'test'
 };

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, } from '@carbon/react';
-
+import { Modal } from '@carbon/react';
 import { NODE_TYPE } from '../../constants';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import BlockDefinitionForm from '../block-definition-form';
@@ -18,8 +17,14 @@ import {
 
 import './block-properties-tray.scss';
 
+export default function BlockPropertiesTray(props) {
+  const {
+    selectedNode, //partner,approval,attribute,sponsor,system,custom
+    selectedTaskNode, //dialog,xslt,api
+    setOpenPropertiesBlock,
+    readOnly
+  } = props;
 
-export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, setOpenPropertiesBlock, editDefinitionProp, activityOperation, activityDefinitionData, readOnly }) {
   const [openExpandMode, setOpenExpandMode] = useState(false);
 
   const getForm = (selectedNode) => {
@@ -54,17 +59,17 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
       <div className="block-properties-container">
         <div className="title-bar">
           <span className="title">
-              <span>
-                {selectedNode?.data?.editableProps.name ? (
-                  <span>
-                    {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
-                  </span>
-                ) : (
-                  <span>
-                    {selectedNode?.id} ({selectedNode?.data?.taskName})
-                  </span>
-                )}
-              </span>
+            <span>
+              {selectedNode?.data?.editableProps.name ? (
+                <span>
+                  {selectedNode?.data?.editableProps.name} ({selectedNode?.data?.taskName})
+                </span>
+              ) : (
+                <span>
+                  {selectedNode?.id} ({selectedNode?.data?.taskName})
+                </span>
+              )}
+            </span>
           </span>
           <div className="icon">
             <span onClick={() => setOpenExpandMode(true)} className="icon">
@@ -75,7 +80,7 @@ export default function BlockPropertiesTray({ selectedNode, selectedTaskNode, se
             </span>
           </div>
         </div>
-        {getForm(selectedNode)}
+        <div className="block-properties-form">{getForm(selectedNode)}</div>
       </div>
       <Modal
         open={openExpandMode}

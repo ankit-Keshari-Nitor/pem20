@@ -27,10 +27,11 @@ export const formFields = [
   CheckboxGroup,
   RadioButtonGroup,
   Toggle,
-  DatePicker,
-  FileUploader,
   Link,
   Tooltip,
+  DataTable,
+  DatePicker,
+  FileUploader,
   Accordion,
   Tab,
   DataTable
