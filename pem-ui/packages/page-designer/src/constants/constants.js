@@ -61,9 +61,9 @@ export const TABLE_HEADER = [
     key: 'column1',
     header: 'column1',
     colSpan: '6',
-    Searchable: false,
-    Sortable: false,
-    Required: false
+    searchable: false,
+    sortable: false,
+    required: false
   }
 ];
 

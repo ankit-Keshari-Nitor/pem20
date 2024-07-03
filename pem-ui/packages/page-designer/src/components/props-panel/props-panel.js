@@ -24,7 +24,7 @@ import {
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, TABLE_HEADER } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan } from '@carbon/icons-react';
@@ -387,6 +387,13 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               labelText="Sortable"
                                               checked={header.sortable}
                                               onChange={(e) => handleHeaderChange(index, !header?.sortable, 'sortable')}
+                                            />
+                                            <Checkbox
+                                              key={`searchable-${idx}-${index}`}
+                                              id={`searchable-${idx}-${index}`}
+                                              labelText="Searchable"
+                                              checked={header.searchable}
+                                              onChange={(e) => handleHeaderChange(index, !header?.searchable, 'searchable')}
                                             />
                                             <Button size="sm" className="delete-table-column" onClick={() => handleTableColumn(index)}>
                                               Delete Column

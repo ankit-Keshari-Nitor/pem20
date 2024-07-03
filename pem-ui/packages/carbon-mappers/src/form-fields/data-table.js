@@ -10,7 +10,8 @@ import {
   TableSelectRow,
   TableSelectAll,
   Pagination,
-  TableContainer
+  TableContainer,
+  Search
 } from '@carbon/react';
 import { FORM_FIELD_GROUPS, FORM_FIELD_LABEL, FORM_FIELD_TYPE } from '../constant/form-field-type';
 import { NameLabel, helperText, isRequired, labelText, pageSize, selectRow, tableColumn, tableRows as tableRowsData } from '../constant';
@@ -20,7 +21,7 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   const { labelText, helperText, disabled, isRequired, selectablerows, pagesize, tableRows, tableColumns, ...rest } = field;
   const [headers, setHeaders] = useState(tableColumns ? tableColumns : []);
   const [selectRow, setSelectRow] = useState(false);
-  const [newRows, setNewRows] = useState([]);
+  const [hideSearch, setHideSearch] = useState(false);
   let sortCheck = useRef(true);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -34,11 +35,11 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
     setDataRows(tableRows ? tableRows : []);
     sortCheck.current = true;
     tableRows && setDataTableRows(tableRows);
-    setNewRows([]);
   }, [tableRows, tableRows?.length]);
 
   useEffect(() => {
     setHeaders(tableColumns);
+    setHideSearch(false);
   }, [tableColumns]);
 
   useEffect(() => {
@@ -60,8 +61,13 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
   }, [pagination]);
   return (
     <>
-      <CarbonDataTable rows={dataTablerows} headers={headers} 
-        render = {({ rows, headers, getTableProps, getHeaderProps, getRowProps, getSelectionProps }) => (
+      {hideSearch && (
+        <Search size="lg" placeholder="Find your items" labelText="Search" closeButtonLabelText="Clear search input" id="search-1" onChange={() => {}} onKeyDown={() => {}} />
+      )}
+      <CarbonDataTable
+        rows={dataTablerows}
+        headers={headers}
+        render={({ rows, headers, getTableProps, getHeaderProps, getRowProps, getSelectionProps }) => (
           <TableContainer title={labelText} description={helperText}>
             {sortCheck.current &&
               (rows.length > 0 &&
@@ -74,15 +80,16 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
                     }
                   });
                 }),
-              (sortCheck.current = false)
-              )}
+              (sortCheck.current = false))}
+
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>
                   {selectRow && <TableSelectAll {...getSelectionProps()} data-testid="row-selection" />}
-                  {headers.map((header) => (
-                    <TableHeader {...getHeaderProps({ header, isSortable: header.sortable })}>{header.header}</TableHeader>
-                  ))}
+                  {headers.map((header) => {
+                    header.searchable && setHideSearch(true);
+                    return <TableHeader {...getHeaderProps({ header, isSortable: header.sortable })}>{header.header}</TableHeader>;
+                  })}
                 </TableRow>
               </TableHead>
               <TableBody>
