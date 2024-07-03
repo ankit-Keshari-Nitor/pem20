@@ -63,7 +63,7 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
       <CarbonDataTable rows={dataTablerows} headers={headers} 
         render = {({ rows, headers, getTableProps, getHeaderProps, getRowProps, getSelectionProps }) => (
           <TableContainer title={labelText} description={helperText}>
-            {/* {sortCheck.current &&
+            {sortCheck.current &&
               (rows.length > 0 &&
                 rows.map((row) => {
                   dataTablerows.map((orgRow, dataTablerowsId) => {
@@ -75,7 +75,7 @@ const DataTable = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
                   });
                 }),
               (sortCheck.current = false)
-              )} */}
+              )}
             <Table {...getTableProps()}>
               <TableHead>
                 <TableRow>

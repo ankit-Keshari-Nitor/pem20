@@ -433,9 +433,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                               );
                                             })}
 
-                                            <Button size="sm" className="delete-table-column" onClick={()=> handleTableRowdelete(index)}>
+                                            {/* <Button size="sm" className="delete-table-column" onClick={()=> handleTableRowdelete(index)}>
                                               Delete Row
-                                            </Button>
+                                            </Button> */}
                                           </AccordionItem>
                                         ))}
                                       </Accordion>
