@@ -24,7 +24,7 @@ import {
 } from '@carbon/react';
 
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, TABLE_HEADER } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan } from '@carbon/icons-react';
@@ -735,6 +735,8 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               labelText={advncProps.label}
                               defaultToggled={Boolean(advncProps.value.value)}
                               toggled={Boolean(advncProps.value.value)}
+                              labelA={advncProps?.labelA}
+                              labelB={advncProps?.labelB}
                               onClick={(e) =>
                                 handleSchemaChanges(
                                   selectedFiledProps?.id,
@@ -747,7 +749,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                   selectedFiledProps?.currentPathDetail
                                 )
                               }
-                              hideLabel
                             />
                           )}
                         </>
