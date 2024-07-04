@@ -37,7 +37,6 @@ export default function ActivityList() {
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState('');
 
-
   const [showRolloutModal, setShowRolloutModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
 
@@ -72,14 +71,7 @@ export default function ActivityList() {
   const fetchAndSetData = useCallback(() => {
     ActivityService.getActivityList(pageNo - 1, pageSize, sortDir, searchKey, status)
       .then((data) => {
-        const updatedRows = data.content.map(row => ({
-          ...row,
-          activityDefnVersionKey: row.defaultVersion.activityDefnVersionKey,
-          version: row.defaultVersion.version,
-          isEncrypted: row.defaultVersion.isEncrypted,
-          status: row.defaultVersion.status,
-        }));
-        setRows(updatedRows);
+        setRows(data.content);
         setTotalRows(data.pageContent.totalElements);
       })
       .catch((error) => {
@@ -92,7 +84,7 @@ export default function ActivityList() {
           onCloseButtonClick: () => setNotificationProps(null)
         });
       });
-  }, [pageNo, pageSize, sortDir, searchKey, status]);
+  }, [pageNo, pageSize, sortDir, status, searchKey]);
 
   // useEffect to trigger fetchAndSetData whenever dependencies change
   useEffect(() => {
@@ -120,7 +112,6 @@ export default function ActivityList() {
     setPageSize(pageSize);
   };
 
-
   // Handler for action clicks
   const onCellActionClick = (action, activityDefKey, actVersionKey = '') => {
     const record = rows.filter((x) => x.id === activityDefKey)[0];
@@ -146,7 +137,7 @@ export default function ActivityList() {
         setShowGeneralActionModal(true);
         break;
       case ACTION_COLUMN_KEYS.ROLLOUT:
-        setShowRolloutModal(true);;//(id);
+        setShowRolloutModal(true); //(id);
         break;
       case ACTION_COLUMN_KEYS.TEST_ACTIVITY:
         handleTestOperation(activityDefKey);
@@ -202,24 +193,26 @@ export default function ActivityList() {
       onCloseButtonClick: () => setNotificationProps(null)
     });
     setShowGeneralActionModal(false);
-  }
+  };
 
   const handleEdit = (id) => {
     pageUtil.navigate(`${id}`, {});
-  }
+  };
 
   const handleView = (id) => {
     pageUtil.navigate(`${id}`, {});
-  }
+  };
 
   const handleVersion = (id, activityName, status) => {
     setActivityDefnKey(id);
     setActivityName(activityName);
-    setActivityStatus(status)
+    setActivityStatus(status);
     setShowDrawer(true);
   };
 
-  const handleClose = () => { setShowDrawer(false); };
+  const handleClose = () => {
+    setShowDrawer(false);
+  };
 
   // -------------------------------------Test operation Start-------------------------------------------------
   // Function to handle the Test operation
@@ -309,18 +302,8 @@ export default function ActivityList() {
       />
       {/* For Version Drawer */}
       {activityDefnKey !== '' && (
-        <ActivityVersionsSideDrawer
-          anchor="right"
-          showDrawer={showDrawer}
-          onClose={handleClose}
-        >
-          <ActivityVersionList
-            activityName={activityName}
-            onClose={handleClose}
-            activityDefnKey={activityDefnKey}
-            status={activityStatus}
-            showDrawer={showDrawer}
-          />
+        <ActivityVersionsSideDrawer anchor="right" showDrawer={showDrawer} onClose={handleClose}>
+          <ActivityVersionList activityName={activityName} onClose={handleClose} activityDefnKey={activityDefnKey} status={activityStatus} showDrawer={showDrawer} />
         </ActivityVersionsSideDrawer>
       )}
       {/* For Version Drawer */}
@@ -350,21 +333,21 @@ export default function ActivityList() {
           onSecondaryButtonClick={handelTestCloseClick}
           onRequestClose={() => setShowTestModal(false)}
         >
-          <ActivityTestModal
-            currentTestData={currentTestData}
-            formRenderSchema={formRenderSchema} />
-
-        </WrapperModal>)}
+          <ActivityTestModal currentTestData={currentTestData} formRenderSchema={formRenderSchema} />
+        </WrapperModal>
+      )}
       {/* Notification toast */}
       {notificationProps && notificationProps.open && <WrapperNotification {...notificationProps} />}
       {/* Modal for Rollout operation */}
-      {showRolloutModal && <ActivityRolloutModal
-        showModal={showRolloutModal}
-        setShowModal={() => setShowRolloutModal(false)}
-        activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
-        activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
-        activityName={selectedActivity ? selectedActivity.name : ''}
-      />}
+      {showRolloutModal && (
+        <ActivityRolloutModal
+          showModal={showRolloutModal}
+          setShowModal={() => setShowRolloutModal(false)}
+          activityDefKey={selectedActivity ? selectedActivity.activityDefnKey : ''}
+          activityVerKey={selectedActivity ? selectedActivity.activityDefnVersionKey : ''}
+          activityName={selectedActivity ? selectedActivity.name : ''}
+        />
+      )}
     </>
   );
 }
