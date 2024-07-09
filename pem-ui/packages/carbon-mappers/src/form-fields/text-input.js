@@ -15,14 +15,15 @@ import {
   NameLabel,
   regexValidation,
   id,
-  mapping
+  mapping,
+  hidden
 } from '../constant';
 import { TextInputIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
 
 const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, label, disabled, value, isRequired, min, max, ...rest } = field;
+  const { labelText, helperText, label, disabled, value, isRequired, visible, min, max, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
@@ -39,6 +40,8 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         labelText={labelText === undefined ? label : labelText}
         helperText={helperText}
         disabled={disabled}
+        hidden={visible}
+        hideLabel={visible}
         defaultValue={''}
         value={fieldValue}
         onChange={(e) => {
@@ -61,7 +64,7 @@ TextInput.config = {
   icon: <TextInputIcon />,
   editableProps: {
     Basic: [id, NameLabel, labelText, placeHolder, helperText, valueLabel, mapping, readOnly],
-    Condition: []
+    Condition: [hidden]
   },
   advanceProps: [minProps, maxProps, regexValidation, isRequired]
 };

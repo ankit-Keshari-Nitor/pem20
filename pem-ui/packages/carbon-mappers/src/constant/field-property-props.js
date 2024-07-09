@@ -220,3 +220,12 @@ export const pageSize = {
   value: '',
   type: 'TextInput'
 };
+
+export const hidden = {
+  propsName: 'visible',
+  label: 'Visible',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+};

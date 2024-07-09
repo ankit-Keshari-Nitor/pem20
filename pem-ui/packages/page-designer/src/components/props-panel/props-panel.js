@@ -27,7 +27,7 @@ import './props-panel.scss';
 import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
-import { TrashCan } from '@carbon/icons-react';
+import { TrashCan, Add } from '@carbon/icons-react';
 
 export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
   const [editableProps, setEditableProps] = React.useState({});
@@ -753,7 +753,39 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                   </>
                 )}
               </TabPanel>
-              <TabPanel className="tab-panel">Conditional Props</TabPanel>
+              {/* Condition Properties Field */}
+              <TabPanel className="tab-panel">
+                {editableProps && editableProps['Condition']?.length > 0 && (
+                  <>
+                    {editableProps['Condition'].map((item, idx) => {
+                      return (
+                        <>
+                          {item.type === 'Toggle' && (
+                            <ul key={idx}>
+                              <li>
+                                <Toggle
+                                  key={idx}
+                                  id={'toggle-Condition-' + String(idx) + '-' + selectedFiledProps?.id}
+                                  className="right-palette-form-item"
+                                  labelText={item.label}
+                                  defaultToggled={Boolean(item.value)}
+                                  toggled={Boolean(item.value)}
+                                  labelA={item?.labelA}
+                                  labelB={item?.labelB}
+                                  onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, 'Condition', item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
+                                />
+                              </li>
+                            </ul>
+                          )}
+                        </>
+                      );
+                    })}
+                    <Button size="lg" renderIcon={Add} onClick={() => {}}>
+                      Add Condition
+                    </Button>
+                  </>
+                )}
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </>
