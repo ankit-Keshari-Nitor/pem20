@@ -26,12 +26,12 @@ import {
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
-import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS } from '../../constants/constants';
+import { CUSTOM_COLUMN, SUBTAB, ROW, TAB, CUSTOM_TITLE, OPTIONS, CUSTOMREGEX, TABLE_COLUMNS, TABLE_ROWS, CONDITIONSBUILDER } from '../../constants/constants';
 import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan, Add } from '@carbon/icons-react';
 
-export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet }) {
+export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet, componentsName }) {
   const [editableProps, setEditableProps] = React.useState({});
   const [advanceProps, setAdvanceProps] = React.useState([]);
   const [componentStyle, setComponentStyle] = React.useState([]);
@@ -53,6 +53,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
 
   const [tableHeader, setTableHeader] = React.useState([]);
   const [tableRows, setTableRows] = React.useState([]);
+  const [conditionsProps, setConditionsProps] = React.useState([]);
 
   const items = [
     { text: '1' },
@@ -72,6 +73,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     { text: '15' },
     { text: '16' }
   ];
+  console.log('selectedFiledProps?.component?.editableProps?.Condition', selectedFiledProps?.component?.editableProps?.Condition)
   useEffect(() => {
     setEditableProps(selectedFiledProps?.component?.editableProps);
     setAdvanceProps(selectedFiledProps?.component?.advanceProps);
@@ -84,6 +86,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     setOptions(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.type === 'Options')?.value || []);
     setTableHeader(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLE_COLUMNS)?.value || []);
     setTableRows(selectedFiledProps?.component?.editableProps?.Basic.find((prop) => prop.propsName === TABLE_ROWS)?.value || []);
+    setConditionsProps(selectedFiledProps?.component?.editableProps?.Condition.find((prop) => prop.propsName === CONDITIONSBUILDER)?.value || []);
   }, [selectedFiledProps, componentMapper, customRegexPattern]);
 
   const handleChange = (e) => {
@@ -211,6 +214,22 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
       </TreeNode>
     </TreeView>
   );
+
+  // ---------------------------------------------------------------- Conditions --------------------------------------------------------------------------
+
+  const addCondition = () => {
+    setConditionsProps((preConditions) => [
+      ...preConditions,
+      {
+        operation: '',
+        operator: '',
+        condition: '',
+        value: ''
+      }
+    ]);
+    //const newCondition = [...conditionsProps, { operation: '', operator: '', condition: '', value: '' }]
+    //handleSchemaChanges(selectedFiledProps?.id, 'Condition', CONDITIONSBUILDER, newCondition, selectedFiledProps?.currentPathDetail);
+  };
 
   // ----------------------------------------------------------------Table Related Functions----------------------------------------------------------------
 
@@ -836,36 +855,123 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
               </TabPanel>
               {/* Condition Properties Field */}
               <TabPanel className="tab-panel">
-                {editableProps && editableProps['Condition']?.length > 0 && (
-                  <>
-                    {editableProps['Condition'].map((item, idx) => {
-                      return (
-                        <>
-                          {item.type === 'Toggle' && (
-                            <ul key={idx}>
-                              <li>
-                                <Toggle
-                                  key={idx}
-                                  id={'toggle-Condition-' + String(idx) + '-' + selectedFiledProps?.id}
-                                  className="right-palette-form-item"
-                                  labelText={item.label}
-                                  defaultToggled={Boolean(item.value)}
-                                  toggled={Boolean(item.value)}
-                                  labelA={item?.labelA}
-                                  labelB={item?.labelB}
-                                  onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, 'Condition', item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
-                                />
-                              </li>
-                            </ul>
-                          )}
-                        </>
-                      );
-                    })}
-                    <Button size="lg" renderIcon={Add} onClick={() => {}}>
-                      Add Condition
-                    </Button>
-                  </>
-                )}
+                {editableProps &&
+                  Object.keys(editableProps).map((key, idx) => {
+                    return (
+                      <span key={idx}>
+                        {editableProps[key] && editableProps[key].length > 0 && (
+                          <>
+                            {editableProps[key].map((item, idx) => {
+                              return (
+                                <>
+                                  {/* TextInput */}
+                                  {key === 'Condition' && item.type === 'TextInput' && item.propsName != TABLE_COLUMNS && item.propsName != TABLE_ROWS && (
+                                    <TextInput
+                                      key={idx}
+                                      readOnly={item?.readOnly}
+                                      id={String(idx)}
+                                      className="right-palette-form-item"
+                                      labelText={item.label}
+                                      value={item.value}
+                                      invalid={item.invalid ? item.invalid : false}
+                                      invalidText={item.invalidText ? item.invalidText : null}
+                                      onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
+                                    />
+                                  )}
+                                  {/* Mapping */}
+                                  {key === 'Condition' && item.type === 'mapping' && (
+                                    <>
+                                      <TextInput
+                                        key={idx}
+                                        id={String(idx)}
+                                        className="right-palette-form-item-mapping"
+                                        labelText={item.label}
+                                        value={item.value}
+                                        invalid={item.invalid ? item.invalid : false}
+                                        invalidText={item.invalidText ? item.invalidText : null}
+                                        onChange={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, e.target.value, selectedFiledProps?.currentPathDetail)}
+                                      />
+                                      <Button
+                                        size="md"
+                                        className="opt-btn"
+                                        kind="secondary"
+                                        renderIcon={ElippsisIcon}
+                                        onClick={() => OpenMappingDialog(selectedFiledProps?.id, key, item.propsName, selectedFiledProps?.currentPathDetail)}
+                                      ></Button>
+                                    </>
+                                  )}
+                                  {/* Toggle */}
+                                  {key === 'Condition' && item.type === 'Toggle' && (
+                                    <ul key={idx}>
+                                      <li>
+                                        <Toggle
+                                          key={idx}
+                                          id={'toggle-' + key + '-' + String(idx) + '-' + selectedFiledProps?.id}
+                                          className="right-palette-form-item"
+                                          labelText={item.label}
+                                          defaultToggled={Boolean(item.value)}
+                                          toggled={Boolean(item.value)}
+                                          labelA={item?.labelA}
+                                          labelB={item?.labelB}
+                                          onClick={(e) => handleSchemaChanges(selectedFiledProps?.id, key, item.propsName, !item.value, selectedFiledProps?.currentPathDetail)}
+                                        />
+                                      </li>
+                                    </ul>
+                                  )}
+                                  {/* Add Condition Button */}
+                                  {item.type === 'Button' && (
+                                    <>
+                                      {
+                                        conditionsProps.map((item, idx) => {
+                                          return (
+                                            <div>
+                                              {/* Operation */}
+                                              <Select id={String(`${idx}-operation`)} hideLabel={true} onChange={''} defaultValue={item.operation} value={item.operation}>
+                                                <SelectItem key={'operation'} value={''} text={'Select Operation'} />
+                                                <SelectItem key={'showIf-1'} value={'showIf'} text={'Show If'} />;
+                                                <SelectItem key={'disable-1'} value={'disableIf'} text={'Disable If'} />;
+                                              </Select>
+                                              {/* Operator */}
+                                              <Select id={String(`${idx}-operator`)} hideLabel={true} onChange={''} defaultValue={item.operator} value={item.operator}>
+                                                <SelectItem key={'operator'} value={''} text={'Select Field Ids'} />
+                                                {componentsName.map((operatorValue) => {
+                                                  return (
+                                                    <SelectItem key={operatorValue.id} value={operatorValue.id} text={operatorValue.id} />
+                                                  )
+                                                })}
+                                              </Select>
+                                              {/* Condition */}
+                                              <Select id={String(`${idx}-condition`)} hideLabel={true} onChange={''} defaultValue={item.condition} value={item.condition}>
+                                                <SelectItem key={'condition'} value={''} text={'Select Condition'} />
+                                                <SelectItem key={'equals-1'} value={'equals'} text={'Equals'} />;
+                                                <SelectItem key={'doesNotEqual-1'} value={'doesNotEqual'} text={'Does Not Equal'} />;
+                                              </Select>
+                                              {/* Value */}
+                                              <TextInput
+                                                key={`${idx}-condition-value`}
+                                                id={String(`${idx}-condition-value`)}
+                                                //className="right-palette-form-item-mapping"
+                                                placeholder='Value'
+                                                value={item.value}
+                                              //onChange={(e) => handleRowOpt(index, e.target.value, rowitem.key)}
+                                              />
+                                            </div>
+                                          )
+                                        })
+                                      }
+                                      <Button size="lg" renderIcon={Add} onClick={() => addCondition()}>
+                                        {item.label}
+                                      </Button>
+                                    </>
+                                  )}
+                                </>
+                              );
+                            })}
+                          </>
+                        )}
+                      </span>
+                    );
+                  })}
               </TabPanel>
             </TabPanels>
           </Tabs>

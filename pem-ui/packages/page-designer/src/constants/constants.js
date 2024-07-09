@@ -19,6 +19,7 @@ export const DATATABLE = 'data-table';
 export const TABLE_COLUMNS = 'tableColumns';
 export const TABLE_ROWS = 'tableRows';
 export const LABEL_TEXT = 'labelText';
+export const CONDITIONSBUILDER = 'conditionBuilder';
 
 export const PALETTE_GROUPS = [
   {

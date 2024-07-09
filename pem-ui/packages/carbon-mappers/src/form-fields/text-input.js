@@ -16,7 +16,8 @@ import {
   regexValidation,
   id,
   mapping,
-  hidden
+  hidden,
+  conditions
 } from '../constant';
 import { TextInputIcon } from './../icons';
 
@@ -64,7 +65,7 @@ TextInput.config = {
   icon: <TextInputIcon />,
   editableProps: {
     Basic: [id, NameLabel, labelText, placeHolder, helperText, valueLabel, mapping, readOnly],
-    Condition: [hidden]
+    Condition: [hidden, conditions]
   },
   advanceProps: [minProps, maxProps, regexValidation, isRequired]
 };

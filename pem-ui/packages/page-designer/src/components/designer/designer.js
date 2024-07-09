@@ -37,7 +37,8 @@ import {
   OPTION,
   DATATABLE,
   TABLE_ROWS,
-  LABEL_TEXT
+  LABEL_TEXT,
+  CONDITIONSBUILDER
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -131,7 +132,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
-
+  
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
@@ -164,6 +165,9 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         if (fieldData?.component[conditionEditPops?.propsName]) {
           return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
         } else {
+          if (conditionEditPops?.propsName === CONDITIONSBUILDER) {
+            return conditionEditPops.value = [];
+          }
           return (conditionEditPops.value = false);
         }
       });
@@ -296,7 +300,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-           {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+            {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>
@@ -329,6 +333,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
                 onFieldDelete={onFieldDelete}
                 componentMapper={componentMapper}
                 replaceComponet={replaceComponet}
+                componentsName = {componentsName}
               />
             </div>
           )}

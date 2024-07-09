@@ -304,3 +304,10 @@ export const hidden = {
   labelA: 'No',
   labelB: 'Yes'
 }
+
+export const conditions = {
+  propsName: 'conditionBuilder',
+  label: 'Add Condition',
+  value: [],
+  type: 'Button'
+};
