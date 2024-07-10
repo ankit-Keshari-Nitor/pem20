@@ -1,6 +1,7 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortByModifyTs;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
@@ -9,6 +10,7 @@ import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
 import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ActivityVersionService;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,9 +48,9 @@ class ActivityVersionControllerTest extends BaseControllerTest{
     @Test
     void testGetActivityDefinitionVersionsList() throws Exception {
         ActivityVersionDefnPaginationResp resp = new ActivityVersionDefnPaginationResp();
-        Mockito.when(activityVersionService.getAllVersionDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyBoolean(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString(),Mockito.anyString()))
+        Mockito.when(activityVersionService.getAllVersionDefinitionList(Mockito.anyString(),Mockito.anyString(),Mockito.anyString(),Mockito.anyBoolean(),Mockito.anyInt(),Mockito.anyInt(),Mockito.anyString(),Mockito.anyString(),Mockito.any()))
                 .thenReturn(resp);
-        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Status.DRAFT,0,1, SortBy.modifyTs, SortDirection.ASC,"cashbank");
+        ResponseEntity<Object> output = activityVersionController.getActivityVersionDefinitionList("test",false,"test", Arrays.asList(Status.DRAFT.getStatus()),0,1, SortByModifyTs.modifyTs, SortDirection.ASC,"cashbank");
         assertNotNull(output);
     }
 
@@ -61,7 +64,7 @@ class ActivityVersionControllerTest extends BaseControllerTest{
     }
 
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
         ActivityDefnVersionResp resp = new ActivityDefnVersionResp();
         Mockito.when(activityVersionService.createActivityDefnVersion(Mockito.anyString(),Mockito.anyString(),Mockito.any(ActivityVersionReq.class)))

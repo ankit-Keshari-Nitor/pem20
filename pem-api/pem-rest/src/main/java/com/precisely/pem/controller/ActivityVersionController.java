@@ -1,18 +1,17 @@
 package com.precisely.pem.controller;
 
 import com.precisely.pem.commonUtil.SortBy;
+import com.precisely.pem.commonUtil.SortByModifyTs;
 import com.precisely.pem.commonUtil.SortDirection;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.PemBpmnModel;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.dtos.responses.ActivityDefnVersionResp;
 import com.precisely.pem.dtos.responses.ActivityVersionDefnPaginationResp;
 import com.precisely.pem.dtos.responses.MarkAsFinalActivityDefinitionVersionResp;
-import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
-import com.precisely.pem.exceptionhandler.ErrorResponseDto;
-import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
-import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
+import com.precisely.pem.exceptionhandler.*;
 import com.precisely.pem.services.ActivityVersionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,6 +24,7 @@ import jakarta.validation.constraints.Size;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -61,15 +62,15 @@ public class ActivityVersionController {
     })
     @GetMapping()
     public ResponseEntity<Object> getActivityVersionDefinitionList(@PathVariable(value = "activityDefnKey") String activityDefnKey,
-                                                                   @RequestParam(value = "isDefault",required = false, defaultValue = "false") Boolean isDefault,
+                                                                   @RequestParam(value = "isDefault",required = false) Boolean isDefault,
                                                                    @RequestParam(value = "description", required = false) @Size(min = 1, max = 255) String description,
-                                                                   @RequestParam(value = "status", defaultValue = "DRAFT", required = true) Status status,
+                                                                   @RequestParam(value = "status", required = false) List<String> status,
                                                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
                                                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
-                                                                   @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortBy sortBy,
+                                                                   @RequestParam(value = "sortBy", defaultValue = "modifyTs" ,required = false) SortByModifyTs sortBy,
                                                                    @RequestParam(value = "sortDir", defaultValue = "DESC", required = false) SortDirection sortDir,
                                                                    @PathVariable(value = "sponsorContext")String sponsorContext) throws Exception {
-        return new ResponseEntity<>(activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy ==null? "modifyTs":sortBy.name(), sortDir ==null? "ASC":sortDir.name(),status.getStatus()),HttpStatus.OK);
+        return new ResponseEntity<>(activityVersionService.getAllVersionDefinitionList(sponsorContext,activityDefnKey,description,isDefault,pageNo, pageSize, sortBy.name(), sortDir ==null? "ASC":sortDir.name(), status),HttpStatus.OK);
     }
 
     @Operation(summary = "Get Version of Activity Definition", tags = { "Activity Definition Version" })
@@ -107,7 +108,7 @@ public class ActivityVersionController {
     public ResponseEntity<Object> createActivityDefinitionVersion(@PathVariable(value = "sponsorContext")String sponsorContext,
                                                                   @PathVariable(value = "activityDefnKey")String activityDefnKey,
                                                                   @Valid ActivityVersionReq activityVersionReq
-    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException {
+    ) throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         ActivityDefnVersionResp activityDefnVersionResp = activityVersionService.createActivityDefnVersion(sponsorContext, activityDefnKey, activityVersionReq);
         Link link = linkTo(methodOn(ActivityVersionController.class).createActivityDefinitionVersion(sponsorContext, activityDefnKey, activityVersionReq)).withSelfRel();
         activityDefnVersionResp.setLocation(link.getHref());
@@ -175,5 +176,44 @@ public class ActivityVersionController {
         if(log.isEnabled(Level.INFO))
             log.info("Retrieve all Activity Definitions: Starts");
         return  new ResponseEntity<>(activityVersionService.markAsDefaultActivityDefinitionVersion(sponsorContext,activityDefnKey,activityDefnVersionKey), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get Activity Definition Data for Specific Version of Activity Definition", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = PemBpmnModel.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+    })
+    @GetMapping("/{activityDefnVersionKey}/actions/getData")
+    public ResponseEntity<InputStreamResource> getActivityDataForSpecificVersion( @PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("getActivityDataForSpecificVersion: Starts");
+        ActivityDataResponse activityDataResponse = activityVersionService.getActivityDataForSpecificVersion(sponsorContext,activityDefnKey,activityDefnVersionKey);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + activityDataResponse.getFileName() + "\"")
+                .body(activityDataResponse.getStreamResource());
+    }
+
+    @Operation(summary = "Get Activity Definition Context Data for Specific Version of Activity Definition", tags = { "Activity Definition Version" })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = Object.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Activity Definition not found", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+    })
+    @GetMapping("/{activityDefnVersionKey}/actions/getContextData")
+    public ResponseEntity<Object> getActivityDefinitionContextData( @PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "activityDefnKey")String activityDefnKey, @PathVariable(value = "activityDefnVersionKey")String activityDefnVersionKey) throws Exception {
+        if(log.isEnabled(Level.INFO))
+            log.info("getActivityDefinitionContextData: Starts");
+        Object activityContextData = activityVersionService.getActivityDefinitionContextData(activityDefnVersionKey);
+        return  ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(activityContextData);
     }
 }

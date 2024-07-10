@@ -1,13 +1,13 @@
 package com.precisely.pem.controller;
 
-import com.precisely.pem.commonUtil.*;
-import com.precisely.pem.dtos.responses.ActivityInstResp;
-import com.precisely.pem.dtos.responses.ParticipantActivityInstPaginationResp;
-import com.precisely.pem.dtos.responses.ParticipantActivityInstResp;
+import com.precisely.pem.commonUtil.PcptInstProgress;
+import com.precisely.pem.commonUtil.PcptInstStatus;
+import com.precisely.pem.commonUtil.SortDirection;
+import com.precisely.pem.dtos.responses.*;
 import com.precisely.pem.exceptionhandler.ErrorResponseDto;
-import com.precisely.pem.services.ActivityInstService;
+import com.precisely.pem.exceptionhandler.InvalidStatusException;
+import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.services.ParticipantActivityInstService;
-import io.swagger.v3.oas.annotations.OpenAPI31;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,17 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Tag(name = "Participant Activity Instances", description = "Participant Activity Instance management APIs")
 @RequestMapping("/sponsors/{sponsorContext}/v2/pcptActivities")
@@ -35,7 +30,6 @@ public class ParticipantActivityInstanceController {
 
     @Autowired
     ParticipantActivityInstService participantActivityInstService;
-
 
     @Operation(summary = "Get List of Participant Activity Instances")
     @ApiResponses({
@@ -104,4 +98,68 @@ public class ParticipantActivityInstanceController {
 
     }
 
+    @Operation(summary = "Start/Execute Activity")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityInstListResp.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "404", description = "There are no Instances", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "500", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) })
+    })
+    @PostMapping(value = "/{pcptActivityInstKey}/actions/start",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> startActivity(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey ) throws ResourceNotFoundException, InvalidStatusException {
+        MessageResp messageResp = participantActivityInstService.startActivity(sponsorContext,pcptActivityInstKey);
+        return new ResponseEntity<>(messageResp, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get Task details for specific task")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ActivityTaskDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Exception in getting the Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "There is no Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+    @GetMapping("/{pcptActivityInstKey}/tasks/{taskKey}")
+    public ResponseEntity<ActivityTaskDto> getTaskDetails(@PathVariable(value = "sponsorContext")String sponsorContext, @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey, @PathVariable(value = "taskKey")String taskKey) throws Exception{
+        ActivityTaskDto ActivitytaskDTO = participantActivityInstService.getTaskDetails(sponsorContext,pcptActivityInstKey,taskKey);
+        return new ResponseEntity<>(ActivitytaskDTO,HttpStatus.OK);
+
+    }
+
+    @Operation(summary = "Submit/Resume activity for form node")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ParticipantActivityInstResp.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "Exception in getting the Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)}),
+            @ApiResponse(responseCode = "404", description = "There is no Participant Activity Instance", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE) }),
+            @ApiResponse(responseCode = "422", content = {
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+                    @Content(schema = @Schema(implementation = ErrorResponseDto.class), mediaType = MediaType.APPLICATION_XML_VALUE)})
+    })
+    @PostMapping("/{pcptActivityInstKey}/tasks/{taskKey}/actions/submit")
+    public ResponseEntity<MarkAsFinalActivityDefinitionVersionResp> submitTask(@PathVariable(value = "sponsorContext")String sponsorContext,
+                                                                               @PathVariable(value = "pcptActivityInstKey")String pcptActivityInstKey,
+                                                                               @PathVariable(value = "taskKey")String taskKey, @RequestBody String data) throws Exception{
+        MarkAsFinalActivityDefinitionVersionResp markAsFinalActivityDefinitionVersionResp = participantActivityInstService.submitTask(sponsorContext,pcptActivityInstKey,taskKey,data);
+        return new ResponseEntity<>(markAsFinalActivityDefinitionVersionResp,HttpStatus.OK);
+
+    }
 }

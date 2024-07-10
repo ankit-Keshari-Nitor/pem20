@@ -11,7 +11,6 @@ import {
   ApiBlockIcon,
   XsltBlockIcon
 } from '../icons';
-import { MarkerType } from 'reactflow';
 import { StartNode, EndNode, GatewayNode, TaskNode } from './../components/nodes';
 import { componentTypes, useFormApi, FormSpy } from '@data-driven-forms/react-form-renderer';
 import textField from '@data-driven-forms/carbon-component-mapper/text-field';
@@ -21,6 +20,7 @@ import checkbox from '@data-driven-forms/carbon-component-mapper/checkbox';
 import { Button, Column, Grid } from '@carbon/react';
 import CrossEdge from './../components/edges/cross-edge';
 import './style.scss';
+import { MarkerType, getConnectedEdges } from 'reactflow';
 
 export const CATEGORY_TYPES = {
   TASK: 'task',
@@ -28,23 +28,24 @@ export const CATEGORY_TYPES = {
 };
 
 export const NODE_TYPE = {
-  START: 'start',
-  END: 'end',
-  PARTNER: 'partner',
-  APPROVAL: 'approval',
-  ATTRIBUTE: 'attribute',
-  SPONSOR: 'sponsor',
-  CUSTOM: 'custom',
-  SYSTEM: 'system',
-  GATEWAY: 'gateway',
-  DIALOG: 'form',
-  XSLT: 'xslt',
-  API: 'api'
+  START: 'START_EVENT',
+  END: 'END_EVENT',
+  PARTNER: 'PARTNER_TASK',
+  APPROVAL: 'APPROVAL_TASK',
+  ATTRIBUTE: 'ATTRIBUTE_TASK',
+  SPONSOR: 'SPONSOR_TASK',
+  CUSTOM: 'CUSTOM',
+  SYSTEM: 'SYSTEM',
+  GATEWAY: 'GATEWAY',
+  DIALOG: 'FORM',
+  XSLT: 'XSLT',
+  API: 'API'
 };
 
 export const NODE_TYPES = [
   {
     type: NODE_TYPE.PARTNER,
+    shortName: 'Partner',
     borderColor: '#0585FC',
     taskName: 'Partner Task',
     editableProps: {},
@@ -76,6 +77,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.APPROVAL,
+    shortName: 'Approval',
     borderColor: '#0585FC',
     taskName: 'Approval Task',
     editableProps: {},
@@ -107,6 +109,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.ATTRIBUTE,
+    shortName: 'Attribute',
     borderColor: '#0585FC',
     taskName: 'Attribute Task',
     editableProps: {},
@@ -138,6 +141,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.SPONSOR,
+    shortName: 'Sponsor',
     borderColor: '#0585FC',
     taskName: 'Sponsor Task',
     editableProps: {},
@@ -169,6 +173,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.CUSTOM,
+    shortName: 'Custom',
     borderColor: '#0585FC',
     taskName: 'Custom Task',
     editableProps: {},
@@ -200,6 +205,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.SYSTEM,
+    shortName: 'System',
     borderColor: '#0585FC',
     taskName: 'System Task',
     editableProps: {},
@@ -231,6 +237,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.GATEWAY,
+    shortName: 'Gatway',
     borderColor: '#0585FC',
     taskName: 'Gateway Task',
     editableProps: {
@@ -264,6 +271,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.DIALOG,
+    shortName: 'Dialog',
     borderColor: '#0585FC',
     taskName: 'Dialog Task',
     editableProps: {},
@@ -295,6 +303,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.API,
+    shortName: 'API',
     borderColor: '#0585FC',
     taskName: 'API Task',
     editableProps: {},
@@ -326,6 +335,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.XSLT,
+    shortName: 'XSLT',
     borderColor: '#0585FC',
     taskName: 'XSLT Task',
     editableProps: {},
@@ -357,6 +367,7 @@ export const NODE_TYPES = [
   },
   {
     type: NODE_TYPE.GATEWAY,
+    shortName: 'Gateway',
     borderColor: '#0585FC',
     taskName: 'Gateway Task',
     editableProps: {
@@ -400,33 +411,16 @@ export const endMarks = {
   color: '#FF0072'
 };
 
-export const TASK_INITIAL_NODES = [
-  {
-    id: 'start',
-    type: NODE_TYPE.START,
-    data: { label: 'Start' },
-    // position: { x: 350, y: 500 },
-    sourcePosition: 'right'
-  },
-  {
-    id: 'end',
-    type: NODE_TYPE.END,
-    data: { label: 'End' },
-    // position: { x: 950, y: 500 },
-    targetPosition: 'left'
-  }
-];
-
 export const TASK_NODE_TYPES = {
-  start: StartNode,
-  end: EndNode,
-  partner: TaskNode,
-  approval: TaskNode,
-  attribute: TaskNode,
-  sponsor: TaskNode,
-  custom: TaskNode,
-  system: TaskNode,
-  gateway: GatewayNode
+  START_EVENT: StartNode,
+  END_EVENT: EndNode,
+  PARTNER_TASK: TaskNode,
+  APPROVAL_TASK: TaskNode,
+  ATTRIBUTE_TASK: TaskNode,
+  SPONSOR_TASK: TaskNode,
+  CUSTOM: TaskNode,
+  SYSTEM: TaskNode,
+  GATEWAY: GatewayNode
 };
 
 export const TASK_EDGE_TYPES = {
@@ -436,14 +430,14 @@ export const TASK_EDGE_TYPES = {
 export const DIALOG_INITIAL_NODES = [
   {
     id: '1',
-    type: 'start',
+    type: NODE_TYPE.START,
     data: { label: 'Start' },
     position: { x: 350, y: 500 },
     sourcePosition: 'right'
   },
   {
     id: '2',
-    type: 'end',
+    type: NODE_TYPE.END,
     data: { label: 'End' },
     position: { x: 950, y: 500 },
     targetPosition: 'left'
@@ -451,12 +445,12 @@ export const DIALOG_INITIAL_NODES = [
 ];
 
 export const DIALOG_NODE_TYPES = {
-  start: StartNode,
-  end: EndNode,
-  form: TaskNode,
-  xslt: TaskNode,
-  api: TaskNode,
-  gateway: GatewayNode
+  START_EVENT: StartNode,
+  END_EVENT: EndNode,
+  FORM: TaskNode,
+  XSLT: TaskNode,
+  API: TaskNode,
+  GATEWAY: GatewayNode
 };
 
 export const DIALOG_EDGE_TYPES = {
@@ -597,3 +591,16 @@ export const QUERY_COMBINATOR = [
   { name: 'and', value: 'and', label: 'AND' },
   { name: 'or', value: 'or', label: 'OR' }
 ];
+
+export const selector =
+  (nodeId, isConnectable = true, maxConnections = Infinity) =>
+  (s) => {
+    // If the user props say this handle is not connectable, we don't need to
+    // bother checking anything else.
+    if (!isConnectable) return false;
+
+    const node = s.nodeInternals.get(nodeId);
+    const connectedEdges = getConnectedEdges([node], s.edges);
+
+    return connectedEdges.length < maxConnections;
+  };

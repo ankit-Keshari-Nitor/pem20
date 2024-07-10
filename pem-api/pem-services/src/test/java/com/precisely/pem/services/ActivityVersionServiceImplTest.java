@@ -3,72 +3,87 @@ package com.precisely.pem.services;
 
 import com.precisely.pem.commonUtil.Application;
 import com.precisely.pem.commonUtil.Status;
+import com.precisely.pem.dtos.BpmnConverterRequest;
 import com.precisely.pem.dtos.requests.ActivityVersionReq;
 import com.precisely.pem.dtos.requests.UpdateActivityVersionReq;
 import com.precisely.pem.dtos.responses.*;
-import com.precisely.pem.dtos.shared.ActivityDefnVersionDto;
 import com.precisely.pem.dtos.shared.TenantContext;
+import com.precisely.pem.exceptionhandler.AlreadyDeletedException;
+import com.precisely.pem.exceptionhandler.BpmnConverterException;
 import com.precisely.pem.exceptionhandler.OnlyOneDraftVersionException;
 import com.precisely.pem.exceptionhandler.ResourceNotFoundException;
 import com.precisely.pem.models.ActivityDefn;
 import com.precisely.pem.models.ActivityDefnData;
 import com.precisely.pem.models.ActivityDefnVersion;
+import com.precisely.pem.repositories.ActivityDefinitionVersionCustomRepo;
+import com.precisely.pem.service.PEMActivitiService;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.Process;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.stubbing.OngoingStubbing;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.mockito.*;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 class ActivityVersionServiceImplTest extends BaseServiceTest{
 
     @InjectMocks
     ActivityVersionServiceImpl activityVersionService;
+    @Mock
+    private Blob mockBlob;
+    @Mock
+    PEMActivitiService pemActivitiService;
+    @Mock
+    private ActivityDefinitionVersionCustomRepo activityDefinitionVersionCustomRepo;
+
+    @Mock
+    BpmnModel bpmnModel;
 
     @BeforeEach
     public void setup(){
         MockitoAnnotations.openMocks(this);
-        SponsorInfo sponsorInfo = new SponsorInfo("cashbank","test");
-        TenantContext.setTenantContext(sponsorInfo);
+        TenantContext.setTenantContext(SponsorInfo.builder().sponsorKey("TEST_SPONSOR").build());
     }
+
     @Test
     void testGetAllVersionDefinitionList() throws Exception {
-        String sponsorContext = "cashbank";
-        String activityDefnKey = "name";
-        String applicationDescription = "test";
-        String status = "status";
+        // Arrange
+        String sponsorContext = "sponsorContext";
+        String activityDefnKey = "activityDefnKey";
+        String description = "description";
+        Boolean isDefault = false;
         int pageNo = 0;
         int pageSize = 10;
-        String sortBy = "sortBy";
-        String sortDir = "sortDir";
-        boolean isDefault = false;
-        Page<ActivityDefnVersion> defnsPage = new PageImpl<>(getVersionList());
-        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndStatusAndActivityDefnSponsorKeyAndDescriptionContaining(eq(activityDefnKey),eq(status),eq(sponsorContext),
-                        eq(applicationDescription),Mockito.any(Pageable.class)))
+        String sortBy = "modifyTs";
+        String sortDir = "DESC";
+        List<String> status = Arrays.asList(Status.DRAFT.getStatus());
+        List<ActivityDefnVersion> activityDefnVersionList = new ArrayList<>();
+        activityDefnVersionList.add(new ActivityDefnVersion());
+        Page<ActivityDefnVersion> defnsPage = new PageImpl<>(activityDefnVersionList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending()), 1);
+        when(activityDefinitionVersionCustomRepo.getAllVersionsList(anyString(),anyList(),anyString(),anyBoolean(),anyString(),any(Pageable.class)))
                 .thenReturn(defnsPage);
-        ActivityDefnVersionDto dto = new ActivityDefnVersionDto();
-        Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(ActivityDefnVersionDto.class)))
-                .thenReturn(dto);
-        ActivityVersionDefnPaginationResp resp = activityVersionService
-                .getAllVersionDefinitionList(sponsorContext, activityDefnKey,
-                        applicationDescription, isDefault, pageNo, pageSize,
-                        sortBy, sortDir, status);
-//        assertEquals(2, resp.getContent().size());
-        assertNotNull(resp);
+        // Act
+        ActivityVersionDefnPaginationResp response = activityVersionService.getAllVersionDefinitionList(
+                sponsorContext, activityDefnKey, description, isDefault, pageNo, pageSize, sortBy, sortDir, Arrays.asList(Status.DRAFT.getStatus()));
+        // Assert
+        assertNotNull(response);
+        assertEquals(1, response.getPage().getTotalElements());
     }
 
     private ActivityDefnVersion getVersion() {
@@ -80,70 +95,62 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         v1.setEncryptionKey("123");
         return v1;
     }
-    private List<ActivityDefnVersion> getVersionList() {
-        ActivityDefnVersion v1 = new ActivityDefnVersion();
-        v1.setVersion(1.0);
-        v1.setStatus("DRAFT");
-        v1.setIsEncrypted(false);
-        v1.setIsDefault(false);
-        v1.setEncryptionKey("123");
-
-        ActivityDefnVersion v2 = new ActivityDefnVersion();
-        v2.setVersion(2.0);
-        v2.setStatus("DRAFT");
-        v2.setIsEncrypted(false);
-        v2.setIsDefault(false);
-        v2.setEncryptionKey("123");
-        return Arrays.asList(v1,v2);
-    }
 
     @Test
     void testGetAllVersionDefinitionById() throws Exception {
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
-        Mockito.when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnKeyVersionAndActivityDefnSponsorKey(Mockito.anyString(), Mockito.anyString(),Mockito.anyString()))
+        when(activityDefnVersionRepo.findByActivityDefnKeyAndActivityDefnVersionKeyAndActivityDefnSponsorKey(anyString(), anyString(), anyString()))
                 .thenReturn(getVersion());
         ActivityDefnVersionListResp dto = activityVersionService.getVersionDefinitionById("test", "test", "test");
         assertNotNull(dto);
     }
+
     @Test
-    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, ResourceNotFoundException {
+    void testPostCreateActivityDefnVersion() throws SQLException, IOException, OnlyOneDraftVersionException, ResourceNotFoundException, AlreadyDeletedException, BpmnConverterException {
         ActivityDefnServiceImplTest activityDefnServiceImplTest = new ActivityDefnServiceImplTest();
 
         Optional<ActivityDefn> activityDefn = Optional.ofNullable(activityDefnServiceImplTest.getVchActivityDefnObj());
         ActivityDefnVersion activityDefnVersion = activityDefnServiceImplTest.getVCHActivityDefnVersionObj();
         ActivityDefnData activityDefnData = activityDefnServiceImplTest.getVchActivityDefnDataObj();
         activityDefn.get().setVersions(Arrays.asList(activityDefnVersion));
-//        Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer("http://localhost:9080/"));
-        Mockito.when(sponsorRepo.getSponsorKey(Mockito.anyString())).thenReturn("cashbank");
-        Mockito.when(activityDefnRepo.findById(Mockito.anyString())).thenReturn(activityDefn);
-        Mockito.when(activityDefnDataRepo.save(Mockito.any())).thenReturn(activityDefnData);
-        Mockito.when(activityDefnVersionRepo.save(Mockito.any())).thenReturn(activityDefnVersion);
 
-        MultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "This is a test file.".getBytes());
+        when(activityDefnRepo.findByActivityDefnKey(anyString())).thenReturn(activityDefn.get());
+        when(activityDefnDataRepo.save(any())).thenReturn(activityDefnData);
+        when(activityDefnVersionRepo.save(any())).thenReturn(activityDefnVersion);
+
+        MultipartFile file = new MockMultipartFile(TEST_FILE_KEY, TEST_FILE_VALUE, CONTENT_TYPE_TEXT, TEST_FILE_DATA.getBytes());
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(), BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
+
         ActivityVersionReq activityVersionReq = new ActivityVersionReq();
         activityVersionReq.setIsEncrypted(true);
         activityVersionReq.setFile(file);
         activityVersionReq.setApplication(Application.PEM);
-        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("test", "test", activityVersionReq);
+
+        ActivityDefnVersionResp resp = activityVersionService.createActivityDefnVersion("cashbank", "test1", activityVersionReq);
         assertNotNull(resp);
+        assertEquals(activityDefnVersion.getActivityDefnVersionKey(), resp.getActivityDefnVersionKey());
     }
 
     @Test
-    void updateMarkAsFinal() throws Exception {
-        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
-
-        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
-
-        mockActivityDefnVersionSave(activityDefnVersion).thenReturn(activityDefnVersion);
-
-        MarkAsFinalActivityDefinitionVersionResp dto = new MarkAsFinalActivityDefinitionVersionResp();
-        Mockito.when(mapper.map(Mockito.any(ActivityDefnVersion.class),eq(MarkAsFinalActivityDefinitionVersionResp.class)))
-                .thenReturn(dto);
-        MarkAsFinalActivityDefinitionVersionResp resp = activityVersionService.
-                markAsFinalActivityDefinitionVersion(TEST_ACTIVITY_DEFN_VERSION_KEY);
-
-        assertEquals(Status.FINAL.getStatus(),resp.getStatus());
-        assertNotNull(resp.getModifyTs());
+    public void testMarkAsFinalActivityDefinitionVersion_Success() throws Exception {
+        String activityDefnVersionKey = "testKey";
+        ActivityDefnVersion activityDefnVersion = new ActivityDefnVersion();
+        activityDefnVersion.setStatus("DRAFT");
+        activityDefnVersion.setIsDefault(true);
+        Object[] dto = {"val1", "val2", "val3", "val4", "val5", "val6", 1.0, mockBlob};
+        List<Object[]> dtoList = new ArrayList<>();
+        dtoList.add(dto);
+        when(activityDefnVersionRepo.findById(activityDefnVersionKey)).thenReturn(Optional.of(activityDefnVersion));
+        when(activityDefnVersionRepo.save(any(ActivityDefnVersion.class))).thenReturn(activityDefnVersion);
+        when(activityDefnDeploymentCustomRepo.findActivitiesByActivityDefnVersionKey(activityDefnVersionKey)).thenReturn(dtoList);
+        when(mapper.map(any(ActivityDefnVersion.class), eq(MarkAsFinalActivityDefinitionVersionResp.class)))
+                .thenReturn(new MarkAsFinalActivityDefinitionVersionResp());
+        when(pemActivitiService.deployProcessDefinition(anyString(),any())).thenReturn("anyKey");
+        MarkAsFinalActivityDefinitionVersionResp response = activityVersionService.markAsFinalActivityDefinitionVersion(activityDefnVersionKey);
+        assertNotNull(response);
+        assertEquals(Status.FINAL.getStatus(), activityDefnVersion.getStatus());
+        verify(activityDefnVersionRepo, times(1)).save(activityDefnVersion);
+        verify(activityDefnVersionRepo, times(1)).findById(activityDefnVersionKey);
     }
 
     @Test
@@ -187,6 +194,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
 
         MultipartFile file = getMultipartFile();
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(),BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
+
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                         UpdateActivityVersionReq.builder().description(TEST_DESCRIPTION).file(file).isEncrypted(Boolean.TRUE).build());
@@ -208,6 +218,9 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
         mockActivityDefnDataSave(activityDefnData).thenReturn(activityDefnData);
 
         MultipartFile file = getMultipartFile();
+        Blob blob = mock(Blob.class);
+        Mockito.when(bpmnConvertService.getBpmnConvertedBlob(file.getInputStream(),BpmnConverterRequest.builder().processId(TEST_BPMN_PROCESS_ID).build())).thenReturn(blob);
+
         MessageResp resp = activityVersionService.
                 updateActivityDefnVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY,
                         UpdateActivityVersionReq.builder().file(file).build());
@@ -264,6 +277,97 @@ class ActivityVersionServiceImplTest extends BaseServiceTest{
                         UpdateActivityVersionReq.builder().build()));
         assertEquals(exception.getMessage(), ACTIVITY_DEFINITION_VERSION_REQUIRED_SINGLE_FIELD_TO_UPDATE);
 
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_Positive() throws Exception{
+        byte[] mockData = SAMPLE_DATA.getBytes();
+        when(mockBlob.length()).thenReturn((long) mockData.length);
+        when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
+
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        activityDefnData.setDefData(mockBlob);
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
+
+        // Create an empty InputStream
+        InputStream emptyInputStream = new ByteArrayInputStream(new byte[0]);
+        // Create an InputStreamResource with the empty InputStream
+        InputStreamResource emptyResource = new InputStreamResource(emptyInputStream);
+        Mockito.when(bpmnConvertService.getPemBpmnJsonData(activityDefnData.getDefData())).thenReturn(emptyResource);
+
+        ActivityDataResponse activityDataResponse = activityVersionService
+                .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        assertNotNull(activityDataResponse);
+        assertNotNull(activityDataResponse.getStreamResource());
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_Version_NotFound(){
+        mockActivityDefnVersionFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityVersionService
+                    .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        });
+        assertEquals(ACTIVITY_DEFINITION_VERSION_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityDataForSpecificVersion_VersionData_NotFound(){
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        mockActivityDefnDataFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () ->{
+            activityVersionService
+                    .getActivityDataForSpecificVersion(TEST_SPONSOR,TEST_ACTIVITY_DEFN_KEY,TEST_ACTIVITY_DEFN_VERSION_KEY);
+        });
+        assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_Positive() throws Exception{
+        byte[] mockData = SAMPLE_DATA.getBytes();
+        when(mockBlob.length()).thenReturn((long) mockData.length);
+        when(mockBlob.getBytes(1, (int) mockBlob.length())).thenReturn(mockData);
+
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        ActivityDefnData activityDefnData = getVchActivityDefnDataObj();
+        activityDefnData.setDefData(mockBlob);
+        mockActivityDefnDataFindById().thenReturn(Optional.of(activityDefnData));
+
+        Mockito.when(bpmnModel.getProcessById(ArgumentMatchers.anyString())).thenReturn(new Process());
+        Mockito.when(bpmnConvertService.getBpmnModel(activityDefnData.getDefData())).thenReturn(bpmnModel);
+        Mockito.when(bpmnConvertService.getContextDataFromProcess(ArgumentMatchers.any())).thenReturn(TEST_CONTEXT_DATA);
+        Object response = activityVersionService.getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY);
+        assertNotNull(response);
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_Version_NotFound(){
+        mockActivityDefnVersionFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService
+                .getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(ACTIVITY_DEFINITION_VERSION_NOT_FOUND,exception.getMessage());
+    }
+
+    @Test
+    void getActivityContextDataForSpecificVersion_VersionData_NotFound(){
+        ActivityDefnVersion activityDefnVersion = getDraftVCHActivityDefnVersionObj();
+        mockActivityDefnVersionFindById().thenReturn(Optional.of(activityDefnVersion));
+
+        mockActivityDefnDataFindById().thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(Exception.class, () -> activityVersionService
+                .getActivityDefinitionContextData(TEST_ACTIVITY_DEFN_VERSION_KEY));
+        assertEquals(ACTIVITY_DEFINITION_VERSION_DATA_NOT_FOUND,exception.getMessage());
     }
 
 }

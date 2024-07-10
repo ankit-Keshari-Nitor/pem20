@@ -29,7 +29,9 @@ export const API_FORM_SCHEMA = {
       component: componentTypes.TEXTAREA,
       name: 'description',
       labelText: 'Description',
-      isRequired: true,
+      isRequired: false,
+      enableCounter: true,
+      maxCount: 100,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,
@@ -606,13 +608,13 @@ export const ACTIVITY_TASK_SCHEMA = {
       name: 'description',
       labelText: 'Description',
       enableCounter: true,
-      isRequired: true,
-      maxCount: 100,
+      isRequired: false,
+      maxCount: 80,
       validate: [
         {
           type: validatorTypes.MAX_LENGTH,
-          threshold: 100,
-          message: 'Description must be no longer then 100 characters'
+          threshold: 80,
+          message: 'Description must be no longer then 80 characters'
         }
       ]
     },
@@ -624,7 +626,7 @@ export const ACTIVITY_TASK_SCHEMA = {
     {
       component: componentTypes.CHECKBOX,
       name: 'encrypted',
-      labelText: 'Encrypt'
+      labelText: 'Encrypt (optional)'
     }
   ]
 };
