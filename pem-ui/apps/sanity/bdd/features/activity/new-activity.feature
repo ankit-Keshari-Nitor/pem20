@@ -5,7 +5,7 @@ Feature: New Activity Definition
     When User navigates to "Definitions" of "Activities" [App-Nav]  
     When User clicks on "New" link in [Page]["activities-list"]
   
-  @current
+#  @current
   Scenario: Activity List page is loaded
     Then User verifies "Workflow" is displayed as current breadscrumb on [Page]["new-activity"]
     Given User provides definition details to new activity
