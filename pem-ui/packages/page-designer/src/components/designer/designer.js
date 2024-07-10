@@ -104,7 +104,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label }
+          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label, operand: [] }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
@@ -257,6 +257,20 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     }
   };
 
+  const fieldEvent = (oldOperatorId, operatorId, targetId) => {
+    if(oldOperatorId){
+      const oldOperatorArray = findChildComponentById(layout, oldOperatorId).component.operand
+      const index = oldOperatorArray.indexOf(targetId);
+      if (index !== -1) {
+        oldOperatorArray.splice(index, 1);
+      }
+    }
+    if(operatorId) {
+      const operatorArray = findChildComponentById(layout, operatorId).component.operand;
+      //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+    }
+  }
+
   const onFieldDelete = (e, path) => {
     e.stopPropagation();
     setDeletedFieldPath(path);
@@ -333,7 +347,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
                 onFieldDelete={onFieldDelete}
                 componentMapper={componentMapper}
                 replaceComponet={replaceComponet}
-                componentsName = {componentsName}
+                componentsName={componentsName}
+                fieldEvent={fieldEvent} 
               />
             </div>
           )}

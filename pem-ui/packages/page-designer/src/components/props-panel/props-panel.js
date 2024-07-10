@@ -31,7 +31,7 @@ import { collectPaletteEntries } from '../../utils/helpers';
 import { ElippsisIcon } from '../../icon';
 import { TrashCan, Add } from '@carbon/icons-react';
 
-export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet, componentsName }) {
+export default function PropsPanel({ layout, selectedFiledProps, handleSchemaChanges, columnSizeCustomization, onFieldDelete, componentMapper, replaceComponet, componentsName, fieldEvent }) {
   const [editableProps, setEditableProps] = React.useState({});
   const [advanceProps, setAdvanceProps] = React.useState([]);
   const [componentStyle, setComponentStyle] = React.useState([]);
@@ -73,7 +73,6 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     { text: '15' },
     { text: '16' }
   ];
-  console.log('selectedFiledProps?.component?.editableProps?.Condition', selectedFiledProps?.component?.editableProps?.Condition)
   useEffect(() => {
     setEditableProps(selectedFiledProps?.component?.editableProps);
     setAdvanceProps(selectedFiledProps?.component?.advanceProps);
@@ -215,7 +214,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
     </TreeView>
   );
 
-  // ---------------------------------------------------------------- Conditions --------------------------------------------------------------------------
+  // ------------------------------------------------------------- Field Conditions Builder ---------------------------------------------------------------------
 
   const addCondition = () => {
     setConditionsProps((preConditions) => [
@@ -227,9 +226,19 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
         value: ''
       }
     ]);
-    //const newCondition = [...conditionsProps, { operation: '', operator: '', condition: '', value: '' }]
-    //handleSchemaChanges(selectedFiledProps?.id, 'Condition', CONDITIONSBUILDER, newCondition, selectedFiledProps?.currentPathDetail);
   };
+
+  const handleConditionBuilder = (index, key, value) => {
+    setConditionsProps((preConditions)=>{
+      const newconbuilder = [...preConditions];
+      if (key === 'operator'){
+        fieldEvent(newconbuilder[index][key], value, selectedFiledProps?.id)
+      }
+      newconbuilder[index][key] = value;
+      handleSchemaChanges(selectedFiledProps?.id, 'Condition', CONDITIONSBUILDER, newconbuilder, selectedFiledProps?.currentPathDetail);
+      return newconbuilder;
+    })
+  }
 
   // ----------------------------------------------------------------Table Related Functions----------------------------------------------------------------
 
@@ -926,13 +935,13 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                           return (
                                             <div>
                                               {/* Operation */}
-                                              <Select id={String(`${idx}-operation`)} hideLabel={true} onChange={''} defaultValue={item.operation} value={item.operation}>
+                                              <Select id={String(`${idx}-operation`)} hideLabel={true} onChange={(e)=>handleConditionBuilder(idx,'operation',e.target.value)} defaultValue={item.operation} value={item.operation}>
                                                 <SelectItem key={'operation'} value={''} text={'Select Operation'} />
                                                 <SelectItem key={'showIf-1'} value={'showIf'} text={'Show If'} />;
                                                 <SelectItem key={'disable-1'} value={'disableIf'} text={'Disable If'} />;
                                               </Select>
                                               {/* Operator */}
-                                              <Select id={String(`${idx}-operator`)} hideLabel={true} onChange={''} defaultValue={item.operator} value={item.operator}>
+                                              <Select id={String(`${idx}-operator`)} hideLabel={true} onChange={(e)=>handleConditionBuilder(idx,'operator',e.target.value)} defaultValue={item.operator} value={item.operator}>
                                                 <SelectItem key={'operator'} value={''} text={'Select Field Ids'} />
                                                 {componentsName.map((operatorValue) => {
                                                   return (
@@ -941,7 +950,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                                 })}
                                               </Select>
                                               {/* Condition */}
-                                              <Select id={String(`${idx}-condition`)} hideLabel={true} onChange={''} defaultValue={item.condition} value={item.condition}>
+                                              <Select id={String(`${idx}-condition`)} hideLabel={true} onChange={(e)=>handleConditionBuilder(idx,'condition',e.target.value)} defaultValue={item.condition} value={item.condition}>
                                                 <SelectItem key={'condition'} value={''} text={'Select Condition'} />
                                                 <SelectItem key={'equals-1'} value={'equals'} text={'Equals'} />;
                                                 <SelectItem key={'doesNotEqual-1'} value={'doesNotEqual'} text={'Does Not Equal'} />;
@@ -951,9 +960,10 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                                 key={`${idx}-condition-value`}
                                                 id={String(`${idx}-condition-value`)}
                                                 //className="right-palette-form-item-mapping"
+                                                hideLabel={true}
                                                 placeholder='Value'
                                                 value={item.value}
-                                              //onChange={(e) => handleRowOpt(index, e.target.value, rowitem.key)}
+                                                onChange={(e)=>handleConditionBuilder(idx,'value',e.target.value)}
                                               />
                                             </div>
                                           )

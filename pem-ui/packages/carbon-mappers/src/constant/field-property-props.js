@@ -311,3 +311,8 @@ export const conditions = {
   value: [],
   type: 'Button'
 };
+
+export const conditionsEvent = {
+  propsName: 'conditionsEvent',
+  value: [],
+};
