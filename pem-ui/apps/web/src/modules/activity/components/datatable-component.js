@@ -39,7 +39,7 @@ const ActivityDataTableComponent = ({
           <Button
             kind="tertiary"
             size="sm"
-            className={showDrawer ? 'action-item-drawer' : 'action-item'}
+            className={showDrawer ? 'action-item-drawer action-item-drawer-mark-as-final' : 'action-item action-item-mark-as-final'}
             onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}
           >
             {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
@@ -47,13 +47,13 @@ const ActivityDataTableComponent = ({
         );
       case 'FINAL':
         return (
-          <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
+          <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer action-item-drawer-rollout' : 'action-item action-item-rollout'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
             {ACTION_COLUMN_KEYS.ROLLOUT}
           </Button>
         );
       case 'DELETE':
         return (
-          <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
+          <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer action-item-drawer-restore' : 'action-item action-item-restore'} action-item-delete`}>
             {ACTION_COLUMN_KEYS.RESTORE}
           </Button>
         );
@@ -66,23 +66,23 @@ const ActivityDataTableComponent = ({
   const renderEllipsisMenu = (id, status = '', isDefault = false) => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
-        <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
-        {status !== 'DELETE' && status !== 'FINAL' && <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />}
+        <OverflowMenuItem className='activity-view-overflow-menu' itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
+        {status !== 'DELETE' && status !== 'FINAL' && <OverflowMenuItem className='activity-edit-overflow-menu' itemText={ACTION_COLUMN_KEYS.EDIT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EDIT, id)} />}
         {!showDrawer ? (
           <>
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />
-            {status !== 'DELETE' && <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />}
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)} />
+            <OverflowMenuItem className='activity-export-overflow-menu' itemText={ACTION_COLUMN_KEYS.EXPORT_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_ACTIVITY, id)} />
+            {status !== 'DELETE' && <OverflowMenuItem className='activity-test-overflow-menu' itemText={ACTION_COLUMN_KEYS.TEST_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_ACTIVITY, id)} />}
+            <OverflowMenuItem className='activity-clone-overflow-menu' itemText={ACTION_COLUMN_KEYS.CLONE_ACTIVITY} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_ACTIVITY, id)} />
           </>
         ) : (
           <>
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} /> : null}
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
-            <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
+            <OverflowMenuItem className='activity-export-version-overflow-menu' itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
+            {!isDefault ? <OverflowMenuItem className='activity-mark-as-default-overflow-menu' itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} /> : null}
+            <OverflowMenuItem className='activity-test-version-overflow-menu' itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
+            <OverflowMenuItem className='activity-clone-version-overflow-menu' itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
         )}
-        {status !== 'DELETE' && <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />}
+        {status !== 'DELETE' && <OverflowMenuItem className='activity-share-unshare-overflow-menu' itemText={ACTION_COLUMN_KEYS.SHARE_UNSHARE} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.SHARE_UNSHARE, id)} />}
         {status !== 'DELETE' && (
           <OverflowMenuItem
             hasDivider
@@ -92,7 +92,7 @@ const ActivityDataTableComponent = ({
                 <Delete className="overflow-menu-icon" />
               </>
             }
-            className="overflow-option-delete"
+            className="overflow-option-delete activity-delete-overflow-menu"
             onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.DELETE, id)}
           />
         )}
