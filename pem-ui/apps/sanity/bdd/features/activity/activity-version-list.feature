@@ -11,3 +11,5 @@ Feature: Activity List
     Then User verifies activity version list default page "1" is displayed in [Page]["activities-version-list"]
     Then User verifies activity version list pagination with default page "1" is displayed in [Page]["activities-list"]
     Then User verifies activity version list perpage rows are displayed in [Page]["activities-list"]
+    Then User verifies activities version list to view the activity in [Page]["activities-list"]
+    Then User verifies activities version list to edit the activity in [Page]["activities-list"]

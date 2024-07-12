@@ -24,3 +24,13 @@ Then('User verifies activity version list perpage rows are displayed in [Page][{
     const activityVersionList = new ActivityVersionList(this.page);
     await activityVersionList.versionPerPageRows();
 });
+
+Then('User verifies activities version list to view the activity in [Page][{string}]', { timeout: 10 * 1000 }, async function (pageId) {
+    const activityList = new ActicityList(this.page);
+    await activityList.activityVersionView();
+})
+
+Then('User verifies activities version list to edit the activity in [Page][{string}]', { timeout: 10 * 1000 }, async function (pageId) {
+    const activityList = new ActicityList(this.page);
+    await activityList.activityVersionEdit();
+})
