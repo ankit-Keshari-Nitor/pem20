@@ -295,3 +295,24 @@ export const fontSize = {
     { label: '36px', value: '36px' },
   ],
 }
+
+export const hidden = {
+  propsName: 'visible',
+  label: 'Visible',
+  value: false,
+  type: 'Toggle',
+  labelA: 'No',
+  labelB: 'Yes'
+}
+
+export const conditions = {
+  propsName: 'conditionBuilder',
+  label: 'Add Condition',
+  value: [],
+  type: 'Button'
+};
+
+export const conditionsEvent = {
+  propsName: 'conditionsEvent',
+  value: [],
+};

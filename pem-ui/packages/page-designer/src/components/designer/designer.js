@@ -37,7 +37,8 @@ import {
   OPTION,
   DATATABLE,
   TABLE_ROWS,
-  LABEL_TEXT
+  LABEL_TEXT,
+  CONDITIONSBUILDER
 } from '../../constants/constants';
 import ViewSchema from './../view-schema';
 import { Button, Grid, Modal, Column } from '@carbon/react';
@@ -103,7 +104,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         const newItem = {
           id: newComponent.id,
           type: COMPONENT,
-          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label }
+          component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label, operand: [] }
         };
         setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
@@ -131,7 +132,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
-
+  
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
@@ -164,6 +165,9 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
         if (fieldData?.component[conditionEditPops?.propsName]) {
           return (conditionEditPops.value = fieldData.component[conditionEditPops?.propsName]);
         } else {
+          if (conditionEditPops?.propsName === CONDITIONSBUILDER) {
+            return conditionEditPops.value = [];
+          }
           return (conditionEditPops.value = false);
         }
       });
@@ -253,6 +257,20 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     }
   };
 
+  const fieldEvent = (oldOperatorId, operatorId, targetId) => {
+    if(oldOperatorId){
+      const oldOperatorArray = findChildComponentById(layout, oldOperatorId).component.operand
+      const index = oldOperatorArray.indexOf(targetId);
+      if (index !== -1) {
+        oldOperatorArray.splice(index, 1);
+      }
+    }
+    if(operatorId) {
+      const operatorArray = findChildComponentById(layout, operatorId).component.operand;
+      //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+    }
+  }
+
   const onFieldDelete = (e, path) => {
     e.stopPropagation();
     setDeletedFieldPath(path);
@@ -296,7 +314,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
             <span className="header-title">{activityDefinitionData && Object.keys(activityDefinitionData).length > 0 ? activityDefinitionData.name : 'New Form Builder'}</span>
           </Column>
           <Column lg={12} className="buttons-container">
-           {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
+            {/*  <Button kind="secondary" className="cancelButton" onClick={() => setOpen(true)}>
               View Schema
             </Button>
             <Button kind="secondary" className="cancelButton" onClick={() => setOpenPreview(true)}>
@@ -329,6 +347,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
                 onFieldDelete={onFieldDelete}
                 componentMapper={componentMapper}
                 replaceComponet={replaceComponet}
+                componentsName={componentsName}
+                fieldEvent={fieldEvent} 
               />
             </div>
           )}
