@@ -22,7 +22,8 @@ import {
   Accordion,
   AccordionItem,
   Checkbox,
-  FileUploader, CheckboxGroup,
+  FileUploader,
+  CheckboxGroup
 } from '@carbon/react';
 import { v4 as uuid } from 'uuid';
 import './props-panel.scss';
@@ -699,7 +700,9 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                               id={String(idx)}
                               className="right-palette-form-item"
                               labelText={advncProps.label}
-                              value={advncProps.value.value}
+                              value={advncProps?.value?.value}
+                              invalid={advncProps.invalid ? advncProps.invalid : false}
+                              invalidText={advncProps.invalidText ? advncProps.invalidText : null}
                               onChange={(e) => {
                                 if (isNaN(e.target.value)) {
                                   e.preventDefault();
@@ -750,7 +753,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                 key={`${idx}-'message'`}
                                 id={String(idx)}
                                 className="right-palette-form-item"
-                                labelText={'Message'}
+                                labelText={'Regex Message'}
                                 value={advncProps.value.message}
                                 onChange={(e) => {
                                   if (isNaN(e.target.value)) {
@@ -999,9 +1002,9 @@ function getValidationMessage(label, propertiesName, value) {
     case 'isRequired':
       return 'This is a required field';
     case 'min':
-      return label + ' must be at least ' + value + 'characters';
+      return label + ' must be at least ' + value + ' characters';
     case 'max':
-      return label + ' must be no longer than ' + value + 'characters';
+      return label + ' must be no longer than ' + value + ' characters';
     case 'regexValidation':
       return value;
     default:
