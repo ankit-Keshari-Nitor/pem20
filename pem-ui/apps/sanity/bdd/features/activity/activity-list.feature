@@ -15,6 +15,4 @@ Feature: Activity List
     Then User verifies activity current status is delete and restore button is enable
     Then User verifies to view the activity in [Page]["activities-list"]
     Then User verifies to edit the activity in [Page]["activities-list"]
-    # Then User verifies the filter 
-
-  
+    Then User verifies activity version drawer is opened on click of version history icon

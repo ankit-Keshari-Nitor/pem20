@@ -15,8 +15,13 @@ class ActicityList {
         // PerPage
         this.perPageItem = this.page.locator('.cds--select__item-count .cds--select-input');
 
+        // PageMenu
         this.currentPage = this.page.locator('.shell-breadscrumb-container .cds--breadcrumb-item--current a');
         this.activityMenu = this.page.locator('.cds--header__menu-bar li a');
+
+        // Version SideDrawar
+        this.versionDrawer = this.page.locator('div.headers-drawer');
+        this.closeVersionDrawer = this.page.locator('div.header-button-left-drawer');
 
     }
     // Verify the page Number
@@ -136,7 +141,7 @@ class ActicityList {
     }
 
     // Activity Edit From Ellipse
-    async activityEdit(){
+    async activityEdit() {
         await this.page.waitForTimeout(10);
         const drafRow = await this.activityRow("Draft");
         const btn = await drafRow.locator('td').nth(5).locator('.cds--overflow-menu__wrapper button');
@@ -146,6 +151,18 @@ class ActicityList {
         const menuName = await this.currentPage.innerText();
         await expect(menuName).toContain("Workflow");
         await this.backToActivityPage("Definitions", "Activities");
+    }
+
+    // Activity Version Drawer
+    async activityVersionDrawer() {
+
+        await this.page.waitForTimeout(10);
+        const finalRow = await this.activityRow("Final");
+        const activityName = await finalRow.locator('td').nth(0).locator('.information-text').innerText();
+        await finalRow.locator('td').nth(3).locator('.cds--popover--high-contrast').click();
+        const drawerHeader = await this.versionDrawer.locator('.header-button-right-drawer').innerText();
+        await expect(drawerHeader).toContain(activityName);
+        await this.closeVersionDrawer.click();
     }
 }
 

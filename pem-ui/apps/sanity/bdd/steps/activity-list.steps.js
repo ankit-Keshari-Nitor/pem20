@@ -40,3 +40,8 @@ Then('User verifies to edit the activity in [Page][{string}]', { timeout: 10 * 1
     const activityList = new ActicityList(this.page);
     await activityList.activityEdit();
 })
+
+Then('User verifies activity version drawer is opened on click of version history icon', { timeout: 10 * 1000 }, async function () {
+    const activityList = new ActicityList(this.page);
+    await activityList.activityVersionDrawer();
+})
