@@ -3,7 +3,7 @@ import { Column, Grid, Modal } from '@carbon/react';
 import ActivityTaskDefinition from '../activity-task-definition';
 import { CrossIcon, ExpandIcon } from './../../icons';
 import ActivityVersions from './activity-versions-dropdown';
-import './../block-properties-tray/block-properties-tray.scss';
+import './../block-definition-form/block-definition-form.scss';
 
 export default function ActivityDefinitionForm(props) {
   const { readOnly, versionData = [], setShowActivityDefineDrawer, onActivityDetailsSave, activityOperation, activityDefinitionData } = props;
@@ -32,19 +32,17 @@ export default function ActivityDefinitionForm(props) {
   return (
     <div className="block-properties-container">
       <div className="title-bar">
-        <div className="title">
+        <span className="title">
           <Grid fullWidth>
-            <Column lg={6} md={3} sm={2}>
+            <Column lg={4} md={3} sm={2}>
               <b>Define Activity</b>
             </Column>
-            <Column lg={4} md={2} sm={1} className="activity-active">
+            <Column lg={2} md={2} sm={1} className="activity-active">
               {versionData.length > 0 ? 'Active' : 'Draft'}
             </Column>
-            <Column lg={6} md={3} sm={2} className="activity-version-dropdown">
-              {versionData.length > 0 && <ActivityVersions {...props} />}
-            </Column>
+            {versionData.length > 0 && <ActivityVersions {...props} />}
           </Grid>
-        </div>
+        </span>
         <div className="icon">
           <span onClick={() => setOpenExpandMode(true)} className="icon">
             <ExpandIcon />
@@ -67,7 +65,7 @@ export default function ActivityDefinitionForm(props) {
         onRequestClose={() => setOpenExpandMode(false)}
         isFullWidth
         modalHeading={
-          <Grid fullWidth>
+          <Grid>
             <Column lg={4} md={3} sm={2}>
               <b>Define Activity</b>
             </Column>

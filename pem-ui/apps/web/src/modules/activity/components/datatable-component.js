@@ -36,26 +36,32 @@ const ActivityDataTableComponent = ({
     switch (status) {
       case 'DRAFT':
         return (
-          <Button
-            kind="tertiary"
-            size="sm"
-            className={showDrawer ? 'action-item-drawer' : 'action-item'}
-            onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}
-          >
-            {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button
+              kind="tertiary"
+              size="sm"
+              className={showDrawer ? 'action-item-drawer' : 'action-item'}
+              onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_FINAL, id, versionKey)}
+            >
+              {ACTION_COLUMN_KEYS.MARK_AS_FINAL}
+            </Button>
+          </div>
         );
       case 'FINAL':
         return (
-          <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
-            {ACTION_COLUMN_KEYS.ROLLOUT}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button kind="tertiary" size="sm" className={showDrawer ? 'action-item-drawer' : 'action-item'} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.ROLLOUT, id)}>
+              {ACTION_COLUMN_KEYS.ROLLOUT}
+            </Button>
+          </div>
         );
       case 'DELETE':
         return (
-          <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
-            {ACTION_COLUMN_KEYS.RESTORE}
-          </Button>
+          <div className='tbody-wrapper'>
+            <Button kind="tertiary" size="sm" className={`${showDrawer ? 'action-item-drawer' : 'action-item'} action-item-delete`}>
+              {ACTION_COLUMN_KEYS.RESTORE}
+            </Button>
+          </div>
         );
       default:
         return null;
@@ -63,7 +69,7 @@ const ActivityDataTableComponent = ({
   };
 
   // Generate the ellipsis menu for each row
-  const renderEllipsisMenu = (id, status = '', isDefault = false) => {
+  const renderEllipsisMenu = (id, status = '', isDefault = false, versionName = '') => {
     return (
       <OverflowMenu size="sm" flipped className="always-visible-overflow-menu">
         <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.VIEW} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.VIEW, id)} />
@@ -77,7 +83,7 @@ const ActivityDataTableComponent = ({
         ) : (
           <>
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.EXPORT_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.EXPORT_VERSION, id)} />
-            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id)} /> : null}
+            {!isDefault ? <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.MARK_AS_DEFAULT} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.MARK_AS_DEFAULT, id, versionName)} /> : null}
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.TEST_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.TEST_VERSION, id)} />
             <OverflowMenuItem itemText={ACTION_COLUMN_KEYS.CLONE_VERSION} onClick={() => onCellActionClick(ACTION_COLUMN_KEYS.CLONE_VERSION, id)} />
           </>
@@ -118,12 +124,16 @@ const ActivityDataTableComponent = ({
   // Render status tag
   const renderTag = (status) => {
     const formattedStatus = capitalizeFirstLetter(status);
-    return <Tag type={status === 'draft' ? 'cool-gray' : status === 'final' ? 'green' : 'red'}>{formattedStatus}</Tag>;
+    return (
+      <div className='tbody-wrapper'>
+        <Tag type={status === 'draft' ? 'cool-gray' : status === 'final' ? 'green' : 'red'}>{formattedStatus}</Tag>
+      </div>
+    )
   };
 
   // Render recently viewed icon and text
-  const renderRecentlyViewed = (value = '""', id, activityName = '', status = '', description = '', isDefault = false) => (
-    <div>
+  const renderRecentlyViewed = (value = '', id, activityName = '', status = '', description = '', isDefault = false) => (
+    <div >
       {showDrawer ? (
         <div className="information-wrapper">
           {description !== '' ? (
@@ -135,21 +145,21 @@ const ActivityDataTableComponent = ({
           {isDefault ? <Tag type='cyan'>Default</Tag> : null}
         </div>
       ) : (
-        <>
+        <div className='tbody-wrapper'>
           <Tooltip label='Version History'>
             <div className="recently-view-wrapper" onClick={() => handleVersion(id, activityName, status)}>
               <span className="recently-view-text">{`Ver. ${value}`}</span>
               <RecentlyViewed />
             </div>
           </Tooltip>
-        </>
+        </div>
       )}
     </div>
   );
 
   // Render checkmark icon and text for encryption status
   const renderCheckmarkFilled = (encryptedvalue = '') => (
-    <div>
+    <div className='tbody-wrapper'>
       <span className="encrypted-wrapper">
         {encryptedvalue ? (
           <>
@@ -195,6 +205,8 @@ const ActivityDataTableComponent = ({
                     const activityName = row.cells.find((cell) => cell.id === `${row.id}:name`);
                     const description = row.cells.find((cell) => cell.id === `${row.id}:description`);
                     const isDefault = row.cells.find((cell) => cell.id === `${row.id}:isDefault`);
+                    const versionName = row.cells.find((cell) => cell.id === `${row.id}:version`);
+
                     return (
                       <TableRow {...getRowProps({ row })} key={row.id}>
                         {row.cells.map((cell) => (
@@ -202,7 +214,7 @@ const ActivityDataTableComponent = ({
                             {cell.info.header === 'action'
                               ? renderActionItem(statusCell.value, row.id, versionKeyCell.value)
                               : cell.info.header === 'ellipsis'
-                                ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value)
+                                ? renderEllipsisMenu(row.id, statusCell.value, isDefault?.value, versionName?.value)
                                 : cell.info.header === 'status'
                                   ? renderTag(cell.value.toLowerCase())
                                   : cell.info.header === 'name'
