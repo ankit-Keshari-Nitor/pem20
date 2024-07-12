@@ -16,9 +16,10 @@ class ActicityList {
         this.perPageItem = this.page.locator('.cds--select__item-count .cds--select-input');
 
         this.currentPage = this.page.locator('.shell-breadscrumb-container .cds--breadcrumb-item--current a');
+        this.activityMenu = this.page.locator('.cds--header__menu-bar li a');
 
     }
-
+    // Verify the page Number
     async verifyPageNumber(pageNo) {
 
         // On Which page you are
@@ -26,6 +27,7 @@ class ActicityList {
         await expect(pageSizeElement).toHaveValue(pageNo);
     }
 
+    // Paginations
     async pagination(pageNo) {
 
         const pageSizeElement = await this.paginationSelection;
@@ -39,6 +41,7 @@ class ActicityList {
         await expect(pageSizeElement).toHaveValue(pageNo);
     }
 
+    // Per Page Rows
     async perPageRows() {
 
         // ROW COUNT
@@ -47,9 +50,10 @@ class ActicityList {
         await expect(defaultItemCount).toHaveValue(String(countRow - 1));
     }
 
+    // Find Activity Row By Current Status
     async activityRow(currentStatus) {
 
-        await this.page.waitForTimeout(5);
+        await this.page.waitForTimeout(10);
         const row = await this.tableData.locator('tr');
         const countRow = await row.count();
         for (let i = 1; i < countRow; i++) {
@@ -60,6 +64,7 @@ class ActicityList {
         }
     }
 
+    // Activity RollOut
     async activityRollout() {
 
         await this.page.waitForTimeout(10);
@@ -74,9 +79,11 @@ class ActicityList {
         const modal = await this.page.locator('.is-visible .cds--modal-header__heading');
         const text = await modal.innerText();
         await expect(text).toContain(activityName);
+        await this.page.locator('.is-visible .cds--modal-close-button button').click();
 
     }
 
+    // Activity Mark As Final
     async activityMarkAsFinal() {
 
         await this.page.waitForTimeout(10);
@@ -93,6 +100,7 @@ class ActicityList {
         await this.page.locator('.is-visible .cds--modal-close-button button').click();
     }
 
+    // Activity Restore
     async activityRestore() {
 
         await this.page.waitForTimeout(10);
@@ -104,14 +112,40 @@ class ActicityList {
         // Restore Action
     }
 
+    // Back To Main Activity List Page
+    async backToActivityPage(subMenu, menu) {
+
+        await this.activityMenu.filter({ hasText: menu }).click();
+        await this.page.locator('.cds--side-nav__item a .cds--side-nav__link-text').filter({ hasText: subMenu }).click();
+        await this.page.locator('[data-testid="side-nav-toggle-button"]').click();
+    }
+
+    // Activity View From Ellipse
     async activityView() {
 
-        const drafStatusRow = await this.activityRow("Draft");
-        await drafStatusRow.locator('td').nth(5).locator('button');
-        //await this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu').click();
+        await this.page.waitForTimeout(10);
+        const drafRow = await this.activityRow("Draft");
+        const btn = await drafRow.locator('td').nth(5).locator('.cds--overflow-menu__wrapper button');
+        await btn.click();
+        await this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu').click();
 
-        //const menuName = await this.currentPage.innerText();
-        //console.log('menuName',menuName)
+        const menuName = await this.currentPage.innerText();
+        await expect(menuName).toContain("Workflow");
+        await this.backToActivityPage("Definitions", "Activities");
+
+    }
+
+    // Activity Edit From Ellipse
+    async activityEdit(){
+        await this.page.waitForTimeout(10);
+        const drafRow = await this.activityRow("Draft");
+        const btn = await drafRow.locator('td').nth(5).locator('.cds--overflow-menu__wrapper button');
+        await btn.click();
+        await this.page.locator('ul.cds--overflow-menu-options--open .activity-edit-overflow-menu').click();
+
+        const menuName = await this.currentPage.innerText();
+        await expect(menuName).toContain("Workflow");
+        await this.backToActivityPage("Definitions", "Activities");
     }
 }
 

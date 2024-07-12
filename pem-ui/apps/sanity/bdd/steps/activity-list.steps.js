@@ -31,7 +31,12 @@ Then('User verifies activity current status is delete and restore button is enab
     await activityList.activityRestore();
 })
 
-Then('user verifies to view the activity in [Page][{string}]', { timeout: 10 * 1000 }, async function (pageId) {
+Then('User verifies to view the activity in [Page][{string}]', { timeout: 10 * 1000 }, async function (pageId) {
     const activityList = new ActicityList(this.page);
     await activityList.activityView();
+})
+
+Then('User verifies to edit the activity in [Page][{string}]', { timeout: 10 * 1000 }, async function (pageId) {
+    const activityList = new ActicityList(this.page);
+    await activityList.activityEdit();
 })

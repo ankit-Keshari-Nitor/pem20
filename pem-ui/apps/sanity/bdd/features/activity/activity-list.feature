@@ -13,6 +13,8 @@ Feature: Activity List
     Then User verifies activity current status is final and rollout button is enable
     Then User verifies activity current status is draft and mark as final button is enable
     Then User verifies activity current status is delete and restore button is enable
-    # Then user verifies to view the activity in [Page]["activities-list"]
-    # Then user verifies to edit the activity in [Page]["activities-list"]
+    Then User verifies to view the activity in [Page]["activities-list"]
+    Then User verifies to edit the activity in [Page]["activities-list"]
+    # Then User verifies the filter 
+
   
