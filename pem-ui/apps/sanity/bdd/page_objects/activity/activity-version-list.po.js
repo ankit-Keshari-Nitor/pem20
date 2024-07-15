@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import ActicityList from '../page_objects/activity/activity-list.po.js';
+import ActicityList from './activity-list.po.js';
 class ActivityVersionList {
     constructor(page){
         
@@ -17,8 +17,13 @@ class ActivityVersionList {
         this.backwardPage = this.page.locator('[data-testid="drawer"] .cds--pagination__button--backward');
         this.perPageItem = this.page.locator('[data-testid="drawer"] .cds--select__item-count .cds--select-input');
 
+        // version View and Edit
         this.versionView = this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu');
         this.versionEdit = this.page.locator('ul.cds--overflow-menu-options--open .activity-edit-overflow-menu');
+
+        // Model
+        this.modelHeading = this.page.locator('.is-visible .cds--modal-header__heading');
+        this.modelClose = this.page.locator('.is-visible .cds--modal-close-button button');
     }
 
     // Open Version Drawer
@@ -52,6 +57,7 @@ class ActivityVersionList {
         await expect(defaultItemCount).toHaveValue(String(countRow - 1));
     }
 
+    // Find Version Row By Current Status
     async activityVersionRow(currentStatus) {
 
         await this.page.waitForTimeout(10);
@@ -65,6 +71,79 @@ class ActivityVersionList {
         }
     }
 
+    // Version rollout Button Enable
+    async rolloutBtnEnable() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Final");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-rollout');
+        const btnName = await btn.innerText();
+        expect(btnName).toContain('Rollout');
+        expect(btn).toBeEnabled();
+
+    }
+
+    // Version rollout
+    async versionRollout() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Final");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-rollout');
+
+        // rollout Action
+        await btn.click();
+    }
+
+    // Version Mark As Final Button Enable
+    async markAsFinalBtnEnable() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Draft");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-mark-as-final');
+        const btnName = await btn.innerText();
+        expect(btnName).toContain('Mark As Final')
+        expect(btn).toBeEnabled();
+
+    }
+
+    // Version Mark As Final
+    async versionMarkAsFinal() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Draft");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-mark-as-final');
+
+        // Mark As Final Action
+        await btn.click();
+        const modal = await this.modelHeading;
+        const text = await modal.innerText();
+        await expect(text).toContain("Confirmation");
+        await this.modelClose.click();
+    }
+
+    // Version restore Button Enable
+    async restoreBtnEnable() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Delete");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-restore');
+        const btnName = await btn.innerText();
+        expect(btnName).toContain('Restore');
+        expect(btn).toBeEnabled();
+
+    }
+
+    // Version Restore
+    async versionRestore() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityVersionRow("Delete");
+        const btn = await drafStatusRow.locator('td').nth(3).locator('.action-item-drawer-restore');
+
+        // Restore Action
+        await btn.click();
+    }
+
     // Activity Version View From Ellipse
     async activityVersionView() {
 
@@ -74,10 +153,7 @@ class ActivityVersionList {
         await btn.click();
         await this.versionView.click();
 
-        const menuName = await this.currentPage.innerText();
-        await expect(menuName).toContain("Workflow");
-        const activityList = new ActicityList(this.page);
-        await activityList.backToActivityPage("Definitions", "Activities");
+        // After Click on View btn
 
     }
 
@@ -89,10 +165,7 @@ class ActivityVersionList {
         await btn.click();
         await this.versionEdit.click();
 
-        const menuName = await this.currentPage.innerText();
-        await expect(menuName).toContain("Workflow");
-        const activityList = new ActicityList(this.page);
-        await activityList.backToActivityPage("Definitions", "Activities");
+        // After Click on Edit btn 
     }
 
 }

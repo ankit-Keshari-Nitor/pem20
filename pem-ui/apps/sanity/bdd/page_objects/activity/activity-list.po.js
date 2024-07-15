@@ -23,6 +23,14 @@ class ActicityList {
         this.versionDrawer = this.page.locator('div.headers-drawer');
         this.closeVersionDrawer = this.page.locator('div.header-button-left-drawer');
 
+        // Model
+        this.modelHeading = this.page.locator('.is-visible .cds--modal-header__heading');
+        this.modelClose = this.page.locator('.is-visible .cds--modal-close-button button');
+
+        // Activity View and Edit
+        this.activityViewBtn = this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu');
+        this.activityEditBtn = this.page.locator('ul.cds--overflow-menu-options--open .activity-edit-overflow-menu');
+
     }
     // Verify the page Number
     async verifyPageNumber(pageNo) {
@@ -76,7 +84,8 @@ class ActicityList {
         const finalStatusRow = await this.activityRow("Final");
         const btn = await finalStatusRow.locator('td').nth(4).locator('.action-item-rollout')
         const btnName = await btn.innerText();
-        expect(btnName).toContain('Rollout')
+        expect(btnName).toContain('Rollout');
+        expect(btn).toBeEnabled();
 
     }
 
@@ -87,15 +96,13 @@ class ActicityList {
         const finalStatusRow = await this.activityRow("Final");
         const activityName = await finalStatusRow.locator('td').nth(0).locator('.information-text').innerText();
         const btn = await finalStatusRow.locator('td').nth(4).locator('.action-item-rollout')
-        const btnName = await btn.innerText();
-        expect(btnName).toContain('Rollout')
 
         // RollOut Action
         await btn.click();
-        const modal = await this.page.locator('.is-visible .cds--modal-header__heading');
+        const modal = await this.modelHeading;
         const text = await modal.innerText();
         await expect(text).toContain(activityName);
-        await this.page.locator('.is-visible .cds--modal-close-button button').click();
+        await this.modelClose.click();
 
     }
 
@@ -106,7 +113,8 @@ class ActicityList {
         const drafStatusRow = await this.activityRow("Draft");
         const btn = await drafStatusRow.locator('td').nth(4).locator('.action-item-mark-as-final');
         const btnName = await btn.innerText();
-        expect(btnName).toContain('Mark As Final')
+        expect(btnName).toContain('Mark As Final');
+        expect(btn).toBeEnabled();
 
     }
 
@@ -116,15 +124,13 @@ class ActicityList {
         await this.page.waitForTimeout(10);
         const drafStatusRow = await this.activityRow("Draft");
         const btn = await drafStatusRow.locator('td').nth(4).locator('.action-item-mark-as-final');
-        const btnName = await btn.innerText();
-        expect(btnName).toContain('Mark As Final')
 
         // Mark As Final Action
         await btn.click();
-        const modal = await this.page.locator('.is-visible .cds--modal-header__heading');
+        const modal = await this.modelHeading;
         const text = await modal.innerText();
         await expect(text).toContain("Confirmation");
-        await this.page.locator('.is-visible .cds--modal-close-button button').click();
+        await this.modelClose.click();
     }
 
     // Activity Restore Button Enable
@@ -134,8 +140,20 @@ class ActicityList {
         const drafStatusRow = await this.activityRow("Delete");
         const btn = await drafStatusRow.locator('td').nth(4).locator('.action-item-restore');
         const btnName = await btn.innerText();
-        expect(btnName).toContain('Restore')
+        expect(btnName).toContain('Restore');
+        expect(btn).toBeEnabled();
 
+    }
+
+    // Activity Restore
+    async activityRestore() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityRow("Delete");
+        const btn = await drafStatusRow.locator('td').nth(4).locator('.action-item-restore');
+
+        // Restore Button Action
+        await btn.click();
     }
 
     // Back To Main Activity List Page
@@ -153,7 +171,7 @@ class ActicityList {
         const drafRow = await this.activityRow("Draft");
         const btn = await drafRow.locator('td').nth(5).locator('.cds--overflow-menu__wrapper button');
         await btn.click();
-        await this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu').click();
+        await this.activityViewBtn.click();
 
         const menuName = await this.currentPage.innerText();
         await expect(menuName).toContain("Workflow");
@@ -167,7 +185,7 @@ class ActicityList {
         const drafRow = await this.activityRow("Draft");
         const btn = await drafRow.locator('td').nth(5).locator('.cds--overflow-menu__wrapper button');
         await btn.click();
-        await this.page.locator('ul.cds--overflow-menu-options--open .activity-edit-overflow-menu').click();
+        await this.activityEditBtn.click();
 
         const menuName = await this.currentPage.innerText();
         await expect(menuName).toContain("Workflow");

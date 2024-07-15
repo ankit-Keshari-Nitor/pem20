@@ -1,7 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 
-Then('verifies {string} page is displayed [Page][{string}]', async function (pageTitle, pageId) {
+Then('verify {string} page is displayed [Page][{string}]', async function (pageTitle, pageId) {
   // const textEle = await this.page.locator(`.${pageId}-container .cds--data-table-container .cds--data-table-header .cds--data-table-header__title`);
   // await expect(textEle).toBeVisible();
   // const text = await textEle.textContent();
