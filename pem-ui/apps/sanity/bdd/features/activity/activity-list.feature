@@ -6,13 +6,15 @@ Feature: Activity List
 
   @current
   Scenario: Activity List page is loaded
-    Then User verifies "Activity Definition" page is displayed [Page]["activities-list"]
-    Then User verifies default page "1" is displayed in [Page]["activities-list"]
-    Then User verifies pagination with default page "1" is displayed in [Page]["activities-list"]
-    Then User verifies perpage rows are displayed in [Page]["activities-list"]
-    Then User verifies activity current status is final and rollout button is enable
-    Then User verifies activity current status is draft and mark as final button is enable
-    Then User verifies activity current status is delete and restore button is enable
-    Then User verifies to view the activity in [Page]["activities-list"]
-    Then User verifies to edit the activity in [Page]["activities-list"]
-    Then User verifies activity version drawer is opened on click of version history icon
+    Then verifies "Activity Definition" page is displayed [Page]["activities-list"]
+    Then verifies default page "1" is displayed in [Page]["activities-list"]
+    Then verifies pagination with default page "1" is displayed in [Page]["activities-list"]
+    Then verifies perpage rows are displayed in [Page]["activities-list"]
+    Then verifies activity current status is final and rollout button is enable
+    Then Verifies rollout functionality
+    Then verifies activity current status is draft and mark as final button is enable
+    Then Verifies mark as final functionality
+    Then verifies activity current status is delete and restore button is enable
+    Then verifies to view the activity functionality in [Page]["activities-list"]
+    Then verifies to edit the activity functionality in [Page]["activities-list"]
+    Then verifies activity version drawer is opened on click of version history icon

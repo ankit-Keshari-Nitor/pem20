@@ -69,6 +69,17 @@ class ActicityList {
         }
     }
 
+    // Activity RollOut Button Enable
+    async rolloutBtnEnable() {
+
+        await this.page.waitForTimeout(10);
+        const finalStatusRow = await this.activityRow("Final");
+        const btn = await finalStatusRow.locator('td').nth(4).locator('.action-item-rollout')
+        const btnName = await btn.innerText();
+        expect(btnName).toContain('Rollout')
+
+    }
+
     // Activity RollOut
     async activityRollout() {
 
@@ -79,12 +90,23 @@ class ActicityList {
         const btnName = await btn.innerText();
         expect(btnName).toContain('Rollout')
 
-        // // RollOut Action
+        // RollOut Action
         await btn.click();
         const modal = await this.page.locator('.is-visible .cds--modal-header__heading');
         const text = await modal.innerText();
         await expect(text).toContain(activityName);
         await this.page.locator('.is-visible .cds--modal-close-button button').click();
+
+    }
+
+    // Activity Mark As Final Button Enable
+    async markAsFinalBtnEnable() {
+
+        await this.page.waitForTimeout(10);
+        const drafStatusRow = await this.activityRow("Draft");
+        const btn = await drafStatusRow.locator('td').nth(4).locator('.action-item-mark-as-final');
+        const btnName = await btn.innerText();
+        expect(btnName).toContain('Mark As Final')
 
     }
 
@@ -105,8 +127,8 @@ class ActicityList {
         await this.page.locator('.is-visible .cds--modal-close-button button').click();
     }
 
-    // Activity Restore
-    async activityRestore() {
+    // Activity Restore Button Enable
+    async restoreBtnEnable() {
 
         await this.page.waitForTimeout(10);
         const drafStatusRow = await this.activityRow("Delete");
@@ -114,7 +136,6 @@ class ActicityList {
         const btnName = await btn.innerText();
         expect(btnName).toContain('Restore')
 
-        // Restore Action
     }
 
     // Back To Main Activity List Page
