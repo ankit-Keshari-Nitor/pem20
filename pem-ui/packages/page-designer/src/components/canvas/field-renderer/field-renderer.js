@@ -6,7 +6,7 @@ import './field-renderer.scss';
 import { COMPONENT } from '../../../constants/constants';
 import { Column, Grid } from '@carbon/react';
 
-const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode, onChangeHandle, colSize = 16 }) => {
+const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onFieldDelete, onFieldSelect, previewMode, onChangeHandle, handConditionEvent, colSize = 16 }) => {
   let compent_type;
   let dragItem;
   var isNestedBlock = false;
@@ -47,9 +47,10 @@ const FieldRenderer = ({ data, path, componentMapper, renderRow, handleDrop, onF
       onFieldDelete={onFieldDelete}
       previewMode={previewMode}
       onChangeHandle={onChangeHandle}
+      handConditionEvent={handConditionEvent}
     />
   ) : (
-    <FormFieldComponent field={data.component} id={data.id} currentPath={path} onChangeHandle={onChangeHandle} previewMode={previewMode} />
+    <FormFieldComponent field={data.component} id={data.id} currentPath={path} onChangeHandle={onChangeHandle} handConditionEvent={handConditionEvent} previewMode={previewMode} />
   );
   drag(ref);
   return !previewMode ? (

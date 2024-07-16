@@ -934,6 +934,7 @@ export default function PropsPanel({ layout, selectedFiledProps, handleSchemaCha
                                         conditionsProps.map((item, idx) => {
                                           return (
                                             <div>
+                                              <br/>
                                               {/* Operation */}
                                               <Select id={String(`${idx}-operation`)} hideLabel={true} onChange={(e)=>handleConditionBuilder(idx,'operation',e.target.value)} defaultValue={item.operation} value={item.operation}>
                                                 <SelectItem key={'operation'} value={''} text={'Select Operation'} />

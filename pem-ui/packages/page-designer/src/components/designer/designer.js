@@ -106,7 +106,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           type: COMPONENT,
           component: { ...item.component, id: newComponent.id, name: 'form-control-' + newComponent.id.substring(0, 2), labelText: item.component.label, operand: [] }
         };
-        setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id }]);
+        setComponentsName((preState) => [...preState, { id: newItem.id, name: newItem.id, path: splitDropZonePath }]);
         setLayout(handleMoveSidebarComponentIntoParent(layout, splitDropZonePath, newItem));
         return;
       }
@@ -132,7 +132,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     },
     [layout, components]
   );
-  
+  console.log('layout>>>',layout);
   const onFieldSelect = (e, componentDetail, currentPathDetail) => {
     e.stopPropagation();
     let filedTypeConfig;
@@ -252,7 +252,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
       }
       setSelectedFiledProps({ ...objCopy });
       if (uniqueName) {
-        setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+        setLayout((previousLayout) => updateChildToChildren(previousLayout, componentPosition, propsName, newValue));
       }
     }
   };
@@ -267,7 +267,8 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
     }
     if(operatorId) {
       const operatorArray = findChildComponentById(layout, operatorId).component.operand;
-      //setLayout(updateChildToChildren(layout, componentPosition, propsName, newValue));
+      const position = componentsName.filter((item) => item.id === operatorId)[0].path;
+      setLayout(updateChildToChildren(layout, position, 'operand', [...operatorArray, targetId]));
     }
   }
 
@@ -390,6 +391,7 @@ export default function Designer({ componentMapper, onClickPageDesignerBack, act
           openPreview={openPreview}
           dataTestid={'form-preview-id'}
           buttonView={true}
+          componentsName={componentsName}
         />
       </Modal>
     </>

@@ -23,8 +23,8 @@ import { TextInputIcon } from './../icons';
 
 const type = FORM_FIELD_TYPE.TEXT_INPUT;
 
-const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
-  const { labelText, helperText, label, disabled, value, isRequired, visible, min, max, ...rest } = field;
+const TextInput = ({ field, id, currentPath, onChangeHandle, handConditionEvent, previewMode }) => {
+  const { labelText, helperText, label, disabled, value, isRequired, visible, min, max, operand, onValueChange, ...rest } = field;
   const [fieldValue, setFieldValue] = useState();
 
   useEffect(() => {
@@ -47,6 +47,10 @@ const TextInput = ({ field, id, currentPath, onChangeHandle, previewMode }) => {
         value={fieldValue}
         onChange={(e) => {
           previewMode && onChangeHandle(currentPath, e.target.value);
+          setFieldValue(e.target.value);
+        }}
+        onBlur={(e)=> {
+          previewMode && handConditionEvent(e.target.value, operand)
           setFieldValue(e.target.value);
         }}
         {...rest}
