@@ -10,8 +10,10 @@ Feature: New Activity Definition
     Then User verifies "Workflow" is displayed as current breadscrumb on [Page]["new-activity"]
     Given User fill the definition details for new activity
     Given User drags "PARTNER_TASK" block and fills details on definition tab
-    # Given User save the new activity
-    # Then verify "Definitions" page is displayed [Page]["activities-list"]
+    Given User fill the exit validation for "PARTNER_TASK" 
+    Given User connects start node to "PARTNER_TASK" node and "PARTNER_TASK" node to end node 
+    Given User save the new activity
+    Then User verifies activity list page after save completion
 
 
   
