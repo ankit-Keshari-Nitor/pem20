@@ -4,7 +4,7 @@ Feature: Activity List
     Given User navigates to the application
     When User navigates to "Definitions" of "Activities" [App-Nav]  
 
-  @current
+  # @current
   Scenario: Activity Version List page is loaded
     Then verify "Activity Definition" page is displayed [Page]["activities-list"]
     Then verify the open version drawer by click of version history icon
