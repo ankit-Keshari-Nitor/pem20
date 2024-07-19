@@ -63,7 +63,7 @@ class NewActivity {
 
     // Task Drag and Drop
     async dragBlock(blockName) {
-
+        this.page.waitForTimeout(9000);
         const dropTarget = this.dropTargetZone;
         const dragPartner = this.dragBlockByTray(blockName);
         await dragPartner.dragTo(dropTarget);
@@ -74,7 +74,7 @@ class NewActivity {
 
     // Task Define Form
     async fillsDetails(blockName) {
-
+        this.page.waitForTimeout(9000);
         // Define Form
         await this.draggedBlockDiv(blockName).click();
         const topWrapper = await this.formWrapper;
@@ -83,7 +83,7 @@ class NewActivity {
         await expect(taskInputfield).toBeVisible();
         await this.page.waitForTimeout(30);
         await taskInputfield.fill("Demo task");
-
+        
         const fieldSecond = topWrapper.nth(1);
         const taskDesfield = await fieldSecond.locator("input#description").first();
         await expect(taskDesfield).toBeVisible();
@@ -95,6 +95,7 @@ class NewActivity {
 
     // Exit Validation
     async exitCondition() {
+        this.page.waitForTimeout(9000);
         await this.exitConditonTab.click();
         await this.addRuleBtn.click();
         
@@ -110,7 +111,19 @@ class NewActivity {
 
     }
 
+    async connectTaskNode(startTaskNode, endTaskNode) {
+
+        const startnodeTarget = this.blockNodeStartPoint(startTaskNode);
+        await startnodeTarget.hover();
+        await this.page.mouse.down();
+
+        const endtnodeTarget = this.blockNodeStartPoint(endTaskNode);
+        await endtnodeTarget.hover();
+        await this.page.mouse.up();
+    }
+
     async connectsNode(startNode, endNode) {
+        this.page.waitForTimeout(9000);
         // ------------------------------------- Start Edges ----------------------------------------------------
         //await this.page.waitForTimeout(10000);
         const startSource = await this.startNodePoint;

@@ -14,6 +14,13 @@ Given('User drags {string} block and fills details on definition tab', async fun
   await newActivity.fillsDetails(blockName);
 });
 
+Given('User connects {string} node and {string} node', async function (startTaskNode, endTaskNode) {
+  const newActivity = new NewActivity(this.page);
+  await newActivity.connectTaskNode(startTaskNode, endTaskNode);
+});
+
+
+
 Given('User fill the exit validation for {string}', async function (blockName) {
   const newActivity = new NewActivity(this.page);
   //await this.page.waitForTimeout(30);
