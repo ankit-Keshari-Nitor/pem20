@@ -24,8 +24,14 @@ class ActicityList {
         this.closeVersionDrawer = this.page.locator('div.header-button-left-drawer');
 
         // Model
-        this.modelHeading = this.page.locator('.is-visible .cds--modal-header__heading');
-        this.modelClose = this.page.locator('.is-visible .cds--modal-close-button button');
+        this.modelHeading = this.page.locator('div.is-visible .cds--modal-header__heading');
+        this.modelClose = this.page.locator('div.is-visible .cds--modal-close-button button');
+
+        // RollOut Form
+        this.rolloutName = this.page.locator('div.is-visible div.cds--text-input__field-wrapper [id="name"]')
+        this.rolloutdes = this.page.locator('div.is-visible div.cds--text-area__wrapper [id="description"]')
+        this.rolloutToName = this.page.locator('div.is-visible fieldset.cds--radio-button-group--label-right [for="internal_users"] span.cds--radio-button__appearance')
+        this.rolloutSaveBtn = this.page.locator('div.is-visible div.cds--btn-set button.cds--btn--primary');        
 
         // Activity View and Edit
         this.activityViewBtn = this.page.locator('ul.cds--overflow-menu-options--open .activity-view-overflow-menu');
@@ -69,9 +75,11 @@ class ActicityList {
         await this.page.waitForTimeout(10);
         const row = await this.tableData.locator('tr');
         const countRow = await row.count();
+        console.log("countRow>>>>>>>>",countRow)
         for (let i = 1; i < countRow; i++) {
             const cells = await row.nth(i).locator('td').nth(2).locator('span').innerText();
             if (cells === currentStatus) {
+                console.log("currentStatus>>>>>>>>",currentStatus)
                 return row.nth(i);
             }
         }
@@ -102,8 +110,17 @@ class ActicityList {
         const modal = await this.modelHeading;
         const text = await modal.innerText();
         await expect(text).toContain(activityName);
-        await this.modelClose.click();
+        //await this.modelClose.click();
 
+    }
+
+    async activityRolloutFillDetail() {
+        
+        await this.rolloutName.fill("Demo RollOut");
+        await this.rolloutdes.fill('Demo RollOut Description');
+        await this.rolloutToName.click();
+        await this.rolloutSaveBtn.click();
+        await this.modelClose.click();
     }
 
     // Activity Mark As Final Button Enable
